@@ -1,0 +1,45 @@
+{
+  "name": "harcon",
+  "version": "0.5.0",
+  "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
+  "keywords": [
+    "messaging",
+    "enterprise service bus"
+  ],
+  "homepage": "https://github.com/imrefazekas/harcon",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/imrefazekas/harcon.git"
+  },
+  "bugs": {
+    "url": "http://github.com/imrefazekas/harcon/issues"
+  },
+  "author": {
+    "name": "Imre Fazekas",
+    "email": "mail@imrefazekas.me"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "./lib/harcon.js",
+  "dependencies": {
+    "async": "^0.9.0",
+    "clerobee": "latest",
+    "lodash": "latest"
+  },
+  "devDependencies": {
+    "winston": "latest",
+    "chai": "latest",
+    "gulp": "latest",
+    "gulp-jshint": "latest",
+    "gulp-load-plugins": "latest",
+    "gulp-mocha": "latest"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "_id": "harcon@0.5.0"
+}
