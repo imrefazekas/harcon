@@ -28,17 +28,8 @@ This frameworks start to shine in a highly structured and distributed environmen
 
 ## Quick setup
 
-	var Inflicter = require('../lib/Inflicter');
-
-	// [logger instance]
-	var winston = require('winston');
-	var logger = new (winston.Logger)({
-		transports: [
-			new (winston.transports.Console)( { level: 'debug' } )
-		]
-	});
-
-	var inflicter = new Inflicter( logger );
+	var Inflicter = require('Inflicter');
+	var inflicter = new Inflicter( );
 
 	// define a listener function listening every message withing the context "morning"
 	inflicter.addict('steve', 'morning.*', function(greetings, callback){

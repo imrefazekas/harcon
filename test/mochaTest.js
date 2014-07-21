@@ -15,48 +15,67 @@ var Inflicter = require('../lib/Inflicter');
 describe("harcon", function () {
 
 	var inflicter;
-	var alice;
+	var marie, julie;
 
 	before(function(done){
-		inflicter = new Inflicter( logger );
+		inflicter = new Inflicter( { logger: logger } );
 
-		inflicter.addict('steve', 'morning.*', function(greetings, callback){
-			callback(null, 'Leave me please!');
+		inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
+			callback(null, 'Hi there!');
 		} );
-		inflicter.addict('bob', 'greet.*', function( greetings1, greetings2, callback ){
-			this.ignite( 'morning.wakeup', 'It is morning, time to go!', function(err, res){
-				callback(null, 'Hive 6!');
-			} );
+		inflicter.addict('walter', 'greet.*', function(greetings1, greetings2, callback){
+			callback(null, 'My pleasure!');
 		} );
-		alice = {
-			name: 'alice',
-			tree: 'almafa',
-			moduleFn: function(greetings1, greetings2, callback){
-				alice.greetings = [ greetings1, greetings2 ];
-				callback( null, this.tree );
+
+		marie = {
+			name: 'marie',
+			context: 'greet',
+			simple: function(greetings1, greetings2, callback){
+				marie.greetings = [ greetings1, greetings2 ];
+				callback( null, 'Bonjour!' );
 			}
 		};
-		inflicter.addicts( alice, [ 'greet.*' ], [ alice.moduleFn ] );
+		var marieFS = inflicter.addicts( marie );
+		console.log( marieFS.burst );
+
+		julie = {
+			name: 'julie',
+			context: 'morning',
+			wakeup: function( callback ){
+				this.ignite( 'greet.gentle', 'It is morning!', 'Time to wake up!', function(err, res){
+					callback(err, res);
+				} );
+			}
+		};
+		var julieFS = inflicter.addicts( julie );
 
 		done();
 	});
 
-	describe("Catty's workflow", function () {
-
-		it('Greetings call is', function(done){
-			inflicter.ignite( 'catty', 'greet.everyone', 'whatsup?', 'how do you do?', function(err, res){
+	describe("Harcon workflow", function () {
+		it('Simple greetings is', function(done){
+			inflicter.ignite( 'greet.simple', 'whatsup?', 'how do you do?', function(err, res){
+				console.log( err, res );
 				should.not.exist(err); should.exist(res);
-				expect( alice.greetings ).to.include( 'whatsup?' );
-				expect( alice.greetings ).to.include( 'how do you do?' );
 
-				var responses = _.map( res, function(comm){ return comm.response; });
-				expect( responses ).to.include( 'Hive 6!' );
-				expect( responses ).to.include( 'almafa' );
+				expect( marie.greetings ).to.include( 'whatsup?' );
+				expect( marie.greetings ).to.include( 'how do you do?' );
+
+				expect( res ).to.include( 'Hi there!' );
+				expect( res ).to.include( 'My pleasure!' );
+				expect( res ).to.include( 'Bonjour!' );
 
 				done( );
 			} );
 		});
 
+		it('Morning greetings is', function(done){
+			inflicter.ignite( 'morning.wakeup', function(err, res){
+				console.log( err, res );
+
+				done( );
+			} );
+		});
 	});
 
 	after(function(done){

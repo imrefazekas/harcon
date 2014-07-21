@@ -11,4 +11,11 @@ gulp.task( 'mocha', function(callback) {
 	return gulp.src( './test/mochaTest.js' ).pipe( global.plugins.mocha({reporter: 'nyan'}) );
 } );
 
-gulp.task( 'default', [ 'jshint', 'mocha' ] );
+gulp.task('doc', function (cb) {
+	gulp.src('./lib/**/*.js')
+		.pipe( global.plugins.yuidoc() )
+		.pipe( gulp.dest('./doc') )
+		.on( 'end', cb );
+});
+
+gulp.task( 'default', [ 'jshint', 'mocha', 'doc' ] );
