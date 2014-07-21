@@ -24,7 +24,7 @@ The library has a stunning feature list beyond basic messaging functionality.
 
 __!Note__: Harcon's concept is to introduce a clean and high abstraction layer over messaging between entities. Like in case of every abstraction tool, for simple webapps or plain REST services, it can be proven as a liability.
 
-This frameworks start to shine in a highly structured and distributed environment.
+This library starts to shine in a highly structured and distributed environment.
 
 
 # Installation
