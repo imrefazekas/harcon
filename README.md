@@ -22,6 +22,8 @@ The library has a stunning feature list beyond basic messaging functionality.
 
 - __Smooth infiltration__: your objects / functions will possess the necessary services via injection, no need to create complex structures and compounds
 
+- __Advanced routing & listening__: qualified names, regular expressions, wildcards can be all used
+
 __!Note__: Harcon's concept is to introduce a clean and high abstraction layer over messaging between entities. Like in case of every abstraction tool, for simple webapps or plain REST services, it can be proven as a liability.
 
 This library starts to shine in a highly structured and distributed environment.
@@ -37,27 +39,29 @@ $ npm install harcon
 
 ## Quick setup
 
-var Inflicter = require('Inflicter');
-var inflicter = new Inflicter( );
+	var Inflicter = require('Inflicter');
+	var inflicter = new Inflicter( );
 
-// define a listener function listening every message withing the context "morning"
-inflicter.addict('steve', 'morning.*', function(greetings, callback){
-callback(null, 'Leave me please!');
-} );
+	// define a listener function listening every message withing the context "greet"
+	inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
+		callback(null, 'Hi there!');
+	} );
 
-// define an listener object listening every message withing the context "greet"
-var alice = {
-name: 'alice',
-handler: function(greetings1, greetings2, callback){
-callback( null, 'Hello there!' );
-}
-};
-inflicter.addicts( alice, [ 'greet.*' ], [ alice.handler ] );
+	// define an plain object serving as listener withing the context "greet" to messages "warm"
+	marie = {
+		name: 'marie',
+		context: 'greet',
+		warm: function(greetings1, greetings2, callback){
+			callback( null, 'Bonjour!' );
+		}
+	};
+	inflicter.addicts( marie );
 
-// sends a communication 'greet.everyone' with parameters and defines a callback to handle responses
-inflicter.ignite( 'catty', 'greet.everyone', 'whatsup?', 'how do you do?', function(err, res){
-console.log( err, res );
-} );
+	// sends a communication 'greet.everyone' with parameters and defines a callback to handle responses
+	// will receive back 2 answers: 'Hi there!' and 'Bonjour!'
+	inflicter.ignite( 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, res){
+		console.log( err, res );
+	} );
 
 [Back to Feature list](#features)
 
