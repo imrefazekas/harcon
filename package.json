@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -24,9 +24,9 @@
       "url": "http://www.opensource.org/licenses/MIT"
     }
   ],
-  "main": "./lib/harcon.js",
+  "main": "./lib/Inflicter.js",
   "dependencies": {
-    "async": "^0.9.0",
+    "async": "latest",
     "clerobee": "latest",
     "lodash": "latest"
   },
@@ -42,5 +42,5 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "_id": "harcon@0.6.0"
+  "_id": "harcon@0.6.1"
 }
