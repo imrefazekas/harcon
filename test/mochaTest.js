@@ -18,7 +18,7 @@ describe("harcon", function () {
 	var marie, julie;
 
 	before(function(done){
-		inflicter = new Inflicter( { logger: logger } );
+		inflicter = new Inflicter( { logger: logger, idLength: 32 } );
 
 		inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
 			callback(null, 'Hi there!');
