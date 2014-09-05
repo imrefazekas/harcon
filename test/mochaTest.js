@@ -1,24 +1,17 @@
 var chai = require("chai");
 var should = chai.should();
 var expect = chai.expect;
-var winston = require('winston');
 
 var _ = require("lodash");
 
-var logger = new (winston.Logger)({
-	transports: [
-		new (winston.transports.Console)( { level: 'debug' } )
-	]
-});
 var Inflicter = require('../lib/Inflicter');
 
 describe("harcon", function () {
-
 	var inflicter;
 	var marie, julie;
 
 	before(function(done){
-		inflicter = new Inflicter( { logger: logger, idLength: 32 } );
+		inflicter = new Inflicter( { logger: { file: 'test.log', level: 'debug' }, idLength: 32 } );
 
 		inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
 			callback(null, 'Hi there!');
@@ -36,7 +29,6 @@ describe("harcon", function () {
 			}
 		};
 		var marieFS = inflicter.addicts( marie );
-		console.log( marieFS.burst );
 
 		julie = {
 			name: 'julie',

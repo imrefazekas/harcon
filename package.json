@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "0.6.10",
+  "version": "0.7.0",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -28,7 +28,8 @@
   "dependencies": {
     "async": "latest",
     "clerobee": "latest",
-    "lodash": "latest"
+    "lodash": "latest",
+	"winston": "latest"
   },
   "devDependencies": {
     "chai": "latest",
@@ -36,11 +37,10 @@
     "gulp-jshint": "latest",
     "gulp-load-plugins": "latest",
     "gulp-mocha": "latest",
-    "gulp-yuidoc": "latest",
-    "winston": "latest"
+    "gulp-yuidoc": "latest"
   },
   "engines": {
     "node": ">= 0.10.0"
   },
-  "_id": "harcon@0.6.10"
+  "_id": "harcon@0.7.0"
 }
