@@ -11,11 +11,11 @@ gulp.task( 'mocha', function(callback) {
 	return gulp.src( './test/mochaTest.js' ).pipe( global.plugins.mocha({reporter: 'nyan'}) );
 } );
 
-gulp.task('doc', function (cb) {
-	gulp.src('./lib/**/*.js')
-		.pipe( global.plugins.yuidoc() )
-		.pipe( gulp.dest('./doc') )
-		.on( 'end', cb );
-});
+gulp.task( 'doc', function(callback) {
+	var doccoOptions;
+	return 	gulp.src("./test/mochaTest.js")
+			.pipe( global.plugins.docco( doccoOptions ) )
+			.pipe( gulp.dest('./doc') );
+} );
 
 gulp.task( 'default', [ 'jshint', 'mocha', 'doc' ] );

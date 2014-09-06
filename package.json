@@ -34,10 +34,10 @@
   "devDependencies": {
     "chai": "latest",
     "gulp": "latest",
+    "gulp-docco": "latest",
     "gulp-jshint": "latest",
     "gulp-load-plugins": "latest",
-    "gulp-mocha": "latest",
-    "gulp-yuidoc": "latest"
+    "gulp-mocha": "latest"
   },
   "engines": {
     "node": ">= 0.10.0"
