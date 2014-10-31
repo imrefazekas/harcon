@@ -97,5 +97,6 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 0.8.0 : automated (re/un)deployment added, rewritten event coordination subsystem
 - 0.6.0 : delivery fixes
 - 0.5.0 : initial release
