@@ -32,10 +32,22 @@ var julie = {
 	}
 };
 var julieFS = inflicter.addicts( julie );
-
+/*
 inflicter.ignite( 'morning.wakeup', function(err, res){
 	console.log( '>>>>>>>>>>', err, res );
-} );
+} );*/
+
+var karl = {
+	name: 'karl',
+	context: 'morning',
+	enter: function( ){
+		this.ignite( 'dire.bonjour', 'Ca vas?', function(err, res){
+			console.log( '>>>>>>', err, res );
+		} );
+	}
+};
+var karlFS = inflicter.addicts( karl );
+karl.enter();
 
 /*
 inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
