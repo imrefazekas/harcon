@@ -2,13 +2,22 @@ var Inflicter = require('../lib/Inflicter');
 
 var inflicter = new Inflicter( { logger: { file: 'test.log', level: 'debug' }, idLength: 32 } );
 
-/*
+var claire = {
+	name: 'claire',
+	context: 'dire',
+	bonjour: function(greetings1, callback){
+		callback( null, 'Bonjour!' );
+	}
+};
+var claireFS = inflicter.addicts( claire );
 var marie = {
 	name: 'marie',
 	context: 'morning',
-	simple: function(greetings1, greetings2, callback){
-		marie.greetings = [ greetings1, greetings2 ];
-		callback( null, 'Bonjour!' );
+	simple: function(greetings1, greetings2, ignite, callback){
+		console.log( ignite.toString() );
+		ignite( 'dire.bonjour', 'Say bonjour!', function(err, res){
+			callback(err, res[0]);
+		} );
 	}
 };
 var marieFS = inflicter.addicts( marie );
@@ -27,8 +36,8 @@ var julieFS = inflicter.addicts( julie );
 inflicter.ignite( 'morning.wakeup', function(err, res){
 	console.log( '>>>>>>>>>>', err, res );
 } );
-*/
 
+/*
 inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
 	callback(null, 'Hi there!');
 } );
@@ -44,5 +53,5 @@ inflicter.addict('steve', 'gentle.greetings', function(ignite, callback){
 inflicter.ignite( 'gentle.greetings', function(err, res){
 	console.log( err, res );
 } );
-
+*/
 setTimeout( function(){ inflicter.close(); }, 2000);
