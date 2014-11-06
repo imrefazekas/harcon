@@ -11,7 +11,7 @@ describe("harcon", function () {
 	before(function(done){
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
-		inflicter = new Inflicter( { logger: { file: 'test.log', level: 'debug' }, idLength: 32, watch:{ folder: './test/components', timeout: -1} } );
+		inflicter = new Inflicter( { logger: { file: 'test.log', level: 'debug' }, idLength: 32, watch:{ folder: './test/components', timeout: -1}, marie: {greetings: 'Hi!'} } );
 
 		// Publishes an event listener function: Peter. It just sends a simple greetings in return
 		inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
