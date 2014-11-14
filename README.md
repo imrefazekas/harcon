@@ -1,10 +1,10 @@
-Harcon - Messaging/Service Bus for the harmonic convergence of node-based enterprise entities
+Harcon - Messaging/Service Bus for the harmonic convergence of node-based enterprise entities or in-browser communication between web components
 
 [![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
 
 
 ========
-[harcon](https://github.com/imrefazekas/harcon) is a enterprise-level service bus for NodeJS giving high abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.
+[harcon](https://github.com/imrefazekas/harcon) is a enterprise-level service bus for NodeJS/Browser giving high abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.
 
 The library has a stunning feature list beyond basic messaging functionality.
 
@@ -25,6 +25,8 @@ The library has a stunning feature list beyond basic messaging functionality.
 - __Advanced routing & listening__: qualified names, regular expressions, wildcards can be all used
 
 __!Note__: Harcon's concept is to introduce a clean and high abstraction layer over messaging between entities. Like in case of every abstraction tool, for simple webapps or plain REST services, it can be proven as a liability.
+
+__!Note__: To use in browser, a CommonJS-enabled packager has to be applied like [browserify](http://browserify.org) or [webpack](http://webpack.github.io).
 
 This library starts to shine in a highly structured and distributed environment.
 
@@ -97,6 +99,7 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 0.9.0 : small redesign to allow to use in a Browserify/Webpack environment
 - 0.8.0 : automated (re/un)deployment added, rewritten event coordination subsystem
 - 0.6.0 : delivery fixes
 - 0.5.0 : initial release
