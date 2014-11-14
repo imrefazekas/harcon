@@ -18,4 +18,7 @@ gulp.task( 'doc', function(callback) {
 			.pipe( gulp.dest('./doc') );
 } );
 
-gulp.task( 'default', [ 'jshint', 'mocha', 'doc' ] );
+var web = require('./test/web/build-web' );
+gulp.task( 'build-web-test', web.buildTasks );
+
+gulp.task( 'default', ['jshint', 'mocha', 'doc'] );

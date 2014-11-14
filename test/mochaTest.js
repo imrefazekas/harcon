@@ -5,13 +5,22 @@ var expect = chai.expect;
 // Requires harcon. In your app the form 'require('harcon');' should be used
 var Inflicter = require('../lib/Inflicter');
 
+var Logger = require('./WinstonLogger');
+
+var Publisher = require('../lib/Publisher');
+
 describe("harcon", function () {
 	var inflicter;
 
 	before(function(done){
+		var logger = Logger.createWinstonLogger( { file: 'test.log', level: 'debug' } );
+
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
-		inflicter = new Inflicter( { logger: { file: 'test.log', level: 'debug' }, idLength: 32, watch:{ folder: './test/components', timeout: -1}, marie: {greetings: 'Hi!'} } );
+		inflicter = new Inflicter( { logger: logger, idLength: 32, marie: {greetings: 'Hi!'} } );
+
+		inflicter.addicts( Publisher );
+		Publisher.watch( './test/components', -1 );
 
 		// Publishes an event listener function: Peter. It just sends a simple greetings in return
 		inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){

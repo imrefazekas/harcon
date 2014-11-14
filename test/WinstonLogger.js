@@ -1,21 +1,5 @@
 var winston = require('winston');
 
-function extend(obj, extension){
-	for(var key in extension){
-		if( extension[key] )
-			obj[key] = extension[key];
-	}
-	return obj;
-}
-
-exports.createLogger = function( name, extension, logger ){
-	logger = logger ? ( logger.file ? exports.createWinstonLogger( logger ) : logger ) : exports.createWinstonLogger( {} );
-	logger[name+'log'] = function( err, message, obj, level ){
-		this.log( err ? 'error' : (level || 'debug'), err ? err.message : message, extend( obj || {}, extension ) );
-	}.bind( logger );
-	return logger;
-};
-
 exports.createWinstonLogger = function( options ){
 	options = options || {};
 	if( options.exceptionFile )
