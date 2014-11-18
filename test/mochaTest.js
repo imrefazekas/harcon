@@ -59,6 +59,20 @@ describe("harcon", function () {
 			inflicter.ignite( 'morning.wakeup', function(err, res){
 				console.log( err, res );
 
+				expect(err).to.be.a('null');
+				expect(res[0]).to.eql( [ 'Hi there!', 'My pleasure!' ] );
+				done( );
+			} );
+		});
+
+		it('No answer', function(done){
+			// Sending a morning message and waiting for the proper answer
+			inflicter.ignite( 'cave.echo', function(err, res){
+				console.log( err, res );
+
+				expect(err).to.be.an.instanceof( Error );
+				expect(res).to.be.a('null');
+
 				done( );
 			} );
 		});
