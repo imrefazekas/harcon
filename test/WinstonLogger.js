@@ -2,6 +2,10 @@ var winston = require('winston');
 
 exports.createWinstonLogger = function( options ){
 	options = options || {};
+	if( options.console ){
+		return new (winston.Logger)({ transports: [ new (winston.transports.Console)({ colorize: 'true' }) ] });
+	}
+
 	if( options.exceptionFile )
 		winston.handleExceptions(new winston.transports.File({ filename: options.exceptionFile }));
 	else
