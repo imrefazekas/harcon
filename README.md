@@ -4,7 +4,7 @@ Harcon - Messaging/Service Bus for the harmonic convergence of node-based enterp
 
 
 ========
-[harcon](https://github.com/imrefazekas/harcon) is a enterprise-level service bus for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.
+[harcon](https://github.com/imrefazekas/harcon) is a enterprise-level service bus for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem. It allows you to design and implement complex workflows where context and causality of messages are important.
 
 The library has a stunning feature list beyond basic messaging functionality.
 
@@ -64,15 +64,142 @@ inflicter.ignite( 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, 
 ```
 [Back to Feature list](#features)
 
-## Features
+## Workflows
 
-... to be filled
+In an enterprise-level system, one has to realize complex communication structure where lots of entities are following business logic and rules, involving subsystems and external resources, policies and other considerations, in short form: workflows.
+I take the liberty to define the workflow now as well defined routes and causality of messages.
+Simple method calls do the same, you can say. Yes and no.
+In a workflow, you are not dependent on the response timeframe, workflows manage distance in time and space. The recepient of a message can be on another server or city or planet. Recepient can answer right away or tomorrow or never.
+
+Let me show a very short example:
+You are a company providing VPN services to customers.
+Orders taken by agents go to some accounting and client management subsystem and eventually your subsystem dealing with the technical setup receives a request through an interface of yours.
+Next step is to identify the network the user will be connected to, so a message is sent to the networking department who will respond maybe a day later. When it does, you have to continue your workflow where it is stopped, so you try to allocate network resources there and if it is successful you create a network configuration firmware to be used on the client's router to communicate with your backbone. When it is done by a config creator submodule of yours, you send it to an operation department for testing and when it is done you send back the results to the accounting for validation.
+And of course everything must be traceable and reconstructable and maybe rollable backwards.
+This is an extremely simplified use case, in real-life, workflows are much more complicated things and even harder to handle properly.
+
+[harcon](https://github.com/imrefazekas/harcon) is not a workflow designer tool, __"just"__ a low-level library to manage such processes. You define entities and the communications among them then publish them.
+
+You can resurrect a workflow if it failed and continue where it failed.
+You have to understand some details to use this lib at full scale.
+
+#### Entities
+One can define 2 type of entities:
+- simple function: when you associate a function with an event-pattern. Recommended to be used as observer, job-like, surveillance-, or interface-related asset.
+```javascript
+// Qualified name - will answer to only this message
+inflicter.addict('hugh', 'allocate.ip', function(callback){
+	callback(null, 'Done.');
+} );
+// Wildcards - will answer anything within the context greet
+inflicter.addict('peter', 'greet.*', function(callback){
+	callback(null, 'Done.');
+} );
+// Regular expression - will answer anything where message name start with string 'job'
+inflicter.addict('john', /job.*/, function(callback){
+	callback(null, 'Done.');
+} );
+```
+
+- objects: service object enclosing service functions as a unique and complete context. Recommended to be used as business entities.
+```javascript
+var bookKeeper = {
+	name: 'BookKeeper',
+	context: 'booking',
+	newOrder: function( customer, callback ){
+		callback( null, 'Done.' );
+	},
+	ordersOfToday: function( callback ){
+		callback( null, [] );
+	}
+};
+...
+inflicter.ignite( 'booking.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
+	console.log( 'Finished', err, res );
+} );
+inflicter.ignite( 'booking.ordersOfToday', function(err, res){
+	console.log( 'Finished', err, res );
+} );
+```
+The name of every entity must be unique. Entities belong to a context as defined above. A context might be associatd to multiple entities depending on you orchestration.
+Every function within an entity will be considered as service and can be called using the 'context' + 'functionName' pair.
+
+#### Chain messages
+
+To chain messages, define the next point in the workflow you have to add another parameter to your service function:
+```javascript
+var order = {
+	name: 'Order',
+	context: 'order',
+	newVPN: function( customer, ignite, callback ){
+		ignite( 'allocate.address', '127.0.0.1', function(err, res){
+			callback(err, res);
+		} );
+	}
+};
+...
+inflicter.ignite( 'order.newVPN', {name: 'Stephen', customerID:123}, function(err, res){
+	console.log( 'Finished', err, res );
+} );
+```
+That will initiate a small workflow. __inflicter.ignite__ send a message to entity Order who will send within the same workflow to the Allocator. When it answeres, then the message of the beginning will be answered. [harcon](https://github.com/imrefazekas/harcon) will know if you initiate a message within the processing of another one and considers it as part of the ongoing workflow and tracks it.
+Mind the async execution to keep everything in track!
+
+#### Call back or not?
+
+You are not forced to always send answer, in some cases a quite entities is desired. If you do not define a callback neither side of the communication, [harcon](https://github.com/imrefazekas/harcon) will consider it as a one-ways message sending.
+```javascript
+// Qualified name - will answer to only this message
+inflicter.addict('karl', 'reserve.address', function( address ){
+	// Do something...
+} );
+...
+inflicter.ignite( 'reserve.address', '127.0.0.1' );
+```
+
+#### Entity initialization
+
+The need to pass contextual parameters to entities might rise. The options object passed to the constructure of Inflicter allows you to specify parameters for entities which will be passed while the init method defined in the entity is called.
+```javascript
+inflicter = new Inflicter( { /* ... */ marie: {greetings: 'Hi!'} } );
+var marie = {
+	name: 'marie',
+	context: 'test',
+	init: function (options) {
+		// {greetings: 'Hi!'} will be passed
+	}
+	// services ...
+};
+```
+
+#### Logging
+
+When you create the Inflicter instance, you can pass a logger object which will be respected and used to do loggings. If not set, [harcon](https://github.com/imrefazekas/harcon) will log everything to the console. So in production, setting up a logging facility ( like [winston](https://github.com/flatiron/winston) or [bunyan](https://github.com/trentm/node-bunyan) ) is strongly adviced.
+```javascript
+inflicter = new Inflicter( { logger: logger /* ... */ } );
+```
+
+#### Unique messages
+
+Every communication exchanged possesses the following properties (not exclusively):
+- unique ID
+- reference to the parent message if exists
+- uniqued ID of the workflow itself
+- external ID of the workflow started by an external communication involving a reference number to consider
+- timestamp
+
+Any time you sends a message or receives an answer, such objects are bypassing through the harcon system which logs and tracks all of them.
+
+By default, [harcon](https://github.com/imrefazekas/harcon) uses 32 as length of the IDs which are unique over time and among computer nodes. You can override this default when initiating Inflicter
+```javascript
+inflicter = new Inflicter( { /* ... */ idLength: 32 } );
+```
 
 ## Extension
 
 [harcon](https://github.com/imrefazekas/harcon) can be easily extended by using pure harcon components listening to system events:
 ```javascript
-{
+var extension = {
 	name: 'As you design it',
 	context: inflicter.name,
 	castOf: function( name, firestarter ){
@@ -82,9 +209,9 @@ inflicter.ignite( 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, 
 	close: function(){
 	}
 }
+inflicter.addicts( extension );
 ```
 In the current version, the inflicter instance you are using will send to your components events about system closing, entity publishing and revoking. For a working example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
-
 
 
 ## License
