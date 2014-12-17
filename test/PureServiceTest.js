@@ -1,6 +1,6 @@
 var Inflicter = require('../lib/Inflicter');
 
-var inflicter = new Inflicter( { logger: { file: 'test.log', level: 'debug' }, idLength: 32 } );
+var inflicter = new Inflicter( { idLength: 32 } );
 
 var claire = {
 	name: 'claire',
@@ -10,6 +10,13 @@ var claire = {
 	}
 };
 var claireFS = inflicter.addicts( claire );
+
+setTimeout( function(){
+	inflicter.ignite( '', 'dire.bonjour', function(err, res){
+		console.log( '::::::::::::', err, res );
+	} );
+ }, 1000);
+/*
 var marie = {
 	name: 'marie',
 	context: 'morning',
@@ -20,8 +27,8 @@ var marie = {
 		} );
 	}
 };
-var marieFS = inflicter.addicts( marie );
-
+var marieFS = inflicter.addicts( marie );*/
+/*
 var julie = {
 	name: 'julie',
 	context: 'morning',
@@ -31,12 +38,12 @@ var julie = {
 		} );
 	}
 };
-var julieFS = inflicter.addicts( julie );
+var julieFS = inflicter.addicts( julie );*/
 /*
 inflicter.ignite( 'morning.wakeup', function(err, res){
 	console.log( '>>>>>>>>>>', err, res );
 } );*/
-
+/*
 var karl = {
 	name: 'karl',
 	context: 'morning',
@@ -47,7 +54,7 @@ var karl = {
 	}
 };
 var karlFS = inflicter.addicts( karl );
-karl.enter();
+karl.enter();*/
 
 /*
 inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
@@ -66,4 +73,6 @@ inflicter.ignite( 'gentle.greetings', function(err, res){
 	console.log( err, res );
 } );
 */
+//setTimeout( function(){ console.log(':::', inflicter.listeners()); }, 1000);
+
 setTimeout( function(){ inflicter.close(); }, 2000);

@@ -42,7 +42,7 @@ describe("harcon", function () {
 
 		it('Simple greetings is', function(done){
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
-			inflicter.ignite( 'greet.simple', 'whatsup?', 'how do you do?', function(err, res){
+			inflicter.ignite( '', 'greet.simple', 'whatsup?', 'how do you do?', function(err, res){
 				console.log( err, res );
 				should.not.exist(err); should.exist(res);
 
@@ -56,7 +56,7 @@ describe("harcon", function () {
 
 		it('Morning greetings is', function(done){
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( 'morning.wakeup', function(err, res){
+			inflicter.ignite( '', 'morning.wakeup', function(err, res){
 				console.log( err, res );
 
 				expect(err).to.be.a('null');
@@ -67,7 +67,7 @@ describe("harcon", function () {
 
 		it('No answer', function(done){
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( 'cave.echo', function(err, res){
+			inflicter.ignite( '', 'cave.echo', function(err, res){
 				console.log( err, res );
 
 				expect(err).to.be.an.instanceof( Error );

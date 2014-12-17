@@ -291,7 +291,7 @@
 	* @method spread
 	*/
 	commPrototype.spread = function( ) {
-		var comm = new Communication( this.originalId, this.flowId, this.externalId, this.source, this.event, this.params );
+		var comm = new Communication( this.originalId, this.flowId, this.externalId, this.subsystem, this.source, this.event, this.params );
 		comm.id = this.id;
 		comm.date = this.date;
 		comm.params = this.params.slice();
@@ -308,7 +308,7 @@
 	* @param {Object} response Response object if exists
 	*/
 	commPrototype.twist = function( name, error, response ) {
-		var comm = new Communication( this.id, this.flowId, this.externalId, this.source, this.event, this.params, this.callback,  name, error, response );
+		var comm = new Communication( this.id, this.flowId, this.externalId, this.subsystem, this.source, this.event, this.params, this.callback,  name, error, response );
 		return comm;
 	};
 
@@ -322,7 +322,7 @@
 	* @param {Function} callback Callback function to deliver the response if exists
 	*/
 	commPrototype.burst = function( name, event, params, callback ) {
-		var comm = new Communication( null, this.flowId, this.externalId, name, event, params, callback );
+		var comm = new Communication( null, this.flowId, this.externalId, this.subsystem, name, event, params, callback );
 		return comm;
 	};
 
@@ -343,8 +343,8 @@
 	exports.setupSecurity = function(idLength){
 		clerobee = new Cerobee( idLength || 16 );
 	};
-	exports.newCommunication = function( originalId, flowId, externalId, source, event, params, callback, target, error, response ){
-		return new Communication( originalId, flowId, externalId, source, event, params, callback, target, error, response );
+	exports.newCommunication = function( originalId, flowId, externalId, subsystem, source, event, params, callback, target, error, response ){
+		return new Communication( originalId, flowId, externalId, subsystem, source, event, params, callback, target, error, response );
 	};
 
 
@@ -1032,7 +1032,7 @@
 	};
 
 	module.exports = exports = Clerobee;
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ },
@@ -1872,13 +1872,13 @@
 	        };
 	        return q;
 	    };
-	    
+
 	    async.priorityQueue = function (worker, concurrency) {
-	        
+
 	        function _compareTasks(a, b){
 	          return a.priority - b.priority;
 	        };
-	        
+
 	        function _binarySearch(sequence, item, compare) {
 	          var beg = -1,
 	              end = sequence.length - 1;
@@ -1892,7 +1892,7 @@
 	          }
 	          return beg;
 	        }
-	        
+
 	        function _insert(q, data, priority, callback) {
 	          if (!q.started){
 	            q.started = true;
@@ -1914,7 +1914,7 @@
 	                  priority: priority,
 	                  callback: typeof callback === 'function' ? callback : null
 	              };
-	              
+
 	              q.tasks.splice(_binarySearch(q.tasks, item, _compareTasks) + 1, 0, item);
 
 	              if (q.saturated && q.tasks.length === q.concurrency) {
@@ -1923,15 +1923,15 @@
 	              async.setImmediate(q.process);
 	          });
 	        }
-	        
+
 	        // Start with a normal queue
 	        var q = async.queue(worker, concurrency);
-	        
+
 	        // Override push to accept second parameter representing priority
 	        q.push = function (data, priority, callback) {
 	          _insert(q, data, priority, callback);
 	        };
-	        
+
 	        // Remove unshift function
 	        delete q.unshift;
 
@@ -2162,7 +2162,7 @@
 	    }
 
 	}());
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ },
@@ -2218,7 +2218,7 @@
 	    error('sorry,', name, 'is not implemented yet')
 	  }
 	})
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -2357,7 +2357,7 @@
 	      /* This will not work in older browsers.
 	       * See https://developer.mozilla.org/en-US/docs/Web/API/window.crypto.getRandomValues
 	       */
-	    
+
 	      _crypto.getRandomValues(bytes);
 	      return bytes;
 	    }
@@ -2371,7 +2371,7 @@
 	      )
 	  }
 	}())
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(18).Buffer))
 
 /***/ },
@@ -2408,7 +2408,7 @@
 	  if('rmd160' === alg) return new rmd160()
 	  return createHash(alg)
 	}
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -2458,7 +2458,7 @@
 	  return createHash(this._alg).update(this._opad).update(h).digest(enc)
 	}
 
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -3540,7 +3540,7 @@
 	    return String.fromCharCode(0xFFFD) // UTF 8 invalid char
 	  }
 	}
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -3781,7 +3781,7 @@
 	}
 
 	module.exports = { hash: hash };
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -3872,7 +3872,7 @@
 	    pbkdf2Sync: pbkdf2Sync
 	  }
 	}
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -4084,7 +4084,7 @@
 	}
 
 
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -4199,7 +4199,7 @@
 	    createCipheriv: createCipheriv
 	  };
 	};
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -4323,7 +4323,7 @@
 	    createDecipheriv: createDecipheriv
 	  };
 	};
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer))
 
 /***/ },
@@ -4670,7 +4670,7 @@
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+
 	/**
 	 * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
 	 * in FIPS 180-2
@@ -5163,7 +5163,7 @@
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+
 	/**
 	 * isArray
 	 */
@@ -6408,7 +6408,7 @@
 	function hasOwnProperty(obj, prop) {
 	  return Object.prototype.hasOwnProperty.call(obj, prop);
 	}
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(11)))
 
 /***/ },
@@ -7916,7 +7916,7 @@
 	  }
 	  return -1;
 	}
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ },
@@ -8400,7 +8400,7 @@
 	  }
 	  state.ended = true;
 	}
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ },
@@ -8496,7 +8496,7 @@
 	    f(xs[i], i);
 	  }
 	}
-	
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ },
