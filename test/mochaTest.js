@@ -13,7 +13,7 @@ describe("harcon", function () {
 	var inflicter;
 
 	before(function(done){
-		var logger = Logger.createWinstonLogger( { file: 'test.log', level: 'info' } );
+		var logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'debug' } );
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
@@ -42,7 +42,7 @@ describe("harcon", function () {
 
 		it('Simple greetings is', function(done){
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
-			inflicter.ignite( '', 'greet.simple', 'whatsup?', 'how do you do?', function(err, res){
+			inflicter.ignite( '0', '', 'greet.simple', 'whatsup?', 'how do you do?', function(err, res){
 				console.log( err, res );
 				should.not.exist(err); should.exist(res);
 
@@ -56,7 +56,7 @@ describe("harcon", function () {
 
 		it('Morning greetings is', function(done){
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( '', 'morning.wakeup', function(err, res){
+			inflicter.ignite( '0', '', 'morning.wakeup', function(err, res){
 				console.log( err, res );
 
 				expect(err).to.be.a('null');
@@ -67,7 +67,7 @@ describe("harcon", function () {
 
 		it('No answer', function(done){
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( '', 'cave.echo', function(err, res){
+			inflicter.ignite( '0', '', 'cave.echo', function(err, res){
 				console.log( err, res );
 
 				expect(err).to.be.an.instanceof( Error );
@@ -79,7 +79,7 @@ describe("harcon", function () {
 
 		it('Division test', function(done){
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
+			inflicter.ignite( '0', 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
 				console.log( err, res );
 
 				should.not.exist(err); should.exist(res);
