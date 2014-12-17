@@ -37,6 +37,7 @@ describe("harcon", function () {
 
 	describe("Harcon workflow", function () {
 		it('Patient...', function(done){
+			setTimeout( function(){ console.log( inflicter.divisions() ); }, 1000 );
 			setTimeout( function(){ console.log( inflicter.listeners() ); done(); }, 1500 );
 		});
 
