@@ -13,7 +13,7 @@ describe("harcon", function () {
 	var inflicter;
 
 	before(function(done){
-		var logger = Logger.createWinstonLogger( { file: 'test.log', level: 'debug' } );
+		var logger = Logger.createWinstonLogger( { file: 'test.log', level: 'info' } );
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
@@ -72,6 +72,22 @@ describe("harcon", function () {
 
 				expect(err).to.be.an.instanceof( Error );
 				expect(res).to.be.a('null');
+
+				done( );
+			} );
+		});
+
+		it('Division test', function(done){
+			// Sending a morning message and waiting for the proper answer
+			inflicter.ignite( 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
+				console.log( err, res );
+
+				should.not.exist(err); should.exist(res);
+
+				expect( res ).to.include( 'Hi there!' );
+				expect( res ).to.include( 'My pleasure!' );
+				expect( res ).to.include( 'Bonjour!' );
+				expect( res ).to.include( 'Pas du tout!' );
 
 				done( );
 			} );
