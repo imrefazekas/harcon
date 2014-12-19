@@ -93,6 +93,20 @@ describe("harcon", function () {
 				done( );
 			} );
 		});
+
+		it('Deactivate', function(done){
+			// Sending a morning message and waiting for the proper answer
+			inflicter.deactivate('claire');
+			inflicter.ignite( '0', 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
+				console.log( err, res );
+
+				should.not.exist(err); should.exist(res);
+
+				expect( res ).to.not.include( 'Pas du tout!' );
+
+				done( );
+			} );
+		});
 	});
 
 	after(function(done){
