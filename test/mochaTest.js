@@ -23,12 +23,12 @@ describe("harcon", function () {
 		Publisher.watch( './test/components', -1 );
 
 		// Publishes an event listener function: Peter. It just sends a simple greetings in return
-		inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
+		inflicter.addict( null, 'peter', 'greet.*', function(greetings1, greetings2, callback){
 			callback(null, 'Hi there!');
 		} );
 
 		// Publishes another function listening all messages which name starts with 'greet'. It just sends a simple greetings in return
-		inflicter.addict('walter', 'greet.*', function(greetings1, greetings2, callback){
+		inflicter.addict( null, 'walter', 'greet.*', function(greetings1, greetings2, callback){
 			callback(null, 'My pleasure!');
 		} );
 

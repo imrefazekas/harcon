@@ -22,7 +22,7 @@ The library has a stunning feature list beyond basic messaging functionality.
 
 - __Smooth infiltration__: your objects / functions will possess the necessary services via injection, no need to create complex structures and compounds
 
-- __Advanced routing & listening__: qualified names, regular expressions, wildcards can be all used
+- __Advanced routing & listening__: system fragmentation, qualified names, regular expressions, wildcards, etc.
 
 __!Note__: Harcon's concept is to introduce a clean and high abstraction layer over messaging between entities. Like in case of every abstraction tool, for webapps which are simple as 1, it can be proven as a liability.
 
@@ -42,7 +42,7 @@ var Inflicter = require('Inflicter');
 var inflicter = new Inflicter( );
 
 // define a listener function listening every message withing the context "greet"
-inflicter.addict('peter', 'greet.*', function(greetings1, greetings2, callback){
+inflicter.addict( null, 'peter', 'greet.*', function(greetings1, greetings2, callback){
 	callback(null, 'Hi there!');
 } );
 
@@ -58,7 +58,7 @@ inflicter.addicts( marie );
 
 // sends a communication 'greet.everyone' with parameters and defines a callback to handle responses
 // will receive back 2 answers: 'Hi there!' and 'Bonjour!'
-inflicter.ignite( 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, res){
+inflicter.ignite( null, null, 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, res){
 	console.log( err, res );
 } );
 ```
@@ -88,15 +88,15 @@ One can define 2 type of entities:
 - simple function: when you associate a function with an event-pattern. Recommended to be used as observer, job-like, surveillance-, or interface-related asset.
 ```javascript
 // Qualified name - will answer to only this message
-inflicter.addict('hugh', 'allocate.ip', function(callback){
+inflicter.addict( null, 'hugh', 'allocate.ip', function(callback){
 	callback(null, 'Done.');
 } );
 // Wildcards - will answer anything within the context greet
-inflicter.addict('peter', 'greet.*', function(callback){
+inflicter.addict( null, 'peter', 'greet.*', function(callback){
 	callback(null, 'Done.');
 } );
 // Regular expression - will answer anything where message name start with string 'job'
-inflicter.addict('john', /job.*/, function(callback){
+inflicter.addict( null, 'john', /job.*/, function(callback){
 	callback(null, 'Done.');
 } );
 ```
@@ -150,7 +150,7 @@ Mind the async execution to keep everything in track!
 You are not forced to always send answer, in some cases a quite entities is desired. If you do not define a callback neither side of the communication, [harcon](https://github.com/imrefazekas/harcon) will consider it as a one-ways message sending.
 ```javascript
 // Qualified name - will answer to only this message
-inflicter.addict('karl', 'reserve.address', function( address ){
+inflicter.addict( null, 'karl', 'reserve.address', function( address ){
 	// Do something...
 } );
 ...
@@ -194,6 +194,77 @@ By default, [harcon](https://github.com/imrefazekas/harcon) uses 32 as length of
 ```javascript
 inflicter = new Inflicter( { /* ... */ idLength: 32 } );
 ```
+
+## Message exchange
+
+When you defined your components, the need to send and receive messages arises. In a workflow, your component might initiate a message, response one or while responding one sends other ones.
+The function-based components can perform only the latter 2 cases, cannot initiate anything by its own. This type of components are present to define services, listeners, definitely not serious business entities.
+As you saw above, the serices functions might possess a parameter before the __callback__: _ignite_
+
+```javascript
+var order = {
+	name: 'Order',
+	context: 'order',
+	newVPN: function( customer, ignite, callback ){
+		ignite( 'allocate.address', '127.0.0.1', function(err, res){
+			callback(err, res);
+		} );
+	}
+};
+...
+
+That ignite can be used to chain messages, which means to send messages during the processing of a received one. The tool to initiate sub-workflows.
+
+Of course components are not just reacting entities, they might launch new workflows as well. Object-based components possesses an injected function: _ignite_ and can be used as follows:
+
+```javascript
+var timer = {
+	name: 'Timer',
+	scheduling: function( ){
+		this.ignite( 'validate.accounts', function(err, res){
+		} );
+	}
+};
+...
+
+That ignite function is injected by the [harcon](https://github.com/imrefazekas/harcon) when you publish the components.
+
+
+## Divisions
+
+Systems can be orchastrated into divisions which is a tree structure actually. One can create divisions following the control-flow or responsibility-chain of the application.
+Every component you deploy will belong to a division. If not declared, then to the system division where all system-level components are put.
+Divisions is not just a logical grouping of components, but also an encapsulation-model. A component cannot send messages outside the own division but can send to the inner ones. This means, that system components can send to any component, but non-system components cannot reach the level of the main system or other branches of the division-tree.
+
+Divisions give you a very easy-to-use structure to orchestrate your system. Of course, you can use the [harcon](https://github.com/imrefazekas/harcon) without using divisions, the complexity of your system will show if you needed it or not.
+
+Let's define components and add them to divisions:
+
+```javascript
+// This will add John to the division 'workers'
+inflicter.addict( 'workers', 'john', /job.*/, function(callback){
+	callback(null, 'Done.');
+} );
+// This will add Claire to the division 'entrance'
+var claire = {
+	name: 'claire',
+	division: 'entrance',
+	context: 'greet',
+	simple: function (greetings1, greetings2, callback) {
+		callback(null, 'Enchanté, mon plaisir!');
+	}
+};
+```
+
+Components in a division can be called to:
+
+```javascript
+inflicter.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
+} );
+```
+
+Note: please keep in mind, that __inflicter.ignite__ can be and should be used only when you initiate a workflow from outside the harcon!
+
 
 ## Extension
 
