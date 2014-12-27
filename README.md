@@ -211,7 +211,7 @@ var order = {
 		} );
 	}
 };
-...
+```
 
 That ignite can be used to chain messages, which means to send messages during the processing of a received one. The tool to initiate sub-workflows.
 
@@ -225,7 +225,7 @@ var timer = {
 		} );
 	}
 };
-...
+```
 
 That ignite function is injected by the [harcon](https://github.com/imrefazekas/harcon) when you publish the components.
 
