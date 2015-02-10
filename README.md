@@ -158,7 +158,7 @@ A context might contain subcontexts depending on the complexity of your system.
 
 __Division__: divisions is a diffferent angle of orchestrating entities. A division is a closed "box" of entities, meaning that an entity can operate only within the division it is member of. Every entity belongs to a division. Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application. The reason why divisions are important, because it represents a responsibility unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
 
-These features are not mandatory to be used. The complexity will tell you how to orchestrate. If you only need function-based simple entities, feel free to go along with them. If you need to implement a highly structured money transaction management system in a financial environment, those features above will be urged to be defined.
+_Note_: these features are not mandatory to be used. The complexity will tell you how to orchestrate. If you only need function-based simple entities, feel free to go along with them. If you need to implement a highly structured money transaction management system in a financial environment, those features above will be urged to be defined.
 
 
 #### Chain messages
