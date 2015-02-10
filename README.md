@@ -26,7 +26,7 @@ The library has a stunning feature list beyond basic messaging functionality.
 
 __!Note__: Harcon's concept is to introduce a clean and high abstraction layer over messaging between entities. Like in case of every abstraction tool, for webapps which are simple as 1, it can be proven as a liability.
 
-__!Note__: To use in browser, a CommonJS-enabled packager has to be applied like [browserify](http://browserify.org) or [webpack](http://webpack.github.io).
+__!Note__: To use in browser, a CommonJS-enabled packager has to be applied like [browserify](http://browserify.org) or [webpack](http://webpack.github.io) or [jspm](http://jspm.io).
 
 This library starts to shine in a highly structured and distributed environment.
 
@@ -41,7 +41,7 @@ $ npm install harcon
 var Inflicter = require('Inflicter');
 var inflicter = new Inflicter( );
 
-// define a listener function listening every message withing the context "greet"
+// define a listener function listening every message related to "greet" like "greet.goodmorning" or "greet.goodday"
 inflicter.addict( null, 'peter', 'greet.*', function(greetings1, greetings2, callback){
 	callback(null, 'Hi there!');
 } );
@@ -84,6 +84,8 @@ You can resurrect a workflow if it failed and continue where it failed.
 You have to understand some details to use this lib at full scale.
 
 #### Entities
+
+In [harcon](https://github.com/imrefazekas/harcon), the communication unit is called simple entity.
 One can define 2 type of entities:
 - simple function: when you associate a function with an event-pattern. Recommended to be used as observer, job-like, surveillance-, or interface-related asset.
 ```javascript
@@ -121,8 +123,43 @@ inflicter.ignite( 'booking.ordersOfToday', function(err, res){
 	console.log( 'Finished', err, res );
 } );
 ```
-The name of every entity must be unique. Entities belong to a context as defined above. A context might be associatd to multiple entities depending on you orchestration.
-Every function within an entity will be considered as service and can be called using the 'context' + 'functionName' pair.
+
+#### Orchestration
+
+Basically, you define service functions which can be called through its name (object-based entity) or expression evaluation (function-based entity). When you orchestrate a complex system, you define object-based entities providing functions to be called.
+There are 2 orthogonal ways to orchestrate such entities in your system.
+
+_Context_: a qualified name identifying the field/purpose the entity is operating. For example an entity parsing incoming JSON document can have the context "transfer" answering communications addressed to "transfer.parse" where __parse__ is the function provided by that entity. Within a given context, multiple entitiy can answer a communication with a given name.
+
+```javascript
+var parser = {
+	name: 'JSONParser',
+	context: 'transfer',
+	parse: function( document, callback ){
+		callback( null, 'Done.' );
+	}
+};
+var observer = {
+	name: 'Observer',
+	context: 'transfer',
+	parse: function( document, callback ){
+		callback( null, null );
+	}
+};
+```
+
+Sending a message "transfer.parse" will be interpreted as follows:
+context: "transfer"
+functionSelector: "parse"
+The entities published in the context "transfer" possessin the function "parse" will be notified and their service function will be invoked.
+
+A context might contain subcontexts depending on the complexity of your system.
+
+
+_Division_: divisions is a diffferent angle of orchestrating entities. A division is a closed "box" of entities, meaning that an entity can operate only within the division it is member of. Every entity belongs to a division. Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application. The reason why divisions are important, because it represents a responsibility unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
+
+These features are not mandatory to be used. The complexity will tell you how to orchestrate. If you only need function-based simple entities, feel free to go along with them. If you need to implement a highly structured money transaction management system in a financial environment, those features above will be urged to be defined.
+
 
 #### Chain messages
 
