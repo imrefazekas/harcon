@@ -129,7 +129,7 @@ inflicter.ignite( 'booking.ordersOfToday', function(err, res){
 Basically, you define service functions which can be called through its name (object-based entity) or expression evaluation (function-based entity). When you orchestrate a complex system, you define object-based entities providing functions to be called.
 There are 2 orthogonal ways to orchestrate such entities in your system.
 
-_Context_: a qualified name identifying the field/purpose the entity is operating. For example an entity parsing incoming JSON document can have the context "transfer" answering communications addressed to "transfer.parse" where __parse__ is the function provided by that entity. Within a given context, multiple entitiy can answer a communication with a given name.
+__Context__: a qualified name identifying the field/purpose the entity is operating. For example an entity parsing incoming JSON document can have the context "transfer" answering communications addressed to "transfer.parse" where __parse__ is the function provided by that entity. Within a given context, multiple entitiy can answer a communication with a given name.
 
 ```javascript
 var parser = {
@@ -156,7 +156,7 @@ The entities published in the context "transfer" possessin the function "parse" 
 A context might contain subcontexts depending on the complexity of your system.
 
 
-_Division_: divisions is a diffferent angle of orchestrating entities. A division is a closed "box" of entities, meaning that an entity can operate only within the division it is member of. Every entity belongs to a division. Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application. The reason why divisions are important, because it represents a responsibility unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
+__Division__: divisions is a diffferent angle of orchestrating entities. A division is a closed "box" of entities, meaning that an entity can operate only within the division it is member of. Every entity belongs to a division. Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application. The reason why divisions are important, because it represents a responsibility unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
 
 These features are not mandatory to be used. The complexity will tell you how to orchestrate. If you only need function-based simple entities, feel free to go along with them. If you need to implement a highly structured money transaction management system in a financial environment, those features above will be urged to be defined.
 
