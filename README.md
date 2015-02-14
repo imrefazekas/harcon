@@ -216,6 +216,24 @@ When you create the Inflicter instance, you can pass a logger object which will 
 inflicter = new Inflicter( { logger: logger /* ... */ } );
 ```
 
+That logger instance will be used as logging facility all over the system, including internal services and entities.
+Each entity receives a function: _harconlog_ with the signature:
+```javascript
+function( err, message, obj, level ){ ... }
+```
+That function can be used anything within your entity object:
+```javascript
+var Marie = {
+	name: 'Marie',
+	context: 'greet',
+	whiny: function (greetings, callback) {
+		this.harconlog( null, 'Some logging', { data: greetings }, 'silly' );
+		callback( null, 'Pas du tout!' );
+	}
+};
+```
+That function should be used for any logging activity you need during the flow of your app.
+
 #### Unique messages
 
 Every communication exchanged possesses the following properties (not exclusively):
