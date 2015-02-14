@@ -321,6 +321,30 @@ inflicter.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?', function(er
 Note: please keep in mind, that __inflicter.ignite__ can be and should be used only when you initiate a workflow from outside the harcon!
 
 
+## Entity configuration
+
+Entities can be configured easily. The _init_ method of an entity if present, will be called at the end of its publishing process withing the [harcon](https://github.com/imrefazekas/harcon).
+The function can be used to set up DB connections or anything required for your entities.
+```javascript
+module.exports = {
+	name: 'Claire',
+	context: 'greet',
+	init: function (options, callback) {
+		console.log('Init...', options);
+		callback();
+	}
+};
+```
+The method receives a configuration object and a callback to be called when the init method finishes.
+That configuration object can be passed when an entity is published:
+```javascript
+inflicter.addicts( Claire, config );
+```
+or even before, when [harcon](https://github.com/imrefazekas/harcon) is created.
+```javascript
+inflicter = new Inflicter( { logger: logger, idLength: 32, Claire: {greetings: 'Hi!'} } );
+```
+
 ## Extension
 
 [harcon](https://github.com/imrefazekas/harcon) can be easily extended by using pure harcon components listening to system events:
@@ -371,6 +395,8 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 1.0.X : serious fixes
+- 1.0.0 : first stable release
 - 0.9.0 : small redesign to allow to use in a Browserify/Webpack environment
 - 0.8.0 : automated (re/un)deployment added, rewritten event coordination subsystem
 - 0.6.0 : delivery fixes
