@@ -41,6 +41,15 @@ describe("harcon", function () {
 			setTimeout( function(){ console.log( inflicter.listeners() ); done(); }, 1500 );
 		});
 
+		it('Simple greetings by name is', function(done){
+			// Sending a greetings message with 2 parameters and waiting for the proper answer
+			inflicter.ignite( '0', '', 'marie.simple', 'whatsup?', 'how do you do?', function(err, res){
+				should.not.exist(err); should.exist(res);
+				expect( res ).to.include( 'Bonjour!' );
+				done( );
+			} );
+		});
+
 		it('Simple greetings is', function(done){
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
 			inflicter.ignite( '0', '', 'greet.simple', 'whatsup?', 'how do you do?', function(err, res){
