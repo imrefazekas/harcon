@@ -1,4 +1,4 @@
-Harcon - Messaging/Service Bus for the harmonic convergence of node-based enterprise entities or in-browser communication between web components
+Harcon - Microservice solution for the harmonic convergence of node-based enterprise entities or in-browser communication between web components. It serves as a messaging/service bus allowing your to orchestrate your entities.
 
 [![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
 
@@ -9,6 +9,7 @@ Harcon - Messaging/Service Bus for the harmonic convergence of node-based enterp
 The library has a stunning feature list beyond basic messaging functionality.
 
 - __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [ZeroMQ](http://zeromq.org), [XMPP](http://xmpp.org), etc...
+For zeromq plugin, please check this: [harcon-zero](https://github.com/imrefazekas/harcon-zero)
 
 - __Tracking__: you can monitor every message delivered (request or response) by only few lines of code
 
