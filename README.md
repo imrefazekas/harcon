@@ -1,15 +1,17 @@
-Harcon - Microservice solution for the harmonic convergence of node-based enterprise entities or in-browser communication between web components. It serves as a messaging/service bus allowing your to orchestrate your entities.
+Harcon - Proven and reliable microservice solution for the harmonic convergence of JS entities.
+Scalable from in-browser web components till highly structured node-based enterprise components of real-time systems.
 
 [![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
 
 
 ========
-[harcon](https://github.com/imrefazekas/harcon) is a enterprise-level service bus for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem. It allows you to design and implement complex workflows where context and causality of messages are important.
+[harcon](https://github.com/imrefazekas/harcon) is a service bus for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.
+It allows you to design and implement complex workflows where context and causality of messages are important.
 
 The library has a stunning feature list beyond basic messaging functionality.
 
 - __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [ZeroMQ](http://zeromq.org), [XMPP](http://xmpp.org), etc...
-For zeromq plugin, please check this: [harcon-zero](https://github.com/imrefazekas/harcon-zero)
+For zeromq integration, please check this: [harcon-zero](https://github.com/imrefazekas/harcon-zero)
 
 - __Tracking__: you can monitor every message delivered (request or response) by only few lines of code
 
@@ -99,8 +101,15 @@ inflicter.addict( null, 'peter', 'greet.*', function(callback){
 	callback(null, 'Done.');
 } );
 // Regular expression - will answer anything where message name start with string 'job'
-inflicter.addict( null, 'john', /job.*/, function(callback){
+inflicter.addict( null, 'john', /job.*/, function( partner, callback){
 	callback(null, 'Done.');
+} );
+...
+inflicter.ignite( 'job.order', {name: 'Stephen', customerID:123}, function(err, res){
+	console.log( 'Finished.', err, res );
+} );
+inflicter.ignite( 'john.job', {name: 'Stephen', customerID:123}, function(err, res){
+	console.log( 'Finished.', err, res );
 } );
 ```
 
@@ -108,7 +117,7 @@ inflicter.addict( null, 'john', /job.*/, function(callback){
 ```javascript
 var bookKeeper = {
 	name: 'BookKeeper',
-	context: 'booking',
+	...
 	newOrder: function( customer, callback ){
 		callback( null, 'Done.' );
 	},
@@ -117,13 +126,16 @@ var bookKeeper = {
 	}
 };
 ...
-inflicter.ignite( 'booking.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.ignite( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished', err, res );
 } );
-inflicter.ignite( 'booking.ordersOfToday', function(err, res){
-	console.log( 'Finished', err, res );
+inflicter.ignite( 'BookKeeper.ordersOfToday', function(err, res){
+	console.log( 'Finished.', err, res );
 } );
 ```
+
+Both component types must possess a unique name serving as the simplest way to send a message to. Or just simple using the regexp addressing any service function matching the pattern...
+
 
 #### Orchestration
 
