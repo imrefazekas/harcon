@@ -105,10 +105,10 @@ inflicter.addict( null, 'john', /job.*/, function( partner, callback){
 	callback(null, 'Done.');
 } );
 ...
-inflicter.ignite( 'job.order', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.ignite( null, null, 'job.order', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished.', err, res );
 } );
-inflicter.ignite( 'john.job', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.ignite( null, null, 'john.job', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished.', err, res );
 } );
 ```
@@ -126,15 +126,75 @@ var bookKeeper = {
 	}
 };
 ...
-inflicter.ignite( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.ignite( null, null, 'BookKeeper.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished', err, res );
 } );
-inflicter.ignite( 'BookKeeper.ordersOfToday', function(err, res){
+inflicter.ignite( null, null, 'BookKeeper.ordersOfToday', function(err, res){
 	console.log( 'Finished.', err, res );
 } );
 ```
 
 Both component types must possess a unique name serving as the simplest way to send a message to. Or just simple using the regexp addressing any service function matching the pattern...
+
+
+#### Responses
+
+By default, [harcon](https://github.com/imrefazekas/harcon) returns and array of response objects returned by the entities addressed by a sent message.
+
+Let's have 2 simple entities:
+
+```javascript
+inflicter.addict( null, 'peter', 'greet.*', function(callback){
+	callback(null, 'Hi.');
+} );
+inflicter.addict( null, 'camille', 'greet.*', function(callback){
+	callback(null, 'Hello.');
+} );
+
+inflicter.ignite( null, null, 'greet.simple', function(err, res){
+	console.error( err, res );
+} );
+```
+
+Returns with the following:
+
+	[ 'Hi.', 'Hello.' ]
+
+(Note: for consistency reason, you got an array even if one entity.)
+
+In some cases, you might find useful to know which answer comes from which entity. If you add a single parameter to the harcon:
+
+	var inflicter = new Inflicter( { namedResponses: true } );
+
+The returned object will look like this:
+
+	{ peter: 'Hi.', camille: 'Hello.' }
+
+Your callback might receive an error object in unwanted situations. The default transport channel of harcon will stop the message processing at the first error occurring as follows:
+
+```javascript
+inflicter.addict( null, 'peter', 'greet.*', function(callback){
+	callback( new Error('Stay away, please.') );
+} );
+inflicter.addict( null, 'camille', 'greet.*', function(callback){
+	callback( new Error('Do not bother me.') );
+} );
+
+inflicter.ignite( null, null, 'greet.simple', function(err, res){
+	console.error( err, res );
+} );
+```
+
+will result the following on your console:
+
+	[Error: Stay away, please.] null
+
+The default transport layer is designed for development purposes or in-browser usage. In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [ZeroMQ](http://zeromq.org).
+
+For [ZeroMQ](http://zeromq.org), you can find an "official" plugin here: [harcon-zero](https://github.com/imrefazekas/harcon-zero)
+
+By using different transport layer, all occurred error messages will be delegated.
+In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
 
 
 #### Orchestration
@@ -188,7 +248,7 @@ var order = {
 	}
 };
 ...
-inflicter.ignite( 'order.newVPN', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.ignite( null, null, 'order.newVPN', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished', err, res );
 } );
 ```
@@ -204,7 +264,7 @@ inflicter.addict( null, 'karl', 'reserve.address', function( address ){
 	// Do something...
 } );
 ...
-inflicter.ignite( 'reserve.address', '127.0.0.1' );
+inflicter.ignite( null, null, 'reserve.address', '127.0.0.1' );
 ```
 
 #### Entity initialization
