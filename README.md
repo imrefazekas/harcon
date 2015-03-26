@@ -61,7 +61,7 @@ inflicter.addicts( marie );
 
 // sends a communication 'greet.everyone' with parameters and defines a callback to handle responses
 // will receive back 2 answers: 'Hi there!' and 'Bonjour!'
-inflicter.ignite( null, null, 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, res){
+inflicter.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, res){
 	console.log( err, res );
 } );
 ```
@@ -105,10 +105,10 @@ inflicter.addict( null, 'john', /job.*/, function( partner, callback){
 	callback(null, 'Done.');
 } );
 ...
-inflicter.ignite( null, null, 'job.order', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.simpleIgnite( 'job.order', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished.', err, res );
 } );
-inflicter.ignite( null, null, 'john.job', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.simpleIgnite( 'john.job', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished.', err, res );
 } );
 ```
@@ -126,10 +126,10 @@ var bookKeeper = {
 	}
 };
 ...
-inflicter.ignite( null, null, 'BookKeeper.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.simpleIgnite( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished', err, res );
 } );
-inflicter.ignite( null, null, 'BookKeeper.ordersOfToday', function(err, res){
+inflicter.simpleIgnite( 'BookKeeper.ordersOfToday', function(err, res){
 	console.log( 'Finished.', err, res );
 } );
 ```
@@ -151,7 +151,7 @@ inflicter.addict( null, 'camille', 'greet.*', function(callback){
 	callback(null, 'Hello.');
 } );
 
-inflicter.ignite( null, null, 'greet.simple', function(err, res){
+inflicter.simpleIgnite( 'greet.simple', function(err, res){
 	console.error( err, res );
 } );
 ```
@@ -180,7 +180,7 @@ inflicter.addict( null, 'camille', 'greet.*', function(callback){
 	callback( new Error('Do not bother me.') );
 } );
 
-inflicter.ignite( null, null, 'greet.simple', function(err, res){
+inflicter.simpleIgnite( 'greet.simple', function(err, res){
 	console.error( err, res );
 } );
 ```
@@ -248,12 +248,13 @@ var order = {
 	}
 };
 ...
-inflicter.ignite( null, null, 'order.newVPN', {name: 'Stephen', customerID:123}, function(err, res){
+inflicter.simpleIgnite( 'order.newVPN', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished', err, res );
 } );
 ```
-That will initiate a small workflow. __inflicter.ignite__ send a message to entity Order who will send within the same workflow to the Allocator. When it answeres, then the message of the beginning will be answered. [harcon](https://github.com/imrefazekas/harcon) will know if you initiate a message within the processing of another one and considers it as part of the ongoing workflow and tracks it.
+That will initiate a small workflow. __inflicter.simpleIgnite__ sends a message to entity Order who will send within the same workflow to the Allocator. When it answeres, then the message of the beginning will be answered. [harcon](https://github.com/imrefazekas/harcon) will know if you initiate a message within the processing of another one and considers it as part of the ongoing workflow and tracks it.
 Mind the async execution to keep everything in track!
+
 
 #### Call back or not?
 
@@ -264,7 +265,7 @@ inflicter.addict( null, 'karl', 'reserve.address', function( address ){
 	// Do something...
 } );
 ...
-inflicter.ignite( null, null, 'reserve.address', '127.0.0.1' );
+inflicter.simpleIgnite( 'reserve.address', '127.0.0.1' );
 ```
 
 #### Entity initialization
@@ -392,6 +393,16 @@ inflicter.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?', function(er
 ```
 
 Note: please keep in mind, that __inflicter.ignite__ can be and should be used only when you initiate a workflow from outside the harcon!
+
+If you inititate a communication through the inflicter instance, it means, that you wants to drop in a message "from outside" which could mean an integration with an external system or just kick off a workflow.
+There are 2 methods to be called:
+
+ignite and simpleIgnite
+
+The different between them is the parameter list. The later does not require to specify external messageId or division, the prior one does as you can see in the example just above.
+
+External ID is very useful, when the workflow is initiated by some external event possessing an id which must be kept for further logging or tracking or just because a communication harmonization across the complete company.
+
 
 
 ## Entity configuration
