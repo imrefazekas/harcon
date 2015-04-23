@@ -41,7 +41,7 @@ $ npm install harcon
 
 ## Quick setup
 ```javascript
-var Inflicter = require('Inflicter');
+var Inflicter = require('harcon');
 var inflicter = new Inflicter( );
 
 // define a listener function listening every message related to "greet" like "greet.goodmorning" or "greet.goodday"
