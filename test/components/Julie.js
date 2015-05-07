@@ -7,5 +7,8 @@ module.exports = {
 		ignite( 'greet.gentle', 'It is morning!', 'Time to wake up!', function(err, res){
 			callback(err, res);
 		} );
+	},
+	dormir: function( ignite, callback ){
+		callback( null, 'Non, Mais non!' );
 	}
 };

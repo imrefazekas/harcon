@@ -197,18 +197,43 @@ By using a real transport layer, all occurred error messages will be delegated. 
 #### Orchestration
 
 You have seen how to call service functions using qualified names and regular expressions (function-based entity).
-If a much structured system must be orchestrated, a set of finer toolset is at you disposal: contexts and divisions, representing different abstraction levels.
+If a much structured system must be orchestrated, a set of finer toolset is at you disposal: __contexts and divisions__, representing different abstraction levels.
 
-__Context__: is a named set of object-based entities and contexts. a qualified name identifying the field/purpose the entity is operating. For example an entity parsing incoming JSON document can have the context "transfer" answering communications addressed to "transfer.parse" where __parse__ is the function provided by that entity. Within a given context, multiple entitiy can answer a communication with a given name.
+__Context__: is a named set of object-based entities and contexts. a qualified name identifying the field/purpose the entity is operating. To refine the structure of your service.
+For example you can have multiple entities providing service like _parse_ but in different contextes like: _"xml"_ or _"json"_.
+You can structure your entities like the following:
 
 ```javascript
 var parser = {
 	name: 'JSONParser',
-	context: 'transfer',
+	context: 'transfer.json',
 	parse: function( document, callback ){
 		callback( null, 'Done.' );
 	}
 };
+var observer = {
+	name: 'XMLParser',
+	context: 'transfer.xml',
+	parse: function( document, callback ){
+		callback( null, null );
+	}
+};
+```
+
+In this case, such messages can be sent:
+
+```javascript
+harcon.simpleIgnite( 'transfer.json.parse', function(err, res){ ... } );
+or
+harcon.simpleIgnite( 'transfer.xml.parse', function(err, res){ ... } );
+or
+harcon.simpleIgnite( 'transfer.'+document.type+'.parse', function(err, res){ ... } );
+```
+
+addressing directly to one of those entities, depending the type of the document you want to parse.
+Let's define the following entity:
+
+```javascript
 var observer = {
 	name: 'Observer',
 	context: 'transfer',
@@ -218,22 +243,32 @@ var observer = {
 };
 ```
 
-Sending a message "transfer.parse" will be interpreted as follows:
-context: "transfer"
-functionSelector: "parse"
-The entities published in the context "transfer" possessin the function "parse" will be notified and their service function will be invoked.
+Such entity will also receive those message and might do logging or measuring or perform preliminary actions.
+In short form: you can address multiple entities with a single message.
+The matching algorithm is simple: spliting the title by _'.'_ matching with the context you specify and fails only if the compared strings are not equals.
+This means, that:
 
-A context might contain subcontexts depending on the complexity of your system.
+__The title 'transfer.xml.parse' will target the XMLParser and Observer entities.__
+
+and
+
+__The title 'transfer.parse' will target the XMLParser, JSONParser and Observer entities.__
+
+Contexts are very good way to refine your structures and entities and express overlapping functional behaviors.
 
 
-__Division__: divisions is a diffferent angle of orchestrating entities. A division is a closed "box" of entities, meaning that an entity can operate only within the division it is member of. Every entity belongs to a division. Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application. The reason why divisions are important, because it represents a responsibility unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
+__Division__: divisions is a diffferent angle on the plane of orchestration. A _division_ is a closed "box" of entities, meaning that an entity can operate only within the division it is  amember of.
+In fact, every entity belongs to a division defined explicitly or implicitly by the harcon.
+Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application.
+The reason why divisions are important, because it represents a responsibility and/or legal unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
 
-_Note_: these features are not mandatory to be used. The complexity will tell you how to orchestrate. If you only need function-based simple entities, feel free to go along with them. If you need to implement a highly structured money transaction management system in a financial environment, those features above will be urged to be defined.
+_Note_: contexts and divisions are not mandatory to be used. The complexity will tell you how to orchestrate your app. It might happen, that simple function-based named entities are fitting your need. Feel free to act on your own, there is no pattern to follow.
+
 
 
 #### Chain messages
 
-To chain messages, define the next point in the workflow you have to add another parameter to your service function:
+If you work with workflows, the sequence/order of your messages will get an importance. To chain messages, define the next point in the workflow you have to add another parameter to your service function:
 ```javascript
 var order = {
 	name: 'Order',
@@ -245,11 +280,11 @@ var order = {
 	}
 };
 ...
-inflicter.simpleIgnite( 'order.newVPN', {name: 'Stephen', customerID:123}, function(err, res){
+harcon.simpleIgnite( 'order.newVPN', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished', err, res );
 } );
 ```
-That will initiate a small workflow. __inflicter.simpleIgnite__ sends a message to entity Order who will send within the same workflow to the Allocator. When it answeres, then the message of the beginning will be answered. [harcon](https://github.com/imrefazekas/harcon) will know if you initiate a message within the processing of another one and considers it as part of the ongoing workflow and tracks it.
+That will initiate a small workflow. __harcon.simpleIgnite__ sends a message to entity Order who will send within the same workflow to the Allocator. When it answeres, then the message of the beginning will be answered. [harcon](https://github.com/imrefazekas/harcon) will know if you initiate a message within the processing of another one and considers it as part of the ongoing workflow and tracks it.
 Mind the async execution to keep everything in track!
 
 
@@ -258,18 +293,18 @@ Mind the async execution to keep everything in track!
 You are not forced to always send answer, in some cases a quite entities is desired. If you do not define a callback neither side of the communication, [harcon](https://github.com/imrefazekas/harcon) will consider it as a one-ways message sending.
 ```javascript
 // Qualified name - will answer to only this message
-inflicter.addict( null, 'karl', 'reserve.address', function( address ){
+harcon.addict( null, 'karl', 'reserve.address', function( address ){
 	// Do something...
 } );
 ...
-inflicter.simpleIgnite( 'reserve.address', '127.0.0.1' );
+harcon.simpleIgnite( 'reserve.address', '127.0.0.1' );
 ```
 
 #### Entity initialization
 
-The need to pass contextual parameters to entities might rise. The options object passed to the constructure of Inflicter allows you to specify parameters for entities which will be passed while the init method defined in the entity is called.
+The need to pass contextual parameters to entities might rise. The options object passed to the constructure of Harcon allows you to specify parameters for entities which will be passed while the init method defined in the entity is called.
 ```javascript
-inflicter = new Inflicter( { /* ... */ marie: {greetings: 'Hi!'} } );
+harcon = new Harcon( { /* ... */ marie: {greetings: 'Hi!'} } );
 var marie = {
 	name: 'marie',
 	context: 'test',
@@ -282,9 +317,9 @@ var marie = {
 
 #### Logging
 
-When you create the Inflicter instance, you can pass a logger object which will be respected and used to do loggings. If not set, [harcon](https://github.com/imrefazekas/harcon) will log everything to the console. So in production, setting up a logging facility ( like [winston](https://github.com/flatiron/winston) or [bunyan](https://github.com/trentm/node-bunyan) ) is strongly adviced.
+When you create the Harcon instance, you can pass a logger object which will be respected and used to do loggings. If not set, [harcon](https://github.com/imrefazekas/harcon) will log everything to the console. So in production, setting up a logging facility ( like [winston](https://github.com/flatiron/winston) or [bunyan](https://github.com/trentm/node-bunyan) ) is strongly adviced.
 ```javascript
-inflicter = new Inflicter( { logger: logger /* ... */ } );
+harcon = new Harcon( { logger: logger /* ... */ } );
 ```
 
 That logger instance will be used as logging facility all over the system, including internal services and entities.
@@ -305,6 +340,7 @@ var Marie = {
 ```
 That function should be used for any logging activity you need during the flow of your app.
 
+
 #### Unique messages
 
 Every communication exchanged possesses the following properties (not exclusively):
@@ -316,9 +352,9 @@ Every communication exchanged possesses the following properties (not exclusivel
 
 Any time you sends a message or receives an answer, such objects are bypassing through the harcon system which logs and tracks all of them.
 
-By default, [harcon](https://github.com/imrefazekas/harcon) uses 32 as length of the IDs which are unique over time and among computer nodes. You can override this default when initiating Inflicter
+By default, [harcon](https://github.com/imrefazekas/harcon) uses 32 as length of the IDs which are unique over time and among computer nodes. You can override this default when initiating Harcon
 ```javascript
-inflicter = new Inflicter( { /* ... */ idLength: 32 } );
+harcon = new Harcon( { /* ... */ idLength: 32 } );
 ```
 
 ## Message exchange
@@ -368,7 +404,7 @@ Let's define components and add them to divisions:
 
 ```javascript
 // This will add John to the division 'workers'
-inflicter.addict( 'workers', 'john', /job.*/, function(callback){
+harcon.addict( 'workers', 'john', /job.*/, function(callback){
 	callback(null, 'Done.');
 } );
 // This will add Claire to the division 'entrance'
@@ -385,13 +421,13 @@ var claire = {
 Components in a division can be called to:
 
 ```javascript
-inflicter.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
+harcon.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
 } );
 ```
 
-Note: please keep in mind, that __inflicter.ignite__ can be and should be used only when you initiate a workflow from outside the harcon!
+Note: please keep in mind, that __harcon.ignite__ can be and should be used only when you initiate a workflow from outside the harcon!
 
-If you inititate a communication through the inflicter instance, it means, that you wants to drop in a message "from outside" which could mean an integration with an external system or just kick off a workflow.
+If you inititate a communication through the harcon instance, it means, that you wants to drop in a message "from outside" which could mean an integration with an external system or just kick off a workflow.
 There are 2 methods to be called:
 
 ignite and simpleIgnite
@@ -400,7 +436,11 @@ The different between them is the parameter list. The later does not require to 
 
 External ID is very useful, when the workflow is initiated by some external event possessing an id which must be kept for further logging or tracking or just because a communication harmonization across the complete company.
 
+By default, [harcon](https://github.com/imrefazekas/harcon) presumes to have one division per node following the concept of microservices. Without eliminating this behavior, harcon will reject every publishing activity where the given entity has deviating division name.
 
+```javascript
+harcon = new Harcon( { divisionDeviation: true, ... } );
+```
 
 ## Entity configuration
 
@@ -419,11 +459,11 @@ module.exports = {
 The method receives a configuration object and a callback to be called when the init method finishes.
 That configuration object can be passed when an entity is published:
 ```javascript
-inflicter.addicts( Claire, config );
+harcon.addicts( Claire, config );
 ```
 or even before, when [harcon](https://github.com/imrefazekas/harcon) is created.
 ```javascript
-inflicter = new Inflicter( { logger: logger, idLength: 32, Claire: {greetings: 'Hi!'} } );
+harcon = new Harcon( { logger: logger, idLength: 32, Claire: {greetings: 'Hi!'} } );
 ```
 
 ## Extension
@@ -432,7 +472,7 @@ inflicter = new Inflicter( { logger: logger, idLength: 32, Claire: {greetings: '
 ```javascript
 var extension = {
 	name: 'As you design it',
-	context: inflicter.name,
+	context: harcon.name,
 	castOf: function( name, firestarter ){
 	},
 	affiliate: function( firestarter ){
@@ -440,9 +480,9 @@ var extension = {
 	close: function(){
 	}
 }
-inflicter.addicts( extension );
+harcon.addicts( extension );
 ```
-In the current version, the inflicter instance you are using will send to your components events about system closing, entity publishing and revoking. For a working example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
+In the current version, the harcon instance you are using will send to your components events about system closing, entity publishing and revoking. For a working example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
 
 
 ## License

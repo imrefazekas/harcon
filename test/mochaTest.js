@@ -3,7 +3,7 @@ var should = chai.should();
 var expect = chai.expect;
 
 // Requires harcon. In your app the form 'require('harcon');' should be used
-var Inflicter = require('../lib/Inflicter');
+var Harcon = require('../lib/Inflicter');
 
 var Logger = require('./WinstonLogger');
 
@@ -17,7 +17,7 @@ describe("harcon", function () {
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
-		inflicter = new Inflicter( { logger: logger, idLength: 32, marie: {greetings: 'Hi!'}, divisionDeviation: true } );
+		inflicter = new Harcon( { logger: logger, idLength: 32, Marie: {greetings: 'Hi!'}, divisionDeviation: true } );
 
 		inflicter.addicts( Publisher );
 		Publisher.watch( './test/components', -1 );
@@ -43,7 +43,7 @@ describe("harcon", function () {
 
 		it('Simple greetings by name is', function(done){
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
-			inflicter.ignite( '0', '', 'marie.simple', 'whatsup?', 'how do you do?', function(err, res){
+			inflicter.ignite( '0', '', 'Marie.simple', 'whatsup?', 'how do you do?', function(err, res){
 				should.not.exist(err); should.exist(res);
 				expect( res ).to.include( 'Bonjour!' );
 				done( );
@@ -71,6 +71,26 @@ describe("harcon", function () {
 
 				expect(err).to.be.a('null');
 				expect(res[0]).to.eql( [ 'Hi there!', 'My pleasure!' ] );
+				done( );
+			} );
+		});
+
+		it('General dormir', function(done){
+			inflicter.ignite( '0', '', 'morning.dormir', function(err, res){
+				//console.log( err, res );
+
+				expect(err).to.be.a('null');
+				expect(res).to.eql( [ 'Non, non, non!', 'Non, Mais non!' ] );
+				done( );
+			} );
+		});
+
+		it('Specific dormir', function(done){
+			inflicter.ignite( '0', '', 'morning.girls.dormir', function(err, res){
+				//console.log( err, res );
+
+				expect(err).to.be.a('null');
+				expect(res).to.eql( [ 'Non, non, non!', 'Non, Mais non!' ] );
 				done( );
 			} );
 		});
@@ -105,7 +125,7 @@ describe("harcon", function () {
 
 		it('Deactivate', function(done){
 			// Sending a morning message and waiting for the proper answer
-			inflicter.deactivate('claire');
+			inflicter.deactivate('Claire');
 			inflicter.ignite( '0', 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
 				//console.log( err, res );
 
