@@ -84,32 +84,32 @@ _In a simple way, you define entities and the communications among them then pub
 
 #### Entities
 
-In [harcon](https://github.com/imrefazekas/harcon), the communication unit is simply called _entity_.
+In [harcon](https://github.com/imrefazekas/harcon), the communication unit is simply called __entity__.
 One can define 2 type of entities:
 - simple function: when you associate a function with an event-pattern. Recommended to be used as observer, job-like, surveillance-, or interface-related asset.
 ```javascript
 // Qualified name - will answer to only this message
-inflicter.addict( null, 'hugh', 'allocate.ip', function(callback){
+harcon.addict( null, 'hugh', 'allocate.ip', function(callback){
 	callback(null, 'Done.');
 } );
 // Wildcards - will answer anything within the context greet
-inflicter.addict( null, 'peter', 'greet.*', function(callback){
+harcon.addict( null, 'peter', 'greet.*', function(callback){
 	callback(null, 'Done.');
 } );
 // Regular expression - will answer anything where message name start with string 'job'
-inflicter.addict( null, 'john', /job.*/, function( partner, callback){
+harcon.addict( null, 'john', /job.*/, function( partner, callback){
 	callback(null, 'Done.');
 } );
 ...
-inflicter.simpleIgnite( 'job.order', {name: 'Stephen', customerID:123}, function(err, res){
+harcon.simpleIgnite( 'job.order', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished.', err, res );
 } );
-inflicter.simpleIgnite( 'john.job', {name: 'Stephen', customerID:123}, function(err, res){
+harcon.simpleIgnite( 'john.job', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished.', err, res );
 } );
 ```
 
-- objects: service object enclosing service functions as a unique and complete context. Recommended to be used as business entities.
+- objects: plain object enclosing functions and a unique name. This is the recommended way to define entities.
 ```javascript
 var bookKeeper = {
 	name: 'BookKeeper',
@@ -122,32 +122,32 @@ var bookKeeper = {
 	}
 };
 ...
-inflicter.simpleIgnite( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
+harcon.simpleIgnite( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123}, function(err, res){
 	console.log( 'Finished', err, res );
 } );
-inflicter.simpleIgnite( 'BookKeeper.ordersOfToday', function(err, res){
+harcon.simpleIgnite( 'BookKeeper.ordersOfToday', function(err, res){
 	console.log( 'Finished.', err, res );
 } );
 ```
 
-Both component types must possess a unique name serving as the simplest way to send a message to. Or just simple using the regexp addressing any service function matching the pattern...
+The simplest but not the only way to address is to quality entities with their names.
 
 
 #### Responses
 
-By default, [harcon](https://github.com/imrefazekas/harcon) returns and array of response objects returned by the entities addressed by a sent message.
+By default, [harcon](https://github.com/imrefazekas/harcon) returns and array of response objects returned by the entities addressed by a message sent.
 
 Let's have 2 simple entities:
 
 ```javascript
-inflicter.addict( null, 'peter', 'greet.*', function(callback){
+harcon.addict( null, 'peter', 'greet.*', function(callback){
 	callback(null, 'Hi.');
 } );
-inflicter.addict( null, 'camille', 'greet.*', function(callback){
+harcon.addict( null, 'camille', 'greet.*', function(callback){
 	callback(null, 'Hello.');
 } );
 
-inflicter.simpleIgnite( 'greet.simple', function(err, res){
+harcon.simpleIgnite( 'greet.simple', function(err, res){
 	console.error( err, res );
 } );
 ```
@@ -156,27 +156,30 @@ Returns with the following:
 
 	[ 'Hi.', 'Hello.' ]
 
-(Note: for consistency reason, you got an array even if one entity.)
+(Note: for consistency reason, you got an array even if one entity has been addressed.)
 
 In some cases, you might find useful to know which answer comes from which entity. If you add a single parameter to the harcon:
 
-	var inflicter = new Inflicter( { namedResponses: true } );
+	var harcon = new Harcon( { namedResponses: true } );
 
 The returned object will look like this:
 
 	{ peter: 'Hi.', camille: 'Hello.' }
 
+
+#### Error responses
+
 Your callback might receive an error object in unwanted situations. The default transport channel of harcon will stop the message processing at the first error occurring as follows:
 
 ```javascript
-inflicter.addict( null, 'peter', 'greet.*', function(callback){
+harcon.addict( null, 'peter', 'greet.*', function(callback){
 	callback( new Error('Stay away, please.') );
 } );
-inflicter.addict( null, 'camille', 'greet.*', function(callback){
+harcon.addict( null, 'camille', 'greet.*', function(callback){
 	callback( new Error('Do not bother me.') );
 } );
 
-inflicter.simpleIgnite( 'greet.simple', function(err, res){
+harcon.simpleIgnite( 'greet.simple', function(err, res){
 	console.error( err, res );
 } );
 ```
@@ -185,20 +188,18 @@ will result the following on your console:
 
 	[Error: Stay away, please.] null
 
-The default transport layer is designed for development purposes or in-browser usage. In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [ZeroMQ](http://zeromq.org).
+The default transport layer is designed for development purposes or in-browser usage only.
+In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [ZeroMQ](http://zeromq.org) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp) and [harcon-zero](https://github.com/imrefazekas/harcon-zero).
 
-For [ZeroMQ](http://zeromq.org), you can find an "official" plugin here: [harcon-zero](https://github.com/imrefazekas/harcon-zero)
-
-By using different transport layer, all occurred error messages will be delegated.
-In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
+By using a real transport layer, all occurred error messages will be delegated. In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
 
 
 #### Orchestration
 
-Basically, you define service functions which can be called through its name (object-based entity) or expression evaluation (function-based entity). When you orchestrate a complex system, you define object-based entities providing functions to be called.
-There are 2 orthogonal ways to orchestrate such entities in your system.
+You have seen how to call service functions using qualified names and regular expressions (function-based entity).
+If a much structured system must be orchestrated, a set of finer toolset is at you disposal: contexts and divisions, representing different abstraction levels.
 
-__Context__: a qualified name identifying the field/purpose the entity is operating. For example an entity parsing incoming JSON document can have the context "transfer" answering communications addressed to "transfer.parse" where __parse__ is the function provided by that entity. Within a given context, multiple entitiy can answer a communication with a given name.
+__Context__: is a named set of object-based entities and contexts. a qualified name identifying the field/purpose the entity is operating. For example an entity parsing incoming JSON document can have the context "transfer" answering communications addressed to "transfer.parse" where __parse__ is the function provided by that entity. Within a given context, multiple entitiy can answer a communication with a given name.
 
 ```javascript
 var parser = {

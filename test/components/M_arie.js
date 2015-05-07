@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'marie',
+	name: 'Marie',
 	context: 'greet',
 	init: function (options) {
 		console.log('Init...', options);

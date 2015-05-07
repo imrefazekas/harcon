@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'julie',
+	name: 'Julie',
 	context: 'morning',
 	// When Julie is woken up, send a gentle message to everyone listening to such messages...  Walter and Pater namely
 	wakeup: function( ignite, callback ){

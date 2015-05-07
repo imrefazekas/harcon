@@ -1,5 +1,5 @@
 module.exports = {
-	name: 'claire',
+	name: 'Claire',
 	division: 'click',
 	context: 'greet',
 	init: function (options) {

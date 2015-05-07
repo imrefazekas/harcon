@@ -53,7 +53,7 @@ describe("harcon", function () {
 		it('Simple greetings is', function(done){
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
 			inflicter.ignite( '0', '', 'greet.simple', 'whatsup?', 'how do you do?', function(err, res){
-				console.log( err, res );
+				//console.log( err, res );
 				should.not.exist(err); should.exist(res);
 
 				expect( res ).to.include( 'Hi there!' );
@@ -67,7 +67,7 @@ describe("harcon", function () {
 		it('Morning greetings is', function(done){
 			// Sending a morning message and waiting for the proper answer
 			inflicter.ignite( '0', '', 'morning.wakeup', function(err, res){
-				console.log( err, res );
+				//console.log( err, res );
 
 				expect(err).to.be.a('null');
 				expect(res[0]).to.eql( [ 'Hi there!', 'My pleasure!' ] );
@@ -78,7 +78,7 @@ describe("harcon", function () {
 		it('No answer', function(done){
 			// Sending a morning message and waiting for the proper answer
 			inflicter.ignite( '0', '', 'cave.echo', function(err, res){
-				console.log( err, res );
+				//console.log( err, res );
 
 				expect(err).to.be.an.instanceof( Error );
 				expect(res).to.be.a('null');
@@ -90,7 +90,7 @@ describe("harcon", function () {
 		it('Division test', function(done){
 			// Sending a morning message and waiting for the proper answer
 			inflicter.ignite( '0', 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
-				console.log( err, res );
+				//console.log( err, res );
 
 				should.not.exist(err); should.exist(res);
 
@@ -107,7 +107,7 @@ describe("harcon", function () {
 			// Sending a morning message and waiting for the proper answer
 			inflicter.deactivate('claire');
 			inflicter.ignite( '0', 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
-				console.log( err, res );
+				//console.log( err, res );
 
 				should.not.exist(err); should.exist(res);
 
