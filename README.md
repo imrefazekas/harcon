@@ -1,7 +1,8 @@
 Harcon - Proven and reliable microservice solution for the harmonic convergence of JS entities.
 Scalable from in-browser web components till highly structured node-based enterprise components of real-time systems.
 
-Need help? Join me on [Gitter](https://gitter.im/imrefazekas/harcon) and level your problem with me freely. :)
+Need help? Join me on
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imrefazekas/harcon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) and level your problem with me freely. :)
 
 [![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
 
