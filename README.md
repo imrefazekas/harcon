@@ -525,6 +525,8 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 1.2.X : plugin architecture added
+- 1.1.X : division concept added
 - 1.0.X : serious fixes
 - 1.0.0 : first stable release
 - 0.9.0 : small redesign to allow to use in a Browserify/Webpack environment
