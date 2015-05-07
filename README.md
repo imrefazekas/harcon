@@ -5,13 +5,14 @@ Scalable from in-browser web components till highly structured node-based enterp
 
 
 ========
-[harcon](https://github.com/imrefazekas/harcon) is a service bus for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.
-It allows you to design and implement complex workflows where context and causality of messages are important.
+[harcon](https://github.com/imrefazekas/harcon) is a microservice solution for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.
+It allows you to design and implement complex workflows and microservices where context and causality of messages are important.
 
 The library has a stunning feature list beyond basic messaging functionality.
 
 - __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [ZeroMQ](http://zeromq.org), [XMPP](http://xmpp.org), etc...
 For zeromq integration, please check this: [harcon-zero](https://github.com/imrefazekas/harcon-zero)
+For amqp integration, please check this: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp)
 
 - __Tracking__: you can monitor every message delivered (request or response) by only few lines of code
 
@@ -41,11 +42,11 @@ $ npm install harcon
 
 ## Quick setup
 ```javascript
-var Inflicter = require('harcon');
-var inflicter = new Inflicter( );
+var Harcon = require('harcon');
+var harcon = new Harcon( );
 
 // define a listener function listening every message related to "greet" like "greet.goodmorning" or "greet.goodday"
-inflicter.addict( null, 'peter', 'greet.*', function(greetings1, greetings2, callback){
+harcon.addict( null, 'peter', 'greet.*', function(greetings1, greetings2, callback){
 	callback(null, 'Hi there!');
 } );
 
@@ -57,38 +58,33 @@ marie = {
 		callback( null, 'Bonjour!' );
 	}
 };
-inflicter.addicts( marie );
+harcon.addicts( marie );
 
 // sends a communication 'greet.everyone' with parameters and defines a callback to handle responses
 // will receive back 2 answers: 'Hi there!' and 'Bonjour!'
-inflicter.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, res){
+harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?', function(err, res){
 	console.log( err, res );
 } );
 ```
 [Back to Feature list](#features)
 
+
 ## Workflows
 
 In an enterprise-level system, one has to realize complex communication structure where lots of entities are following business logic and rules, involving subsystems and external resources, policies and other considerations, in short form: workflows.
 I take the liberty to define the workflow now as well defined routes and causality of messages.
-Simple method calls do the same, you can say. Yes and no.
 In a workflow, you are not dependent on the response timeframe, workflows manage distance in time and space. The recepient of a message can be on another server or city or planet. Recepient can answer right away or tomorrow or never.
 
-Let me show a very short example:
-You are a company providing VPN services to customers.
-Orders taken by agents go to some accounting and client management subsystem and eventually your subsystem dealing with the technical setup receives a request through an interface of yours.
-Next step is to identify the network the user will be connected to, so a message is sent to the networking department who will respond maybe a day later. When it does, you have to continue your workflow where it is stopped, so you try to allocate network resources there and if it is successful you create a network configuration firmware to be used on the client's router to communicate with your backbone. When it is done by a config creator submodule of yours, you send it to an operation department for testing and when it is done you send back the results to the accounting for validation.
-And of course everything must be traceable and reconstructable and maybe rollable backwards.
-This is an extremely simplified use case, in real-life, workflows are much more complicated things and even harder to handle properly.
+In the JS world, one should mind the introduction of [microservices](http://martinfowler.com/articles/microservices.html) to start with right in the beginning. Just take the advantage of better orchestration, simpler development and debugging, easier deployment, scaling and monitoring.
 
-[harcon](https://github.com/imrefazekas/harcon) is not a workflow designer tool, __"just"__ a low-level library to manage such processes. You define entities and the communications among them then publish them.
 
-You can resurrect a workflow if it failed and continue where it failed.
-You have to understand some details to use this lib at full scale.
+[harcon](https://github.com/imrefazekas/harcon) is __"just"__ a low-level library to leverage such concept.
+_In a simple way, you define entities and the communications among them then publish them._
+
 
 #### Entities
 
-In [harcon](https://github.com/imrefazekas/harcon), the communication unit is called simple entity.
+In [harcon](https://github.com/imrefazekas/harcon), the communication unit is simply called _entity_.
 One can define 2 type of entities:
 - simple function: when you associate a function with an event-pattern. Recommended to be used as observer, job-like, surveillance-, or interface-related asset.
 ```javascript
@@ -361,7 +357,7 @@ That ignite function is injected by the [harcon](https://github.com/imrefazekas/
 
 ## Divisions
 
-Systems can be orchastrated into divisions which is a tree structure actually. One can create divisions following the control-flow or responsibility-chain of the application.
+When you orchastrate your system as a microservice architure over a clustered message bus for example, the individual microservicSystems can be orchastrated into divisions which is a tree structure actually. One can create divisions following the control-flow or responsibility-chain of the application.
 Every component you deploy will belong to a division. If not declared, then to the system division where all system-level components are put.
 Divisions is not just a logical grouping of components, but also an encapsulation-model. A component cannot send messages outside the own division but can send to the inner ones. This means, that system components can send to any component, but non-system components cannot reach the level of the main system or other branches of the division-tree.
 

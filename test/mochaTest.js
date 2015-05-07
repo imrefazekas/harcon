@@ -17,7 +17,7 @@ describe("harcon", function () {
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
-		inflicter = new Inflicter( { logger: logger, idLength: 32, marie: {greetings: 'Hi!'} } );
+		inflicter = new Inflicter( { logger: logger, idLength: 32, marie: {greetings: 'Hi!'}, divisionDeviation: true } );
 
 		inflicter.addicts( Publisher );
 		Publisher.watch( './test/components', -1 );
