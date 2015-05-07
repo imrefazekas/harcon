@@ -1,9 +1,9 @@
 Harcon - Proven and reliable microservice solution for the harmonic convergence of JS entities.
 Scalable from in-browser web components till highly structured node-based enterprise components of real-time systems.
 
-[![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
-
 Need help? Join me on [Gitter](https://gitter.im/imrefazekas/harcon) and level your problem with me freely. :)
+
+[![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
 
 ========
 [harcon](https://github.com/imrefazekas/harcon) is a microservice solution for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.
