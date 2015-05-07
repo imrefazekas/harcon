@@ -262,6 +262,9 @@ In fact, every entity belongs to a division defined explicitly or implicitly by 
 Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application.
 The reason why divisions are important, because it represents a responsibility and/or legal unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
 
+Please find the [Divisions](#divisions) chapter for details.
+
+
 _Note_: contexts and divisions are not mandatory to be used. The complexity will tell you how to orchestrate your app. It might happen, that simple function-based named entities are fitting your need. Feel free to act on your own, there is no pattern to follow.
 
 
