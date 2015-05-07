@@ -5,6 +5,8 @@ Scalable from in-browser web components till highly structured node-based enterp
 
 
 ========
+
+[![Join the chat at https://gitter.im/imrefazekas/harcon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imrefazekas/harcon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [harcon](https://github.com/imrefazekas/harcon) is a microservice solution for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.
 It allows you to design and implement complex workflows and microservices where context and causality of messages are important.
 
