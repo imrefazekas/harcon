@@ -17,7 +17,7 @@ describe("harcon", function () {
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
-		inflicter = new Harcon( { logger: logger, idLength: 32, Marie: {greetings: 'Hi!'}, divisionDeviation: true } );
+		inflicter = new Harcon( { logger: logger, idLength: 32, Marie: {greetings: 'Hi!'} } );
 
 		inflicter.addicts( Publisher );
 		Publisher.watch( './test/components', -1 );
@@ -109,7 +109,7 @@ describe("harcon", function () {
 
 		it('Division test', function(done){
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( '0', 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
+			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
 				//console.log( err, res );
 
 				should.not.exist(err); should.exist(res);
