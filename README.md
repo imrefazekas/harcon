@@ -445,10 +445,10 @@ The different between them is the parameter list. The later does not require to 
 
 External ID is very useful, when the workflow is initiated by some external event possessing an id which must be kept for further logging or tracking or just because a communication harmonization across the complete company.
 
-By default, [harcon](https://github.com/imrefazekas/harcon) presumes to have one division per node following the concept of microservices. Without eliminating this behavior, harcon will reject every publishing activity where the given entity has deviating division name.
+By default, [harcon](https://github.com/imrefazekas/harcon) presumes to have one division per node following the concept of microservices. That division name can be given via its config object or will be derived from its unique name. The created division will serve as the root for every divisions and entities defined.
 
 ```javascript
-harcon = new Harcon( { divisionDeviation: true, ... } );
+harcon = new Harcon( { division: 'District 8', ... } );
 ```
 
 ## Entity configuration
