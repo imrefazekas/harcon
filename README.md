@@ -525,6 +525,7 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 2.0.0 : reimplemented architecture and division management
 - 1.2.X : plugin architecture added
 - 1.1.X : division concept added
 - 1.0.X : serious fixes
