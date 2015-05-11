@@ -35,11 +35,19 @@ describe("harcon", function () {
 		done();
 	});
 
-	describe("Harcon workflow", function () {
+	describe("Test Harcon status calls", function () {
 		it('Patient...', function(done){
-			setTimeout( function(){ console.log( inflicter.divisions() ); }, 1000 );
-			setTimeout( function(){ console.log( inflicter.listeners() ); done(); }, 1500 );
+			setTimeout( function(){
+				var divisions = inflicter.divisions();
+				expect( divisions ).to.eql( [ 'Inflicter', 'Inflicter.click' ] );
+				var listeners = inflicter.listeners();
+				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Julie', 'Marie' ] );
+				done();
+			}, 1000 );
 		});
+	});
+
+	describe("Harcon workflow", function () {
 
 		it('Simple greetings by name is', function(done){
 			// Sending a greetings message with 2 parameters and waiting for the proper answer

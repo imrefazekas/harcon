@@ -3,7 +3,7 @@ var winston = require('winston');
 exports.createWinstonLogger = function( options ){
 	options = options || {};
 	if( options.console ){
-		return new (winston.Logger)({ transports: [ new (winston.transports.Console)({ colorize: 'true' }) ] });
+		return new (winston.Logger)({ transports: [ new (winston.transports.Console)({ level: options.level || 'debug', colorize: 'true' }) ] });
 	}
 
 	if( options.exceptionFile )
