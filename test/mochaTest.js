@@ -41,14 +41,13 @@ describe("harcon", function () {
 				var divisions = inflicter.divisions();
 				expect( divisions ).to.eql( [ 'Inflicter', 'Inflicter.click' ] );
 				var listeners = inflicter.listeners();
-				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Julie', 'Marie' ] );
+				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Marie' ] );
 				done();
 			}, 1000 );
 		});
 	});
 
 	describe("Harcon workflow", function () {
-
 		it('Simple greetings by name is', function(done){
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
 			inflicter.ignite( '0', '', 'Marie.simple', 'whatsup?', 'how do you do?', function(err, res){
@@ -106,7 +105,7 @@ describe("harcon", function () {
 		it('No answer', function(done){
 			// Sending a morning message and waiting for the proper answer
 			inflicter.ignite( '0', '', 'cave.echo', function(err, res){
-				//console.log( err, res );
+				console.log( '?????', err, res );
 
 				expect(err).to.be.an.instanceof( Error );
 				expect(res).to.be.a('null');
@@ -114,7 +113,6 @@ describe("harcon", function () {
 				done( );
 			} );
 		});
-
 		it('Division test', function(done){
 			// Sending a morning message and waiting for the proper answer
 			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
@@ -131,10 +129,22 @@ describe("harcon", function () {
 			} );
 		});
 
+		it('Domina', function(done){
+			// Sending a morning message and waiting for the proper answer
+			inflicter.simpleIgnite( 'Domina.force', function(err, res){
+				should.not.exist(err); should.exist(res);
+
+				expect( res[0][0] ).to.eql( [ 'Hi there!', 'My pleasure!' ] );
+				expect( res[0][1] ).to.eql( [ 'Pas du tout!' ] );
+
+				done( );
+			} );
+		});
+
 		it('Deactivate', function(done){
 			// Sending a morning message and waiting for the proper answer
 			inflicter.deactivate('Claire');
-			inflicter.ignite( '0', 'click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
+			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
 				//console.log( err, res );
 
 				should.not.exist(err); should.exist(res);
