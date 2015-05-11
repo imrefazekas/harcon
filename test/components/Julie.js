@@ -5,7 +5,6 @@ module.exports = {
 	wakeup: function( ignite, callback ){
 		this.harconlog( null, 'Simple logging test', {}, 'warn' );
 		ignite( 'greet.gentle', 'It is morning!', 'Time to wake up!', function(err, res){
-			console.log('????????????????????', err, res);
 			callback(err, res);
 		} );
 	},
