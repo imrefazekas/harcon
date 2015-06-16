@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -47,5 +47,5 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "_id": "harcon@2.1.1"
+  "_id": "harcon@2.2.0"
 }
