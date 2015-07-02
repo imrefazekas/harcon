@@ -143,7 +143,7 @@ describe("harcon", function () {
 
 		it('Deactivate', function(done){
 			// Sending a morning message and waiting for the proper answer
-			inflicter.deactivate('Claire');
+			inflicter.activity('Claire', false);
 			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?', function(err, res){
 				//console.log( err, res );
 
