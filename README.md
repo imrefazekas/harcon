@@ -3,13 +3,11 @@ Scalable from in-browser web components till highly structured node-based enterp
 
 Need help? Join me on
 
-[![Join the chat at https://gitter.im/imrefazekas/harcon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imrefazekas/harcon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/imrefazekas/harcon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imrefazekas/harcon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![npm version](https://badge.fury.io/js/harcon.svg)](http://badge.fury.io/js/harcon) [![Code Climate](https://codeclimate.com/github/imrefazekas/harcon/badges/gpa.svg)](https://codeclimate.com/github/imrefazekas/harcon)
 
 and level your problem with me freely. :)
 
 [![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
-
-[![Code Climate](https://codeclimate.com/github/imrefazekas/harcon/badges/gpa.svg)](https://codeclimate.com/github/imrefazekas/harcon)
 
 ========
 
