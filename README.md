@@ -7,7 +7,8 @@ Need help? Join me on
 
 and level your problem with me freely. :)
 
-[![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
+//
+	[![NPM](https://nodei.co/npm/harcon.png)](https://nodei.co/npm/harcon/)
 
 ========
 
