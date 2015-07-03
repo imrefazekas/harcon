@@ -18,12 +18,7 @@
     "name": "Imre Fazekas",
     "email": "mail@imrefazekas.me"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ],
+  "license": "MIT",
   "main": "./lib/Inflicter.js",
   "dependencies": {
     "async": "latest",
