@@ -1,5 +1,5 @@
 var gulp = global.gulp = require('gulp'),
-	plugins = global.plugins = require("gulp-load-plugins")( { scope: ['devDependencies'] } );;
+	plugins = global.plugins = require("gulp-load-plugins")( { scope: ['devDependencies'] } );
 
 gulp.task( 'eslint', function(callback) {
 	return gulp.src( './lib/*.js' )

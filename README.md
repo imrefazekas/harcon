@@ -7,6 +7,8 @@ Need help? Join me on
 
 and level your problem with me freely. :)
 
+!Note: Please be aware, that from version 2.3.0, harcon requires Node 4.0.0 or above...
+
 ========
 
 [harcon](https://github.com/imrefazekas/harcon) is a microservice solution for NodeJS/Browser giving superior abstraction layer for interoperability between entities in a highly structured and fragmented ecosystem.

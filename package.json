@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "2.2.3",
+  "version": "2.3.0",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -23,7 +23,7 @@
   "dependencies": {
     "async": "latest",
     "clerobee": "latest",
-    "lodash": "~3"
+    "isa.js": "^1.0.1"
   },
   "devDependencies": {
     "chai": "latest",
@@ -42,5 +42,5 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "_id": "harcon@2.2.3"
+  "_id": "harcon@2.3.0"
 }
