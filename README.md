@@ -16,8 +16,7 @@ It allows you to design and implement complex workflows and microservices where 
 
 The library has a stunning feature list beyond basic messaging functionality.
 
-- __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [ZeroMQ](http://zeromq.org), [XMPP](http://xmpp.org), etc...
-For zeromq integration, please check this: [harcon-zero](https://github.com/imrefazekas/harcon-zero)
+- __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [XMPP](http://xmpp.org), etc...
 For amqp integration, please check this: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp)
 
 - __Tracking__: you can monitor every message delivered (request or response) by only few lines of code
