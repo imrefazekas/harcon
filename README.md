@@ -16,8 +16,9 @@ It allows you to design and implement complex workflows and microservices where 
 
 The library has a stunning feature list beyond basic messaging functionality.
 
-- __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [XMPP](http://xmpp.org), etc...
+- __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [NSQ](http://nsq.io), [XMPP](http://xmpp.org), etc...
 For amqp integration, please check this: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp)
+For nsq integration, please check this: [harcon-nsq](https://github.com/imrefazekas/harcon-nsq)
 
 - __Tracking__: you can monitor every message delivered (request or response) by only few lines of code
 
@@ -194,7 +195,7 @@ will result the following on your console:
 	[Error: Stay away, please.] null
 
 The default transport layer is designed for development purposes or in-browser usage only.
-In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [ZeroMQ](http://zeromq.org) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp) and [harcon-zero](https://github.com/imrefazekas/harcon-zero).
+In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org) or [NSQ](http://nsq.io) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp) and [harcon-nsq](https://github.com/imrefazekas/harcon-nsq) accordingly.
 
 By using a real transport layer, all occurred error messages will be delegated. In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
 
