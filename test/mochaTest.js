@@ -17,7 +17,11 @@ describe("harcon", function () {
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
-		inflicter = new Harcon( { logger: logger, idLength: 32, Marie: {greetings: 'Hi!'} } );
+		inflicter = new Harcon( {
+			logger: logger, idLength: 32,
+			blower: { commTimeout: 2000, tolerates: ['Alizee.superFlegme'] },
+			Marie: {greetings: 'Hi!'}
+		} );
 
 		inflicter.addicts( Publisher );
 		Publisher.watch( './test/components', -1 );
@@ -105,11 +109,30 @@ describe("harcon", function () {
 		it('No answer', function(done){
 			// Sending a morning message and waiting for the proper answer
 			inflicter.ignite( '0', '', 'cave.echo', function(err, res){
-				console.log( '?????', err, res );
+				//console.log( '?????', err, res );
 
 				expect(err).to.be.an.instanceof( Error );
 				expect(res).to.be.a('null');
 
+				done( );
+			} );
+		});
+		it('Timeout test', function(done){
+			this.timeout(5000);
+			inflicter.simpleIgnite( 'Alizee.flegme', function(err, res){
+				expect(err).to.be.an.instanceof( Error );
+				expect(res).to.be.a('null');
+
+				done( );
+			} );
+		});
+		it('Custom timeout test', function(done){
+			this.timeout(5000);
+			inflicter.simpleIgnite( 'Alizee.superFlegme', function(err, res){
+				//console.log('>>>>>>', err, res);
+
+				expect(err).to.be.a('null');
+				expect(res).to.eql( [ 'Quoi???' ] );
 				done( );
 			} );
 		});
