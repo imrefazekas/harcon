@@ -475,6 +475,33 @@ or even before, when [harcon](https://github.com/imrefazekas/harcon) is created.
 harcon = new Harcon( { logger: logger, idLength: 32, Claire: {greetings: 'Hi!'} } );
 ```
 
+## Timeout management
+
+[harcon](https://github.com/imrefazekas/harcon) has an internal handler - which is off by default - to deal with messages not answered within a reasonable timeframe.
+
+```javascript
+harcon = new Harcon( { ..., blower: { commTimeout: 2000 } } );
+```
+
+This configuration will tell your running harcon instance to check if the messages sent to some entities have been answered within __2000__ millisecs. If not, an error will be sent to the sender with the message: __'Communication has not been received answer withing the given timeframe.'__
+
+The nature of your app might urge you to distinguish time management following some business logic. For example: operations involving third party APIs have to be performed with a wider or without time limitation. [harcon](https://github.com/imrefazekas/harcon) supports such logic in many ways:
+
+```javascript
+harcon = new Harcon( { ..., blower: { commTimeout: 2000, tolerates: [ 'Alizee.superFlegme' ] } } );
+```
+
+The field __'tolerates'__ defines the list of conditions turning off the global timeout management. It is an array with possible values of types: String, Regexp and Function.
+
+- Strings will be matched to the address of the message
+- Regexp will be matched to the address of the message
+- Function will be called by passing the ongoing communication object and the return value will determine if timeout management should be applied.
+
+In [harcon](https://github.com/imrefazekas/harcon), event the attribute _'commTimeout'_ can be a function to define custom timeouts to different communication.
+
+!Note: Please, keep it mind, that harcon is transport layer agnostic, so a preferred message broker can also provide some security over interaction.
+
+
 ## Extension
 
 [harcon](https://github.com/imrefazekas/harcon) can be easily extended by using pure harcon components listening to system events:
