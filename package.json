@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "2.10.2",
+  "version": "2.20.0",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -21,23 +21,23 @@
   "license": "MIT",
   "main": "./lib/Inflicter.js",
   "dependencies": {
-    "async": "latest",
-    "clerobee": "latest",
-    "isa.js": "^1.0.1"
+    "async": "^1.5.2",
+    "clerobee": "^0.5.1",
+    "isa.js": "^1.6.1"
   },
   "devDependencies": {
-    "chai": "latest",
-    "gulp": "latest",
-    "gulp-docco": "latest",
-    "gulp-eslint": "latest",
-    "gulp-load-plugins": "latest",
-    "gulp-mocha": "latest",
+	"chai": "^3.5.0",
+	"gulp": "^3.9.1",
+    "gulp-docco": "0.0.4",
+	"gulp-eslint": "^2.0.0",
+	"gulp-load-plugins": "^1.2.0",
+	"gulp-mocha": "^2.2.0",
     "gulp-util": "~3",
     "memwatch-next": "^0.2.10",
-    "mkdirp": "latest",
-    "watch": "latest",
+    "mkdirp": "^0.5.1",
+    "watch": "^0.17.1",
     "webpack": "~1",
-    "winston": "latest"
+    "winston": "^2.1.1"
   },
   "engines": {
     "node": ">= 4.0.0"

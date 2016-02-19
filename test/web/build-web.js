@@ -1,9 +1,7 @@
-var gulp = global.gulp;
+var gulp = require('gulp')
 
-var gutil = require("gulp-util");
-var webpack = require("webpack");
-
-var path = require( 'path' );
+var gutil = require('gulp-util')
+var webpack = require('webpack')
 
 var config = {
 	cache: true,
@@ -12,18 +10,18 @@ var config = {
 		path: './test/web/js',
 		filename: 'test.js'
 	}
-};
+}
 
-gulp.task( 'webpack', function( callback ) {
-	webpack( config, function(err, stats) {
-		if(err){
-			throw new gutil.PluginError("webpack", err);
+gulp.task( 'webpack', function ( callback ) {
+	webpack( config, function (err, stats) {
+		if (err) {
+			throw new gutil.PluginError('webpack', err)
 		}
-		gutil.log("[webpack]", stats.toString({
+		gutil.log('[webpack]', stats.toString({
 			// output options
-		}));
-		callback();
-	});
-});
+		}))
+		callback()
+	})
+})
 
-exports.buildTasks = [ 'webpack' ];
+exports.buildTasks = [ 'webpack' ]
