@@ -8,6 +8,7 @@ Need help? Join me on
 and level your problem with me freely. :)
 
 !Note: Please be aware, that from version 2.3.0, harcon requires Node 4.0.0 or above...
+!Note: From version 3.0.0, harcon provides callback interface with Promise support in its functions.
 
 ========
 
@@ -72,7 +73,6 @@ harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?', function(er
 	console.log( err, res );
 } );
 ```
-[Back to Feature list](#features)
 
 
 ## Workflows
@@ -520,6 +520,17 @@ harcon.addicts( extension );
 ```
 In the current version, the harcon instance you are using will send to your components events about system closing, entity publishing and revoking. For a working example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
 
+
+## Promises
+
+To think in terms of the current trends in the JS-world, the services of [harcon](https://github.com/imrefazekas/harcon) might give you back a promise of no callback is provided as last parameter.
+```javascript
+harcon.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?' )
+.then( function ( res ) {
+})
+.catch( function ( reason ) {
+} )
+```
 
 ## License
 

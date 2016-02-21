@@ -23,30 +23,34 @@ describe('harcon', function () {
 			Marie: {greetings: 'Hi!'}
 		} )
 
-		inflicter.addicts( Publisher )
-		Publisher.watch( './test/components', -1 )
+		inflicter.addicts( Publisher, function (err, res) {
+			if (err) return done(err)
 
-		// Publishes an event listener function: Peter. It just sends a simple greetings in return
-		inflicter.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
-			callback(null, 'Hi there!')
+			Publisher.watch( './test/components', -1 )
+
+			// Publishes an event listener function: Peter. It just sends a simple greetings in return
+			inflicter.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
+				callback(null, 'Hi there!')
+			} )
+
+			// Publishes another function listening all messages which name starts with 'greet'. It just sends a simple greetings in return
+			inflicter.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
+				callback(null, 'My pleasure!')
+			} )
+
+			done()
 		} )
-
-		// Publishes another function listening all messages which name starts with 'greet'. It just sends a simple greetings in return
-		inflicter.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
-			callback(null, 'My pleasure!')
-		} )
-
-		done()
 	})
 
 	describe('Test Harcon status calls', function () {
 		it('Patient...', function (done) {
 			setTimeout( function () {
-				var divisions = inflicter.divisions()
-				expect( divisions ).to.eql( [ 'Inflicter', 'Inflicter.click' ] )
-				var listeners = inflicter.listeners()
-				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Marie' ] )
-				done()
+				inflicter.divisions().then( function (divisions) {
+					expect( divisions ).to.eql( [ 'Inflicter', 'Inflicter.click' ] )
+					var listeners = inflicter.listeners()
+					expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Marie' ] )
+					done()
+				} )
 			}, 1000 )
 		})
 	})
@@ -138,6 +142,24 @@ describe('harcon', function () {
 				done( )
 			} )
 		})
+
+		it('Division Promise test', function (done) {
+			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?' )
+			.then( function ( res ) {
+				should.exist(res)
+
+				expect( res ).to.include( 'Hi there!' )
+				expect( res ).to.include( 'My pleasure!' )
+				expect( res ).to.include( 'Bonjour!' )
+				expect( res ).to.include( 'Pas du tout!' )
+
+				done()
+			})
+			.catch( function ( reason ) {
+				done( reason )
+			} )
+		})
+
 		it('Division test', function (done) {
 			// Sending a morning message and waiting for the proper answer
 			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
