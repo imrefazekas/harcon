@@ -2,12 +2,14 @@ var chai = require('chai')
 var should = chai.should()
 var expect = chai.expect
 
+var path = require('path')
+
 // Requires harcon. In your app the form 'require('harcon')' should be used
 var Harcon = require('../lib/Inflicter')
 
 var Logger = require('./WinstonLogger')
 
-var Publisher = require('../lib/Publisher')
+var Publisher = require('./Publisher')
 
 describe('harcon', function () {
 	var inflicter
@@ -26,7 +28,7 @@ describe('harcon', function () {
 		inflicter.addicts( Publisher, function (err, res) {
 			if (err) return done(err)
 
-			Publisher.watch( './test/components', -1 )
+			Publisher.watch( path.join( process.cwd(), 'test', 'components' ) )
 
 			// Publishes an event listener function: Peter. It just sends a simple greetings in return
 			inflicter.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {

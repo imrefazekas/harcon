@@ -5,9 +5,11 @@ var logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'debug'
 
 var inflicter = new Inflicter( { logger: logger, namedResponses: true, idLength: 32, marie: {greetings: 'Hi!'} } )
 
-var Publisher = require('../lib/Publisher')
+var path = require('path')
+
+var Publisher = require('./Publisher')
 inflicter.addicts( Publisher )
-Publisher.watch( './test/components', -1 )
+Publisher.watch( path.join( process.cwd(), 'test', 'components' ) )
 
 inflicter.addict( null, 'peter', 'great.*', function (greetings1, greetings2, callback) {
 	// callback( new Error('Stay away, please.') )
