@@ -7,8 +7,9 @@ Need help? Join me on
 
 and level your problem with me freely. :)
 
-!Note: Please be aware, that from version 2.3.0, harcon requires Node 4.0.0 or above...
 !Note: From version 3.0.0, harcon provides callback interface with Promise support in its functions.
+
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 ========
 

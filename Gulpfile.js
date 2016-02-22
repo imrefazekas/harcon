@@ -2,7 +2,7 @@ var gulp = require('gulp'),
 	plugins = require('gulp-load-plugins')( { scope: ['devDependencies'] } )
 
 gulp.task( 'eslint', function (callback) {
-	return gulp.src( './lib/*.js' )
+	return gulp.src( './lib/**/*.js' )
 		.pipe( plugins.eslint() )
 		.pipe( plugins.eslint.format() )
 		.pipe( plugins.eslint.failOnError() )
