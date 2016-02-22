@@ -47,9 +47,10 @@ describe('harcon', function () {
 			setTimeout( function () {
 				inflicter.divisions().then( function (divisions) {
 					expect( divisions ).to.eql( [ 'Inflicter', 'Inflicter.click' ] )
-					var listeners = inflicter.listeners()
-					expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Marie' ] )
-					done()
+					inflicter.listeners( function (err, listeners) {
+						expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Marie' ] )
+						done(err)
+					} )
 				} )
 			}, 1000 )
 		})
