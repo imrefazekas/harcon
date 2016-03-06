@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -21,6 +21,7 @@
   "license": "MIT",
   "main": "./lib/Inflicter.js",
   "dependencies": {
+	"assign.js": "^1.6.8",
     "async": "^1.5.2",
     "clerobee": "^0.5.1",
     "isa.js": "^1.6.1",
