@@ -13,6 +13,9 @@ var Logger = require('./WinstonLogger')
 
 var Publisher = require('./Publisher')
 
+var Clerobee = require('clerobee')
+var clerobee = new Clerobee(16)
+
 describe('harcon', function () {
 	var inflicter
 
@@ -57,6 +60,14 @@ describe('harcon', function () {
 					} )
 				} )
 			}, 1000 )
+		})
+		it('Retrieve divisions...', function (done) {
+			inflicter.ignite( clerobee.generate(), '', 'Inflicter.divisions', function (err, res) {
+				should.not.exist(err)
+				should.exist(res)
+				expect( res[0] ).to.include( 'Inflicter', 'Inflicter.click' )
+				done()
+			} )
 		})
 	})
 
