@@ -16,6 +16,7 @@ var Publisher = require('./Publisher')
 var Clerobee = require('clerobee')
 var clerobee = new Clerobee(16)
 
+var harconName = 'HarconSys'
 describe('harcon', function () {
 	var inflicter
 
@@ -25,6 +26,7 @@ describe('harcon', function () {
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
 		inflicter = new Harcon( {
+			name: harconName,
 			logger: logger, idLength: 32,
 			blower: { commTimeout: 2000, tolerates: ['Alizee.superFlegme'] },
 			Marie: {greetings: 'Hi!'}
@@ -50,23 +52,36 @@ describe('harcon', function () {
 	})
 
 	describe('Test Harcon status calls', function () {
-		it('Patient...', function (done) {
+		it('Retrieve divisions...', function (done) {
 			setTimeout( function () {
 				inflicter.divisions().then( function (divisions) {
-					expect( divisions ).to.eql( [ 'Inflicter', 'Inflicter.click' ] )
-					inflicter.listeners( function (err, listeners) {
-						expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Marie' ] )
-						done(err)
-					} )
-				} )
-			}, 1000 )
+					expect( divisions ).to.eql( [ harconName, harconName + '.click' ] )
+					done()
+				} ).catch(function (error) {
+					done(error)
+				})
+			}, 500 )
 		})
-		it('Retrieve divisions...', function (done) {
+		it('Retrieve listeners...', function (done) {
+			inflicter.listeners( function (err, listeners) {
+				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Marie' ] )
+				done(err)
+			} )
+		})
+		it('Send for divisions...', function (done) {
 			inflicter.ignite( clerobee.generate(), '', 'Inflicter.divisions', function (err, res) {
 				should.not.exist(err)
 				should.exist(res)
-				expect( res[0] ).to.include( 'Inflicter', 'Inflicter.click' )
+				expect( res[0] ).to.include( harconName, harconName + '.click' )
 				done()
+			} )
+		})
+		it('Clean internals', function (done) {
+			inflicter.pendingComms( function (err, comms) {
+				comms.forEach( function (comm) {
+					expect( Object.keys(comm) ).to.have.lengthOf( 0 )
+				} )
+				done(err)
 			} )
 		})
 	})
@@ -139,6 +154,7 @@ describe('harcon', function () {
 				done( )
 			} )
 		})
+
 		it('Timeout test', function (done) {
 			this.timeout(5000)
 			inflicter.simpleIgnite( 'Alizee.flegme', function (err, res) {
@@ -148,19 +164,19 @@ describe('harcon', function () {
 				done( )
 			} )
 		})
-		it('Custom timeout test', function (done) {
+
+		it('Tolerated messages test', function (done) {
 			this.timeout(5000)
 			inflicter.simpleIgnite( 'Alizee.superFlegme', function (err, res) {
-				// console.log('>>>>>>', err, res)
-
 				expect(err).to.be.a('null')
 				expect(res).to.eql( [ 'Quoi???' ] )
-				done( )
+
+				done( err )
 			} )
 		})
 
 		it('Division Promise test', function (done) {
-			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?' )
+			inflicter.ignite( '0', harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?' )
 			.then( function ( res ) {
 				should.exist(res)
 
@@ -178,7 +194,7 @@ describe('harcon', function () {
 
 		it('Division test', function (done) {
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
+			inflicter.ignite( '0', harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
 				// console.log( err, res )
 
 				should.not.exist(err)
@@ -209,7 +225,7 @@ describe('harcon', function () {
 		it('Deactivate', function (done) {
 			// Sending a morning message and waiting for the proper answer
 			inflicter.deactivate('Claire')
-			inflicter.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
+			inflicter.ignite( '0', harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
 				// console.log( err, res )
 
 				should.not.exist(err)
@@ -218,6 +234,17 @@ describe('harcon', function () {
 				expect( res ).to.not.include( 'Pas du tout!' )
 
 				done( )
+			} )
+		})
+	})
+
+	describe('Post health tests', function () {
+		it('Clean internals', function (done) {
+			inflicter.pendingComms( function (err, comms) {
+				comms.forEach( function (comm) {
+					expect( Object.keys(comm) ).to.have.lengthOf( 0 )
+				} )
+				done(err)
 			} )
 		})
 	})

@@ -12,6 +12,6 @@ module.exports = {
 	superFlegme: function ( callback ) {
 		setTimeout( function () {
 			callback( null, 'Quoi???')
-		}, 4000 )
+		}, 4500 )
 	}
 }
