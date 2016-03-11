@@ -21,7 +21,7 @@
   "license": "MIT",
   "main": "./lib/Inflicter.js",
   "dependencies": {
-	"assign.js": "^1.6.8",
+	"assign.js": "^1.7.0",
     "async": "^1.5.2",
     "clerobee": "^0.5.1",
     "isa.js": "^1.6.1",
