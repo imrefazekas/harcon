@@ -555,6 +555,13 @@ var Marie = {
 
 In any service of entity 'Marie', the _'self.options.workDir'_ will be a valid object.
 
+
+## Interoperating with other harcon instances
+
+By default harcon blocks acts like a blackbox allowing to exchange communication within the main division / name of the system deployed.
+If you pass an attribute _'connectedDivisions'_ to the config of harcon, it will accept communication from the enlisted divisions and allow you to connect to those ones.
+
+
 ## License
 
 (The MIT License)
@@ -586,6 +593,7 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 3.0.0 : promise support added and tons of tweaks and features
 - 2.0.0 : reimplemented architecture and division management
 - 1.2.X : plugin architecture added
 - 1.1.X : division concept added
