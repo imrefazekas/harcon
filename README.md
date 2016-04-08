@@ -476,6 +476,14 @@ or even before, when [harcon](https://github.com/imrefazekas/harcon) is created.
 harcon = new Harcon( { logger: logger, idLength: 32, Claire: {greetings: 'Hi!'} } )
 ```
 
+An entity's configuration is an merged object made from the followings (in order):
+
+- the [millieu](#millieu) object in the configuration of harcon
+- object in harcon configuration associated through the name of the entity
+- the direct configuration passed to the function addicts
+
+Should you use none of them, and your entity shall be initiated with empty object.
+
 ## Timeout management
 
 [harcon](https://github.com/imrefazekas/harcon) has an internal handler - which is off by default - to deal with messages not answered within a reasonable timeframe.
