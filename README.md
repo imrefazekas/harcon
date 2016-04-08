@@ -570,6 +570,34 @@ By default harcon blocks acts like a blackbox allowing to exchange communication
 If you pass an attribute _'connectedDivisions'_ to the config of harcon, it will accept communication from the enlisted divisions and allow you to connect to those ones.
 
 
+## Functions erupt
+
+On the line to ease the management of workflows, [harcon](https://github.com/imrefazekas/harcon) introduces the _erupt_ functions appearing in the published entities and in the terms object passed to the services functions during ongoing communication.
+It represents a simple trick to call ignite by returning the following:
+
+```javascript
+function (cb) {
+	var _args = self.sliceArguments.apply( self, arguments )
+	return function (cb) {
+		_args.push( cb )
+		igniteFn.apply( self, _args )
+	}
+}
+```
+
+In case, you are building up a complete chain of calls, you can use your favorite functional abstraction tool as the following example demonstrates through the popular _async.js_:
+
+```javascript
+async.series([
+	erupt( 'Marie.greet', 'Hello' ),
+	erupt( 'Julie.greet', 'Hello' )
+], function(err, res){ })
+```
+
+No need to pass callback, the function returned by _erupt_ will possess a callback function as parameter used as THE callback of the communication.
+Pretty nasty, huh?
+
+
 ## License
 
 (The MIT License)

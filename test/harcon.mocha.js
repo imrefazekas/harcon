@@ -4,6 +4,8 @@ var chai = require('chai')
 var should = chai.should()
 var expect = chai.expect
 
+var async = require('async')
+
 var path = require('path')
 
 // Requires harcon. In your app the form 'require('harcon')' should be used
@@ -67,7 +69,7 @@ describe('harcon', function () {
 		it('Retrieve listeners...', function (done) {
 			inflicter.listeners( function (err, listeners) {
 				console.log( err, listeners )
-				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Domina', 'Julie', 'Claire', 'Marie' ] )
+				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Domina', 'Julie', 'Marion', 'Claire', 'Marie' ] )
 				done(err)
 			} )
 		})
@@ -88,6 +90,27 @@ describe('harcon', function () {
 			} )
 		})
 	})
+
+	describe('Erupt flow', function () {
+		it('Simple greetings by name is', function (done) {
+			async.series([
+				inflicter.erupt( '0', '', 'Marie.simple', 'whatsup?', 'how do you do?'),
+				inflicter.erupt( '0', '', 'greet.simple', 'whatsup?', 'how do you do?')
+			], done)
+		})
+		it('Marion', function (done) {
+			// Sending a morning message and waiting for the proper answer
+			inflicter.simpleIgnite( 'Marion.force', function (err, res) {
+				should.not.exist(err)
+				should.exist(res)
+
+				expect( res[0][0] ).to.eql( [ 'Hi there!', 'My pleasure!' ] )
+				expect( res[0][1] ).to.eql( [ 'Pas du tout!' ] )
+
+				done( )
+			} )
+		})
+	} )
 
 	describe('Harcon workflow', function () {
 		it('Simple greetings by name is', function (done) {
