@@ -74,7 +74,7 @@ describe('harcon', function () {
 			} )
 		})
 		it('Send for divisions...', function (done) {
-			inflicter.ignite( clerobee.generate(), '', 'Inflicter.divisions', function (err, res) {
+			inflicter.ignite( clerobee.generate(), null, '', 'Inflicter.divisions', function (err, res) {
 				should.not.exist(err)
 				should.exist(res)
 				expect( res[0] ).to.include( harconName, harconName + '.click' )
@@ -94,8 +94,8 @@ describe('harcon', function () {
 	describe('Erupt flow', function () {
 		it('Simple greetings by name is', function (done) {
 			async.series([
-				inflicter.erupt( '0', '', 'Marie.simple', 'whatsup?', 'how do you do?'),
-				inflicter.erupt( '0', '', 'greet.simple', 'whatsup?', 'how do you do?')
+				inflicter.erupt( '0', null, '', 'Marie.simple', 'whatsup?', 'how do you do?'),
+				inflicter.erupt( '0', null, '', 'greet.simple', 'whatsup?', 'how do you do?')
 			], done)
 		})
 		it('Marion', function (done) {
@@ -115,7 +115,7 @@ describe('harcon', function () {
 	describe('Harcon workflow', function () {
 		it('Simple greetings by name is', function (done) {
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
-			inflicter.ignite( '0', '', 'Marie.simple', 'whatsup?', 'how do you do?', function (err, res) {
+			inflicter.ignite( '0', null, '', 'Marie.simple', 'whatsup?', 'how do you do?', function (err, res) {
 				should.not.exist(err)
 				should.exist(res)
 				expect( res ).to.include( 'Bonjour!' )
@@ -125,7 +125,7 @@ describe('harcon', function () {
 
 		it('Simple greetings is', function (done) {
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
-			inflicter.ignite( '0', '', 'greet.simple', 'whatsup?', 'how do you do?', function (err, res) {
+			inflicter.ignite( '0', null, '', 'greet.simple', 'whatsup?', 'how do you do?', function (err, res) {
 				// console.log( err, res )
 				should.not.exist(err)
 				should.exist(res)
@@ -140,7 +140,7 @@ describe('harcon', function () {
 
 		it('Morning greetings is', function (done) {
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( '0', '', 'morning.wakeup', function (err, res) {
+			inflicter.ignite( '0', null, '', 'morning.wakeup', function (err, res) {
 				// console.log( err, res )
 
 				expect(err).to.be.a('null')
@@ -150,7 +150,7 @@ describe('harcon', function () {
 		})
 
 		it('General dormir', function (done) {
-			inflicter.ignite( '0', '', 'morning.dormir', function (err, res) {
+			inflicter.ignite( '0', null, '', 'morning.dormir', function (err, res) {
 				// console.log( err, res )
 
 				expect(err).to.be.a('null')
@@ -160,7 +160,7 @@ describe('harcon', function () {
 		})
 
 		it('Specific dormir', function (done) {
-			inflicter.ignite( '0', '', 'morning.girls.dormir', function (err, res) {
+			inflicter.ignite( '0', null, '', 'morning.girls.dormir', function (err, res) {
 				// console.log( err, res )
 
 				expect(err).to.be.a('null')
@@ -171,7 +171,7 @@ describe('harcon', function () {
 
 		it('No answer', function (done) {
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( '0', '', 'cave.echo', function (err, res) {
+			inflicter.ignite( '0', null, '', 'cave.echo', function (err, res) {
 				// console.log( '?????', err, res )
 
 				expect(err).to.be.an.instanceof( Error )
@@ -202,7 +202,7 @@ describe('harcon', function () {
 		})
 
 		it('Division Promise test', function (done) {
-			inflicter.ignite( '0', harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?' )
+			inflicter.ignite( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?' )
 			.then( function ( res ) {
 				should.exist(res)
 
@@ -220,7 +220,7 @@ describe('harcon', function () {
 
 		it('Division test', function (done) {
 			// Sending a morning message and waiting for the proper answer
-			inflicter.ignite( '0', harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
+			inflicter.ignite( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
 				// console.log( err, res )
 
 				should.not.exist(err)
@@ -251,7 +251,7 @@ describe('harcon', function () {
 		it('Deactivate', function (done) {
 			// Sending a morning message and waiting for the proper answer
 			inflicter.deactivate('Claire')
-			inflicter.ignite( '0', harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
+			inflicter.ignite( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
 				// console.log( err, res )
 
 				should.not.exist(err)

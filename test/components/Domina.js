@@ -8,10 +8,10 @@ module.exports = {
 		var self = this
 		async.series([
 			function (cb) {
-				ignite( 0, '', 'greet.gentle', 'It is morning!', 'Time to wake up!', cb )
+				ignite( 0, null, '', 'greet.gentle', 'It is morning!', 'Time to wake up!', cb )
 			},
 			function (cb) {
-				ignite( 1, self.division + '.click', 'Claire.simple', 'It is morning!', 'Time to wake up!', cb )
+				ignite( 1, null, self.division + '.click', 'Claire.simple', 'It is morning!', 'Time to wake up!', cb )
 			}
 		], callback )
 	}

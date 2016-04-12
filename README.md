@@ -80,7 +80,7 @@ harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?', function (e
 
 In an enterprise-level system, one has to realize complex communication structure where lots of entities are following business logic and rules, involving subsystems and external resources, policies and other considerations, in short form: workflows.
 I take the liberty to define the workflow now as well defined routes and causality of messages.
-In a workflow, you are not dependent on the response timeframe, workflows manage distance in time and space. The recepient of a message can be on another server or city or planet. Recepient can answer right away or tomorrow or never.
+In a workflow, you are not dependent on the response timeframe, workflows manage distance in time and space. The recipient of a message can be on another server or city or planet. Recipient can answer right away or tomorrow or never.
 
 In the JS world, one should mind the introduction of [microservices](http://martinfowler.com/articles/microservices.html) to start with right in the beginning. Just take the advantage of better orchestration, simpler development and debugging, easier deployment, scaling and monitoring.
 
@@ -207,7 +207,7 @@ You have seen how to call service functions using qualified names and regular ex
 If a much structured system must be orchestrated, a set of finer toolset is at you disposal: __contexts and divisions__, representing different abstraction levels.
 
 __Context__: is a named set of object-based entities and contexts. a qualified name identifying the field/purpose the entity is operating. To refine the structure of your service.
-For example you can have multiple entities providing service like _parse_ but in different contextes like: _"xml"_ or _"json"_.
+For example you can have multiple entities providing service like _parse_ but in different context like: _"xml"_ or _"json"_.
 You can structure your entities like the following:
 
 ```javascript
@@ -264,7 +264,7 @@ __The title 'transfer.parse' will target the XMLParser, JSONParser and Observer 
 Contexts are very good way to refine your structures and entities and express overlapping functional behaviors.
 
 
-__Division__: divisions is a diffferent angle on the plane of orchestration. A _division_ is a closed "box" of entities, meaning that an entity can operate only within the division it is  amember of.
+__Division__: divisions is a different angle on the plane of orchestration. A _division_ is a closed "box" of entities, meaning that an entity can operate only within the division it is a member of.
 In fact, every entity belongs to a division defined explicitly or implicitly by the harcon.
 Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application.
 The reason why divisions are important, because it represents a responsibility and/or legal unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
@@ -300,15 +300,20 @@ Mind the async execution to keep everything in track!
 
 #### Call back or not?
 
-You are not forced to always send answer, in some cases a quite entities is desired. If you do not define a callback neither side of the communication, [harcon](https://github.com/imrefazekas/harcon) will consider it as a one-ways message sending.
+You are not forced to always expect answer, in some cases a quite entity is desired.
+If you do not pass a callback when a communication is initiated, [harcon](https://github.com/imrefazekas/harcon) will consider it as a one-ways message sending.
+
 ```javascript
 // Qualified name - will answer to only this message
-harcon.addict( null, 'karl', 'reserve.address', function ( address ) {
+harcon.addict( null, 'karl', 'reserve.address', function ( address, callback ) {
 	// Do something...
+	callback(null, 'Done.')
 } )
 ...
 harcon.simpleIgnite( 'reserve.address', '127.0.0.1' )
 ```
+
+Harcon will know, that sender does not expect any answer at all. But, considering that [harcon](https://github.com/imrefazekas/harcon) is designed for highly structured and fragmented context, receiver entities always __MUST__ have a callback, to let [harcon](https://github.com/imrefazekas/harcon) know about the termination of the given operation for operational prudence!
 
 #### Entity initialization
 
@@ -596,6 +601,38 @@ async.series([
 
 No need to pass callback, the function returned by _erupt_ will possess a callback function as parameter used as THE callback of the communication.
 Pretty nasty, huh?
+
+
+## Fragmented in time
+
+Some operations cannot be performed within a reasonable short timeframe. Let's say, a task is sent to another devision requesting for manual acknowledgement. This will make a gap between request and response for sure. Could be proven the measure of days as well...
+
+The design you app should follow for such cases as follows:
+The entity receiving the request must send back 'Request accepted'-like message to the sender and store the externalID and flowID of the communication:
+
+```javascript
+ignite( 'ManCanDo.sign', document, function () {
+	console.log('Accepted.')
+} )
+
+...
+
+let ManCanDo = {
+	auditor: true,
+	sign: function ( document, terms, ignite, callback ) {
+		database.store( terms.sourceComm, document, callback )
+	},
+	_signed: function( document ) {
+		let self = this
+		database.readRequest( document, function(err, record){
+			self.ignite( record.externalId, record.flowId, record.sourceDivision, record.source + '.signed', document )
+		} )
+	}
+}
+```
+
+The param terms holds references about the incoming communication by the name of _sourceComm_.
+You can store the _externalID_ if the communication has been initiated by an external party or just the _flowID_ if continuity must be ensured.
 
 
 ## License
