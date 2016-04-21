@@ -1,8 +1,9 @@
 module.exports = {
 	name: 'Marie',
 	context: 'greet',
-	init: function (options) {
+	init: function (options, callback) {
 		console.log('Init...', options)
+		callback()
 	},
 	// Simple service function listening to the greet.simple message where greet comes from context and simple is identified by the name of the fuction.
 	simple: function (greetings1, greetings2, callback) {

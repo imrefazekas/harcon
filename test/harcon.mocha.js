@@ -69,7 +69,7 @@ describe('harcon', function () {
 		it('Retrieve listeners...', function (done) {
 			inflicter.listeners( function (err, listeners) {
 				console.log( err, listeners )
-				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Domina', 'Julie', 'Marion', 'Claire', 'Marie' ] )
+				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Domina', 'Julie', 'Marion', 'Claire', 'Lina', 'Marie' ] )
 				done(err)
 			} )
 		})
@@ -87,6 +87,26 @@ describe('harcon', function () {
 					expect( Object.keys(comm) ).to.have.lengthOf( 0 )
 				} )
 				done(err)
+			} )
+		})
+	})
+
+	describe('State shifting', function () {
+		it('Simple case', function (done) {
+			var Lina = inflicter.barrel.firestarter('Lina').object
+			inflicter.ignite( clerobee.generate(), null, '', 'Marie.notify', 'data', 'Lina.marieChanged', function (err) {
+				if (err) return done(err)
+
+				inflicter.ignite( clerobee.generate(), null, '', 'Marie.simple', 'Bonjour', 'Salut', function (err) {
+					if (err) return done(err)
+
+					var pingInterval = setInterval( function () {
+						if ( Lina.hasMarieChanged ) {
+							clearInterval( pingInterval )
+							done()
+						}
+					}, 500 )
+				} )
 			} )
 		})
 	})

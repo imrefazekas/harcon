@@ -442,7 +442,7 @@ harcon.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?', function (err,
 
 Note: please keep in mind, that __harcon.ignite__ can be and should be used only when you initiate a workflow from outside the harcon!
 
-If you inititate a communication through the harcon instance, it means, that you wants to drop in a message "from outside" which could mean an integration with an external system or just kick off a workflow.
+If you initiate a communication through the harcon instance, it means, that you wants to drop in a message "from outside" which could mean an integration with an external system or just kick off a workflow.
 There are 2 methods to be called:
 
 ignite and simpleIgnite
@@ -567,6 +567,48 @@ var Marie = {
 ```
 
 In any service of entity 'Marie', the _'self.options.workDir'_ will be a valid object.
+
+
+
+## State shifting
+
+There is a reverse-directed-like feature in [harcon](https://github.com/imrefazekas/harcon), allowing an entity to shift "internal state" and let other entities to know about it.
+Let's say, entities of a system want to know when the DB component becomes "available", or when a third party connector entity becomes "connected".
+
+To build such constellation between entities, is pretty straightforward:
+
+```javascript
+module.exports = {
+	name: 'Lina',
+	...
+	registerForShift: function () {
+		self.ignite('Marie.notify', 'data', 'Lina.marieChanged', function (err) { if (err) { self.harconlog(err) } } )
+	}, ...
+	marieChanged: function ( payload, callback ) {
+		console.log( '>>>>>>>>>>>', payload )
+		callback( null, 'OK' )
+	}
+}
+```
+
+In function _'registerForShift'_ _'Lina'_ tells _'Marie'_ to notify her if the state _'data'_ is changing. The function to be called is _'marieChanged'_. The new value of the given state should be passed.
+State is a string. It does not need to be represented as attribute or whatever, just a pure string - object pair.
+
+How Marie can "shift" state:
+
+```javascript
+module.exports = {
+	name: 'Marie',
+	simple: function (greetings1, greetings2, callback) {
+		this.shifted( { data: 'content' } )
+		callback(null, 'Bonjour!')
+	}
+}
+```
+
+Anytime _Marie_ calls its internal _'shifted'_ function, it triggers the [harcon](https://github.com/imrefazekas/harcon)'s state changing service. You have to pass an object possessing all properties considered to be "states". So an object might shift multiple states at once if needed. The values of the attributes are the payload to send to the listener entities.
+That __this.shifted( { data: 'content' } )__ line will initiate an internal communication with the addressing _'Lina.marieChanged'_ as _Lina_ specified. And the function _'marieChanged'_ of _Lina_ will be called with the string _'content'_ passed as payload.
+
 
 
 ## Interoperating with other harcon instances
