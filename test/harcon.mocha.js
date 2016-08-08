@@ -69,7 +69,7 @@ describe('harcon', function () {
 		it('Retrieve listeners...', function (done) {
 			inflicter.listeners( function (err, listeners) {
 				console.log( err, listeners )
-				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Domina', 'Julie', 'Marion', 'Claire', 'Lina', 'Marie' ] )
+				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Lina', 'Marie', 'Marion' ] )
 				done(err)
 			} )
 		})
