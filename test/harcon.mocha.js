@@ -23,7 +23,7 @@ describe('harcon', function () {
 	var inflicter
 
 	before(function (done) {
-		var logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'info' } )
+		var logger = Logger.createWinstonLogger( { file: 'mochatest.log' } )
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
