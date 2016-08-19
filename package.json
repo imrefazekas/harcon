@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "4.5.2",
+  "version": "4.5.3",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -37,7 +37,7 @@
     "gulp-util": "~3",
     "memwatch-next": "^0.3.0",
     "mkdirp": "^0.5.1",
-    "watch": "^0.19.1",
+    "watch": "^0.19.2",
     "webpack": "~1",
     "winston": "^2.2.0"
   },
