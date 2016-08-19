@@ -56,6 +56,7 @@ describe('harcon', function () {
 	})
 
 	describe('Test Harcon status calls', function () {
+
 		it('Retrieve divisions...', function (done) {
 			setTimeout( function () {
 				inflicter.divisions().then( function (divisions) {
@@ -73,6 +74,7 @@ describe('harcon', function () {
 				done(err)
 			} )
 		})
+
 		it('Send for divisions...', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'Inflicter.divisions', function (err, res) {
 				should.not.exist(err)
@@ -81,6 +83,7 @@ describe('harcon', function () {
 				done()
 			} )
 		})
+
 		it('Clean internals', function (done) {
 			inflicter.pendingComms( function (err, comms) {
 				comms.forEach( function (comm) {
@@ -89,7 +92,9 @@ describe('harcon', function () {
 				done(err)
 			} )
 		})
+
 	})
+
 
 	describe('State shifting', function () {
 		it('Simple case', function (done) {

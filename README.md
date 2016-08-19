@@ -31,6 +31,8 @@ For nsq integration, please check this: [harcon-nsq](https://github.com/imrefaze
 
 - __Short learning curve__: no need to learn hundred of pages, communication has to be simple after all
 
+- __Log-free coding__: no more mixture of logging and business logic. Harcon logs all messages exchanged.
+
 - __Transparent__: although harcon introduces lots of complex types and structures, your code and callbacks will be kept clean and pure, everything is (un)packed in the background in a transparent way
 
 - __Smooth infiltration__: your objects / functions will possess the necessary services via injection, no need to create complex structures and compounds
@@ -355,6 +357,32 @@ var Marie = {
 }
 ```
 That function should be used for any logging activity you need during the flow of your app.
+
+__Important__: Harcon logs all incoming and outgoing messages at the level 'igniteLevel' set in the configuration file making every-day logging activities unnecessary. You might want to change the default level of this behaviour in order to refine your logging strategy.
+
+```javascript
+harcon = new Harcon( { igniteLevel: 'info' /* ... */ } )
+```
+
+An entity might exclude itself from the logging process by possessing the attribute "concealed":
+
+```javascript
+var Marie = {
+	name: 'Marie',
+	concealed: true,
+	...
+}
+```
+
+That will turn off the logging of all messages sent or received by the entity 'Marie'.
+
+Another option is to set the the list of entities unlogged.
+
+```javascript
+harcon = new Harcon( { seals: [ 'Marie' ] /* ... */ } )
+```
+
+That will turn off the logging of all messages sent to Marie. So no answers received by other entities from Marie will be logged.
 
 
 #### Unique messages
