@@ -67,10 +67,11 @@ describe('harcon', function () {
 				})
 			}, 500 )
 		})
-		it('Retrieve listeners...', function (done) {
-			inflicter.listeners( function (err, listeners) {
-				console.log( err, listeners )
-				expect( listeners ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Lina', 'Marie', 'Marion' ] )
+		it('Retrieve entities...', function (done) {
+			inflicter.entities( function (err, entities) {
+				console.log( err, entities )
+				let names = entities.map( function (entity) { return entity.name } )
+				expect( names ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Lina', 'Marie', 'Marion' ] )
 				done(err)
 			} )
 		})
