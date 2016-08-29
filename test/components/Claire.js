@@ -11,7 +11,6 @@ module.exports = {
 		callback(null, 'Enchanté, mon plaisir!')
 	},
 	simple: function (greetings1, greetings2, callback) {
-		this.harconlog( new Error('Stack test...') )
 		callback( null, 'Pas du tout!' )
 	}
 }
