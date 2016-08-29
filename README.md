@@ -1,5 +1,5 @@
 Harcon - Proven and reliable microservice solution for the harmonic convergence of JS entities.
-Scalable from in-browser web components till highly structured node-based enterprise components of real-time systems.
+Designed to be scalable from prototypes till highly structured node-based enterprise components of real-time systems.
 
 Need help? Join me on
 
@@ -40,8 +40,6 @@ For nsq integration, please check this: [harcon-nsq](https://github.com/imrefaze
 - __Advanced routing & listening__: system fragmentation, qualified names, regular expressions, wildcards, etc.
 
 __!Note__: Harcon's concept is to introduce a clean and high abstraction layer over messaging between entities. Like in case of every abstraction tool, for webapps which are simple as 1, it can be proven as a liability.
-
-__!Note__: To use in browser, a CommonJS-enabled packager has to be applied like [browserify](http://browserify.org) or [webpack](http://webpack.github.io) or [jspm](http://jspm.io).
 
 This library starts to shine in a highly structured and distributed environment.
 
@@ -198,7 +196,7 @@ will result the following on your console:
 
 	[Error: Stay away, please.] null
 
-The default transport layer is designed for development purposes or in-browser usage only.
+The default transport layer is designed for development purposes only.
 In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [MQTT](http://mqtt.org) or [NSQ](http://nsq.io) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp), [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) and [harcon-nsq](https://github.com/imrefazekas/harcon-nsq) accordingly.
 
 By using a real transport layer, all occurred error messages will be delegated. In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
@@ -743,7 +741,7 @@ See <https://github.com/imrefazekas/harcon/issues>.
 - 1.1.X : division concept added
 - 1.0.X : serious fixes
 - 1.0.0 : first stable release
-- 0.9.0 : small redesign to allow to use in a Browserify/Webpack environment
+- 0.9.0 : small redesign
 - 0.8.0 : automated (re/un)deployment added, rewritten event coordination subsystem
 - 0.6.0 : delivery fixes
 - 0.5.0 : initial release
