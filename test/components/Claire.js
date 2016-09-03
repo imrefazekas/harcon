@@ -10,7 +10,7 @@ module.exports = {
 	usual: function (callback) {
 		callback(null, 'Enchanté, mon plaisir!')
 	},
-	simple: function (greetings1, greetings2, callback) {
+	simple: function (greetings1, greetings2, terms, ignite, callback) {
 		callback( null, 'Pas du tout!' )
 	}
 }

@@ -316,6 +316,7 @@ harcon.simpleIgnite( 'reserve.address', '127.0.0.1' )
 
 Harcon will know, that sender does not expect any answer at all. But, considering that [harcon](https://github.com/imrefazekas/harcon) is designed for highly structured and fragmented context, receiver entities always __MUST__ have a callback, to let [harcon](https://github.com/imrefazekas/harcon) know about the termination of the given operation for operational prudence!
 
+
 #### Entity initialization
 
 The need to pass contextual parameters to entities might rise. The options object passed to the constructure of Harcon allows you to specify parameters for entities which will be passed while the init method defined in the entity is called.
@@ -432,6 +433,41 @@ var timer = {
 ```
 
 That ignite function is injected by the [harcon](https://github.com/imrefazekas/harcon) when you publish the components.
+
+
+## The terms object
+
+In a workflow, a contextual object is much desired to set the context where business entities are participating and share some environmental state or values.
+If you implement a financial transaction management system, currencies should be added to the terms object making the information accessible to all entities interoperating within the workflow.
+
+Should you define your business functions as below, the terms will be passed and managed by [harcon](https://github.com/imrefazekas/harcon)
+
+```javascript
+module.exports = {
+	name: 'Claire',
+	init: function (options, callback) {
+		callback()
+	},
+	simple: function (greetings1, greetings2, terms, ignite, callback) {
+		callback( null, 'Pas du tout!' )
+	}
+}
+```
+
+Along the parameters you need for your business logic, and the ignite function and callback object introduced earlier, the terms can be added to the parameter list in the right order shown above.
+
+```javascript
+module.exports = {
+	name: 'Domina',
+	force: function ( terms, ignite, callback ) {
+		var self = this
+		terms.tree = 'grow'
+		ignite( 'Claire.simple', 'It is morning!', 'Time to wake up!', callback )
+	}
+}
+```
+
+The 'tree' attribute set by entity 'Domina' will be seen by the entity 'Claire' when it receives the message.
 
 
 ## Divisions
