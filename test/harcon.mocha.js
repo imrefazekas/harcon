@@ -69,9 +69,9 @@ describe('harcon', function () {
 		})
 		it('Retrieve entities...', function (done) {
 			inflicter.entities( function (err, entities) {
-				console.log( err, entities )
+				console.log( '...', err, entities )
 				let names = entities.map( function (entity) { return entity.name } )
-				expect( names ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Claire', 'Domina', 'Julie', 'Lina', 'Marie', 'Marion' ] )
+				expect( names ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Charlotte', 'Claire', 'Domina', 'Julie', 'Lina', 'Marie', 'Marion' ] )
 				done(err)
 			} )
 		})
@@ -113,6 +113,25 @@ describe('harcon', function () {
 						}
 					}, 500 )
 				} )
+			} )
+		})
+	})
+
+	describe('Harcon distinguish', function () {
+		it('Access distinguished entity', function (done) {
+			inflicter.ignite( '0', null, '', 'Charlotte.access', function (err, res) {
+				should.not.exist(err)
+				should.exist(res)
+				expect( res ).to.include( 'D\'accord?' )
+				done( )
+			} )
+		})
+		it('Access distinguished entity', function (done) {
+			inflicter.ignite( '0', null, '', 'Charlotte-Unique.access', function (err, res) {
+				should.not.exist(err)
+				should.exist(res)
+				expect( res ).to.include( 'D\'accord?' )
+				done( )
 			} )
 		})
 	})
