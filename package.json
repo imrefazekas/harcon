@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "4.8.1",
+  "version": "4.8.2",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -23,9 +23,9 @@
   "dependencies": {
     "assign.js": "^2.1.7",
     "async": "^2.0.1",
-    "clerobee": "^0.6.6",
+    "clerobee": "^0.6.8",
     "isa.js": "^1.7.5",
-    "proback.js": "^1.1.2"
+    "proback.js": "^1.2.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
