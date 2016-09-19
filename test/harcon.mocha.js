@@ -27,36 +27,37 @@ describe('harcon', function () {
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
-		inflicter = new Harcon( {
+		new Harcon( {
 			name: harconName,
 			logger: logger, idLength: 32,
 			blower: { commTimeout: 2000, tolerates: ['Alizee.superFlegme'] },
 			Marie: {greetings: 'Hi!'}
-		}, function (err) {
-			if (err) return done(err)
-
-			inflicter.addicts( Publisher, function (err, res) {
-				if (err) return done(err)
-
-				Publisher.watch( path.join( process.cwd(), 'test', 'components' ) )
-
-				// Publishes an event listener function: Peter. It just sends a simple greetings in return
-				inflicter.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
-					callback(null, 'Hi there!')
-				} )
-
-				// Publishes another function listening all messages which name starts with 'greet'. It just sends a simple greetings in return
-				inflicter.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
-					callback(null, 'My pleasure!')
-				} )
-
-				done()
+		} )
+		.then( function (_inflicter) {
+			inflicter = _inflicter
+			return inflicter.inflicterEntity.addicts( Publisher )
+		} )
+		.then( () => { return Publisher.watch( path.join( process.cwd(), 'test', 'components' ) ) } )
+		.then( () => {
+			// Publishes an event listener function: Peter. It just sends a simple greetings in return
+			return inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
+				callback(null, 'Hi there!')
 			} )
 		} )
+		.then( () => {
+			// Publishes another function listening all messages which name starts with 'greet'. It just sends a simple greetings in return
+			return inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
+				callback(null, 'My pleasure!')
+			} )
+		} )
+		.then( function () {
+			done()
+		} )
+		.catch(function (reason) {
+			return done(reason)
+		} )
 	})
-
 	describe('Test Harcon status calls', function () {
-
 		it('Retrieve divisions...', function (done) {
 			setTimeout( function () {
 				inflicter.divisions().then( function (divisions) {
@@ -67,6 +68,7 @@ describe('harcon', function () {
 				})
 			}, 500 )
 		})
+
 		it('Retrieve entities...', function (done) {
 			inflicter.entities( function (err, entities) {
 				console.log( '...', err, entities )
@@ -95,7 +97,6 @@ describe('harcon', function () {
 		})
 
 	})
-
 
 	describe('State shifting', function () {
 		it('Simple case', function (done) {
