@@ -10,5 +10,9 @@ module.exports = {
 		this.greetings = [greetings1, greetings2]
 		this.shifted( { data: 'content' } )
 		callback(null, 'Bonjour!')
+	},
+	jolie: function (message, callback) {
+		console.log( this.name + ' est jolie. ' + message)
+		callback(null, 'Enchentée.')
 	}
 }

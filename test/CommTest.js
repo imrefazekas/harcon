@@ -1,18 +1,18 @@
-var Inflicter = require('../lib/Inflicter')
+let Inflicter = require('../lib/Inflicter')
 
-var Logger = require('./WinstonLogger')
-var logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'debug' } )
-var inflicter = new Inflicter( { logger: logger, idLength: 32, marie: {greetings: 'Hi!'} } )
+let Logger = require('./WinstonLogger')
+let logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'debug' } )
+let inflicter = new Inflicter( { logger: logger, idLength: 32, marie: {greetings: 'Hi!'} } )
 
 
-var Claire = {
+let Claire = {
 	name: 'Claire',
 	context: 'greet',
 	simple: function (greetings1, ignite, callback) {
 		ignite( 'greet.whiny', greetings1, 'Bon matin!', 'Bon jour!', 'Bon soleil!', callback )
 	}
 }
-var Marie = {
+let Marie = {
 	name: 'Marie',
 	context: 'greet',
 	whiny: function (greetings1, greetings2, greetings3, greetings4, callback) {

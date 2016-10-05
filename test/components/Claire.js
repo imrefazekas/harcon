@@ -12,5 +12,9 @@ module.exports = {
 	},
 	simple: function (greetings1, greetings2, terms, ignite, callback) {
 		callback( null, 'Pas du tout!' )
+	},
+	jolie: function (message, terms, ignite, callback) {
+		console.log( this.name + ' est jolie. ' + message )
+		callback( null, 'Merci' )
 	}
 }

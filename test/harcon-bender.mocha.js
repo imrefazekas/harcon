@@ -1,0 +1,99 @@
+'use strict'
+
+let chai = require('chai')
+let should = chai.should()
+let expect = chai.expect
+
+// Requires harcon. In your app the form 'require('harcon')' should be used
+let Harcon = require('../lib/Inflicter')
+
+let Logger = require('./WinstonLogger')
+
+let Clerobee = require('clerobee')
+let clerobee = new Clerobee(16)
+
+let harconName = 'HarconBend'
+
+let Julie = require('./components/Julie')
+let Claire = require('./components/Claire')
+let Marie = require('./components/Marie')
+
+describe('HarconBend', function () {
+	let inflicter
+
+	before(function (done) {
+		let logger = Logger.createWinstonLogger( { console: true } )
+		// let logger = Logger.createWinstonLogger( { file: 'mochaBendtest.log' } )
+
+		// Initializes the Harcon system
+		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
+		new Harcon( {
+			name: harconName,
+			bender: { enabled: true },
+			logger: logger,
+			idLength: 32,
+			blower: { commTimeout: 2000, tolerates: [] },
+			FireBender: {
+				defs: {
+					'Julie.rever': { type: 'spread', primers: [ { division: 'HarconBend.click', event: 'Claire.jolie' }, 'Marie.jolie' ] },
+					'Julie.repose': { type: 'series', primers: [ { division: 'HarconBend.click', event: 'Claire.jolie' }, 'Marie.jolie' ] }
+				}
+			}
+		} )
+		.then( function (_inflicter) {
+			inflicter = _inflicter
+			return 'ok'
+		} )
+		.then( () => {
+			return inflicter.inflicterEntity.addicts( Julie )
+		} )
+		.then( () => {
+			return inflicter.inflicterEntity.addicts( Claire )
+		} )
+		.then( () => {
+			return inflicter.inflicterEntity.addicts( Marie )
+		} )
+		.then( function () {
+			done()
+		} )
+		.catch(function (reason) {
+			return done(reason)
+		} )
+	})
+
+	describe('Test Harcon status calls', function () {
+		it('Retrieve divisions...', function (done) {
+			setTimeout( function () {
+				inflicter.divisions().then( function (divisions) {
+					expect( divisions ).to.eql( [ harconName, harconName + '.click' ] )
+					done()
+				} ).catch(function (error) {
+					done(error)
+				})
+			}, 500 )
+		})
+	})
+
+	describe('Bending', function () {
+		/*
+		it('Spread', function (done) {
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.dormir', [ 'bonne nuite' ], function (err, res) {
+				console.log('Spread .....', err, res)
+				done()
+			} )
+		})
+		*/
+		it('Series', function (done) {
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne nuite' ], function (err, res) {
+				console.log('Series .....', err, res)
+				done()
+			} )
+		})
+	})
+
+	after(function (done) {
+		// Shuts down Harcon when it is not needed anymore
+		inflicter.close()
+		done()
+	})
+})

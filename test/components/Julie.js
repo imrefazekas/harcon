@@ -8,7 +8,15 @@ module.exports = {
 			callback(err, res)
 		} )
 	},
-	dormir: function ( ignite, callback ) {
+	dormir: function ( callback ) {
+		callback( null, 'Non, Mais non!' )
+	},
+	rever: function ( message, callback ) {
+		console.log( this.name + ' dort ... ' + message )
+		callback( null, 'Non, Mais non!' )
+	},
+	repose: function ( message, callback ) {
+		console.log( this.name + ' dort ... ' + message )
 		callback( null, 'Non, Mais non!' )
 	}
 }

@@ -9,17 +9,15 @@ gulp.task( 'eslint', function (callback) {
 } )
 
 gulp.task( 'mocha', function (callback) {
-	return gulp.src( './test/*.mocha.js' ).pipe( plugins.mocha({reporter: 'nyan'}) )
+	// return gulp.src( './test/harcon.mocha.js' ).pipe( plugins.mocha({reporter: 'nyan'}) )
+	return gulp.src( './test/harcon-bender.mocha.js' ).pipe( plugins.mocha({reporter: 'nyan'}) )
 } )
 
 gulp.task( 'doc', function (callback) {
 	var doccoOptions
-	return 	gulp.src('./test/mochaTest.js')
+	return 	gulp.src('./test/*.mocha.js')
 			.pipe( plugins.docco( doccoOptions ) )
 			.pipe( gulp.dest('./doc') )
 } )
-
-var web = require('./test/web/build-web' )
-gulp.task( 'build-web-test', web.buildTasks )
 
 gulp.task( 'default', ['eslint', 'mocha', 'doc'] )

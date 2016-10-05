@@ -1,11 +1,11 @@
-var async = require('async')
+let async = require('async')
 
 module.exports = {
 	name: 'Domina',
 	auditor: true,
 	// When Julie is woken up, send a gentle message to everyone listening to such messages...  Walter and Pater namely
 	force: function ( terms, ignite, callback ) {
-		var self = this
+		let self = this
 		terms.tree = 'grow'
 		async.series([
 			function (cb) {

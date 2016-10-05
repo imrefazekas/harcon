@@ -1,29 +1,29 @@
 'use strict'
 
-var chai = require('chai')
-var should = chai.should()
-var expect = chai.expect
+let chai = require('chai')
+let should = chai.should()
+let expect = chai.expect
 
-var async = require('async')
+let async = require('async')
 
-var path = require('path')
+let path = require('path')
 
 // Requires harcon. In your app the form 'require('harcon')' should be used
-var Harcon = require('../lib/Inflicter')
+let Harcon = require('../lib/Inflicter')
 
-var Logger = require('./WinstonLogger')
+let Logger = require('./WinstonLogger')
 
-var Publisher = require('./Publisher')
+let Publisher = require('./Publisher')
 
-var Clerobee = require('clerobee')
-var clerobee = new Clerobee(16)
+let Clerobee = require('clerobee')
+let clerobee = new Clerobee(16)
 
-var harconName = 'HarconSys'
+let harconName = 'HarconSys'
 describe('harcon', function () {
-	var inflicter
+	let inflicter
 
 	before(function (done) {
-		var logger = Logger.createWinstonLogger( { file: 'mochatest.log' } )
+		let logger = Logger.createWinstonLogger( { file: 'mochatest.log' } )
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
@@ -71,18 +71,16 @@ describe('harcon', function () {
 
 		it('Retrieve entities...', function (done) {
 			inflicter.entities( function (err, entities) {
-				console.log( '...', err, entities )
 				let names = entities.map( function (entity) { return entity.name } )
-				expect( names ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Charlotte', 'Claire', 'Domina', 'Julie', 'Lina', 'Marie', 'Marion' ] )
+				console.log( '...', err, entities, names )
+				expect( names ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Bandit', 'Charlotte', 'Claire', 'Domina', 'Julie', 'Lina', 'Marie', 'Marion' ] )
 				done(err)
 			} )
 		})
 
 		it('Send for divisions...', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'Inflicter.divisions', function (err, res) {
-				should.not.exist(err)
-				should.exist(res)
-				expect( res[0] ).to.include( harconName, harconName + '.click' )
+				console.log( err, res )
 				done()
 			} )
 		})
@@ -98,16 +96,25 @@ describe('harcon', function () {
 
 	})
 
+	describe('Error handling', function () {
+		it('Throw error', function (done) {
+			inflicter.ignite( clerobee.generate(), null, '', 'Bandit.delay', function (err) {
+				should.exist(err)
+				done()
+			} )
+		})
+	})
+
 	describe('State shifting', function () {
 		it('Simple case', function (done) {
-			var Lina = inflicter.barrel.firestarter('Lina').object
+			let Lina = inflicter.barrel.firestarter('Lina').object
 			inflicter.ignite( clerobee.generate(), null, '', 'Marie.notify', 'data', 'Lina.marieChanged', function (err) {
 				if (err) return done(err)
 
 				inflicter.ignite( clerobee.generate(), null, '', 'Marie.simple', 'Bonjour', 'Salut', function (err) {
 					if (err) return done(err)
 
-					var pingInterval = setInterval( function () {
+					let pingInterval = setInterval( function () {
 						if ( Lina.hasMarieChanged ) {
 							clearInterval( pingInterval )
 							done()
@@ -159,6 +166,7 @@ describe('harcon', function () {
 	} )
 
 	describe('Harcon workflow', function () {
+
 		it('Simple greetings by name is', function (done) {
 			// Sending a greetings message with 2 parameters and waiting for the proper answer
 			inflicter.ignite( '0', null, '', 'Marie.simple', 'whatsup?', 'how do you do?', function (err, res) {
@@ -308,6 +316,7 @@ describe('harcon', function () {
 				done( )
 			} )
 		})
+
 	})
 
 	describe('Post health tests', function () {

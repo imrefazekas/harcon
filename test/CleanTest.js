@@ -1,13 +1,13 @@
-var Inflicter = require('../lib/Inflicter')
+let Inflicter = require('../lib/Inflicter')
 
-var Logger = require('./WinstonLogger')
-var logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'debug' } )
+let Logger = require('./WinstonLogger')
+let logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'debug' } )
 
-var inflicter = new Inflicter( { logger: logger, namedResponses: true, idLength: 32, marie: {greetings: 'Hi!'} } )
+let inflicter = new Inflicter( { logger: logger, namedResponses: true, idLength: 32, marie: {greetings: 'Hi!'} } )
 
-var path = require('path')
+let path = require('path')
 
-var Publisher = require('./Publisher')
+let Publisher = require('./Publisher')
 inflicter.addicts( Publisher )
 Publisher.watch( path.join( process.cwd(), 'test', 'components' ) )
 
