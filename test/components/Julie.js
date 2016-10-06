@@ -18,5 +18,9 @@ module.exports = {
 	repose: function ( message, callback ) {
 		console.log( this.name + ' dort ... ' + message )
 		callback( null, 'Non, Mais non!' )
+	},
+	chouchou: function ( message, callback ) {
+		console.log( this.name + ' dort ... ' + message )
+		callback( null, 'Non, Mais non!' )
 	}
 }
