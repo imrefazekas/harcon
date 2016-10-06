@@ -12,15 +12,16 @@ module.exports = {
 		callback( null, 'Non, Mais non!' )
 	},
 	rever: function ( message, callback ) {
-		console.log( this.name + ' dort ... ' + message )
+		console.log( this.name + ' reve < ' + message + ' >' )
 		callback( null, 'Non, Mais non!' )
 	},
 	repose: function ( message, callback ) {
-		console.log( this.name + ' dort ... ' + message )
+		console.log( this.name + ' repose < ' + message + ' >' )
 		callback( null, 'Non, Mais non!' )
 	},
-	chouchou: function ( message, callback ) {
-		console.log( this.name + ' dort ... ' + message )
-		callback( null, 'Non, Mais non!' )
+	chouchou: function ( message, terms, ignite, callback ) {
+		console.log( this.name + ' chouchou < ' + message + ' >' )
+		ignite( 'Alizee.dormir', callback )
+		// callback( null, 'Non, Mais non!' )
 	}
 }

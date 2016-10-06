@@ -12,7 +12,7 @@ module.exports = {
 		callback(null, 'Bonjour!')
 	},
 	jolie: function (message, callback) {
-		console.log( this.name + ' est jolie. ' + message)
+		console.log( this.name + ' est jolie < ' + message + ' >' )
 		callback(null, 'Enchentée.')
 	}
 }

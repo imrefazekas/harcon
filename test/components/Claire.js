@@ -14,7 +14,7 @@ module.exports = {
 		callback( null, 'Pas du tout!' )
 	},
 	jolie: function (message, terms, ignite, callback) {
-		console.log( this.name + ' est jolie. ' + message )
+		console.log( this.name + ' est jolie < ' + message + ' >' )
 		callback( null, 'Merci' )
 	}
 }

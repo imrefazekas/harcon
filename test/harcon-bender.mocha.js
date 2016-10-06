@@ -14,6 +14,7 @@ let clerobee = new Clerobee(16)
 
 let harconName = 'HarconSys'
 
+let Alizee = require('./components/Alizee')
 let Julie = require('./components/Julie')
 let Claire = require('./components/Claire')
 let Marie = require('./components/Marie')
@@ -22,8 +23,8 @@ describe('HarconBend', function () {
 	let inflicter
 
 	before(function (done) {
-		// let logger = Logger.createWinstonLogger( { console: true } )
-		let logger = Logger.createWinstonLogger( { file: 'mochaBendtest.log' } )
+		let logger = Logger.createWinstonLogger( { console: true } )
+		// let logger = Logger.createWinstonLogger( { file: 'mochaBendtest.log' } )
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
@@ -39,13 +40,17 @@ describe('HarconBend', function () {
 				defs: {
 					'Julie.rever': { type: 'spread', primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ] },
 					'Julie.repose': { type: 'series', primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ] },
-					'Julie.chouchou': { type: 'waterfall', primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ] }
+					'Julie.chouchou': { type: 'waterfall', primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ] },
+					'Alizee.dormir': { type: 'series', primers: [] }
 				}
 			}
 		} )
 		.then( function (_inflicter) {
 			inflicter = _inflicter
 			return 'ok'
+		} )
+		.then( () => {
+			return inflicter.inflicterEntity.addicts( Alizee )
 		} )
 		.then( () => {
 			return inflicter.inflicterEntity.addicts( Julie )
@@ -68,7 +73,6 @@ describe('HarconBend', function () {
 		it('Retrieve divisions...', function (done) {
 			setTimeout( function () {
 				inflicter.divisions().then( function (divisions) {
-					console.log('!!!!!!', divisions)
 					expect( divisions ).to.eql( [ harconName ] )
 					done()
 				} ).catch(function (error) {
@@ -79,6 +83,7 @@ describe('HarconBend', function () {
 	})
 
 	describe('Bending', function () {
+		/*
 		it('Spread', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.rever', [ 'bonne nuite' ], function (err, res) {
 				console.log('Spread .....', err, res)
@@ -93,6 +98,7 @@ describe('HarconBend', function () {
 				done()
 			} )
 		})
+		*/
 		it('Waterfall', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.chouchou', [ 'bonne nuite' ], function (err, res) {
 				console.log('Waterfall .....', err, res)
