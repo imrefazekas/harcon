@@ -14,6 +14,7 @@ let clerobee = new Clerobee(16)
 
 let harconName = 'HarconSys'
 
+let Domina = require('./components/Domina')
 let Alizee = require('./components/Alizee')
 let Julie = require('./components/Julie')
 let Claire = require('./components/Claire')
@@ -38,16 +39,32 @@ describe('HarconBend', function () {
 			blower: { commTimeout: 2000, tolerates: [] },
 			FireBender: {
 				defs: {
-					'Julie.rever': { type: 'spread', primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ] },
-					'Julie.repose': { type: 'series', primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ] },
-					'Julie.chouchou': { type: 'waterfall', primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ] },
-					'Alizee.dormir': { type: 'series', primers: [] }
+					'Julie.rever': {
+						type: 'spread',
+						primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ]
+					},
+					'Julie.repose': {
+						type: 'series',
+						primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ]
+					},
+					'Julie.chouchou': {
+						type: 'waterfall',
+						primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ]
+					},
+					'Alizee.dormir': { type: 'series', primers: [] },
+					'Julie.choisi': {
+						type: 'series',
+						primers: [ { division: 'HarconSys', event: 'Claire.tampis', skipIf: 'Domina.permit' } ]
+					}
 				}
 			}
 		} )
 		.then( function (_inflicter) {
 			inflicter = _inflicter
 			return 'ok'
+		} )
+		.then( () => {
+			return inflicter.inflicterEntity.addicts( Domina )
 		} )
 		.then( () => {
 			return inflicter.inflicterEntity.addicts( Alizee )
@@ -83,7 +100,6 @@ describe('HarconBend', function () {
 	})
 
 	describe('Bending', function () {
-		/*
 		it('Spread', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.rever', [ 'bonne nuite' ], function (err, res) {
 				console.log('Spread .....', err, res)
@@ -98,11 +114,17 @@ describe('HarconBend', function () {
 				done()
 			} )
 		})
-		*/
 		it('Waterfall', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.chouchou', [ 'bonne nuite' ], function (err, res) {
 				console.log('Waterfall .....', err, res)
 				expect( res ).to.eql( 'Enchentée.' )
+				done()
+			} )
+		})
+		it('Waterfall', function (done) {
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.choisi', [ 'bonne nuite' ], function (err, res) {
+				console.log('Waterfall .....', err, res)
+				expect( res ).to.eql( [ 'Non, Mais non!' ] )
 				done()
 			} )
 		})

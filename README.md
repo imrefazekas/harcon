@@ -1,6 +1,8 @@
 Harcon - Proven and reliable microservice solution for the harmonic convergence of JS entities.
 Designed to be scalable from prototypes till highly structured node-based enterprise components of real-time systems.
 
+Harcon is strong to build an endlessly scalable execution-chain or workflow-based or machine-learning solution for NodeJS applications.
+
 Need help? Join me on
 
 [![Join the chat at https://gitter.im/imrefazekas/harcon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imrefazekas/harcon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![npm version](https://badge.fury.io/js/harcon.svg)](http://badge.fury.io/js/harcon) [![Code Climate](https://codeclimate.com/github/imrefazekas/harcon/badges/gpa.svg)](https://codeclimate.com/github/imrefazekas/harcon)
@@ -8,6 +10,7 @@ Need help? Join me on
 and level your problem with me freely. :)
 
 !Note: From version 3.0.0, harcon provides callback interface with Promise support in its functions.
+!Note: From version 5.0.0, harcon has explicit toolset to define and perform execution chains and workflows.
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
@@ -38,6 +41,8 @@ For nsq integration, please check this: [harcon-nsq](https://github.com/imrefaze
 - __Smooth infiltration__: your objects / functions will possess the necessary services via injection, no need to create complex structures and compounds
 
 - __Advanced routing & listening__: system fragmentation, qualified names, regular expressions, wildcards, etc.
+
+- __Execution-chain__: toolset to easily define execution paths between entities to relay messages and results.
 
 __!Note__: Harcon's concept is to introduce a clean and high abstraction layer over messaging between entities. Like in case of every abstraction tool, for webapps which are simple as 1, it can be proven as a liability.
 
@@ -88,6 +93,13 @@ In the JS world, one should mind the introduction of [microservices](http://mart
 
 [harcon](https://github.com/imrefazekas/harcon) is __"just"__ a low-level library to leverage such concept.
 _In a simple way, you define entities and the communications among them then publish them._
+
+
+## Execution-chain
+
+In a microservice architecture, the key to design and orchestrate a working and living system is to abstract out the control in some form and write business logic fitting that abstract description.
+
+[harcon](https://github.com/imrefazekas/harcon) provides the [Bender](#bender) chapter for details, but please learn the basics of harcon before entering the rabbit hole, it is not without a reason that chapter is at the end of the documentation... ;)
 
 
 #### Entities
@@ -173,6 +185,8 @@ In some cases, you might find useful to know which answer comes from which entit
 The returned object will look like this:
 
 	{ peter: 'Hi.', camille: 'Hello.' }
+
+__!Note:__ Harcon support special cases, where all message exchange is performed in 1:1 constellation and the result of a given call is always a single object. Please read [Unfolding](#unfolding) for details.
 
 
 #### Error responses
@@ -702,35 +716,116 @@ By default harcon blocks acts like a blackbox allowing to exchange communication
 If you pass an attribute _'connectedDivisions'_ to the config of harcon, it will accept communication from the enlisted divisions and allow you to connect to those ones.
 
 
-## Function erupt
 
-On the line to ease the management of workflows, [harcon](https://github.com/imrefazekas/harcon) introduces the _erupt_ function appearing in the published entities and in the terms object passed to the services functions during ongoing communication.
-It represents a simple trick to call ignite by returning the following:
+## Unfolding
+
+The basic concept of [harcon](https://github.com/imrefazekas/harcon) is to relay messages between entities where m:n quantity relationship for delivery is much encouraged. That is why, harcon always returns with an array. It is in the nature of Javascript and harcon, that a lib can not decide in advance who will respond to a given message (domains, contextes, auditors, etc.) and if an addressed entity will respond anything.
+
+However, if your system is designed to leverage only 1:1 interactions, harcon can be forced to unfold the array of results and return only the single answer you expect.
 
 ```javascript
-function (waterfall) {
-	return waterfall ? function (_obj, cb) { ... } : function (cb) { ... }
+let harcon = new Harcon( {
+	name: harconName,
+	unfoldAnswer: true,
+	...
+} )
+```
+
+That will unlock the unfolding feature of harcon as follows:
+
+```javascript
+harcon.simpleIgnite( 'camille.simple', function (err, res) {
+	console.error( 'res will be \'Hello.\' and not [\'Hello.\'] ')
+	///
+} )
+```
+
+
+## Bender
+
+Bender is a proven high-level entity over microservices aims to introduce a simple, yet powerful execution-chain-tool for architects helping to drive message relaying between entities in a regulated environment.
+
+How it works: you define your execution logic which is a set of rules pairing
+- a message
+- a list of messages induced when that message is answered.
+
+Let's say you want to see that execution to be performed:
+
+```javascript
+'Order.registerOrder' -> 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif'
+```
+
+The event registerOrder will trigger 3 order messages to be sent. Rolling the execution of your business workflow further.
+In other way, you can liberate your execution chain from low-level source code. The entity Bender is dedicated to help with you on this road.
+
+One can activate it by using the following configuration:
+
+```javascript
+let harcon = new Harcon( {
+	name: harconName,
+	bender: { enabled: true },
+	FireBender: {
+		defs: {
+			// rules here
+		}
+	}
+	...
+} )
+```
+
+Syntax of a rule:
+
+```javascript
+{event_name}: {
+	type: {execution_type},
+	primers: [ {target} ]
 }
+
+{execution_type} : 'series' || 'waterfall' || 'spread'
+
+{target} : { division: {domain_name}, event: {event_name}, skipIf: {condition} } || {event_name}
+
+{condition} : {event_name} || function
 ```
 
-In case, you are building up a complete chain of calls, you can use your favorite functional abstraction tool as the following example demonstrates through the popular _async.js_:
+Each rule is pair of message and a list of steps to make (called primers)
+For example :
 
 ```javascript
-async.series([
-	erupt()( 'Marie.greet', 'Hello' ),
-	erupt()( 'Julie.greet', 'Hello' )
-], function(err, res){ })
+'Order.registerOrder': { primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ] }
 ```
 
+That works as follows: an entity or external event triggers the message 'registerOrder'sent to entity 'Order'. The call will be performed and the result of that call will be passed as parameter to all messages enlisted in the array 'primer'. So the entity 'DB' will receive the message 'storeOrder' automatically triggered by the message 'Order.registerOrder'. When 'DB' is finished, 'checkStore' will be triggered and so on.
+Default execution type is 'series' means sequential execution of the given list.
+
+Bender is turns harcon into a strinct message delivery environment, which means if an event is not reckognised by Bender or in other words, there is no rule for that given event, an exception will be thrown to the caller and no message delivery will be performed.
+
+There are several type of execution defined by the {execution_type} above.
+- 'series' means to execute all steps in sequential order passing the result of 'Order.registerOrder' to each of them and returning the collected results to the caller of 'Order.registerOrder'.
 ```javascript
-async.waterfall([
-	erupt()( 'Marie.greet', 'Hello' ),
-	erupt(true)( 'Julie.greet', 'Hello' )
-], function(err, res){ })
+'Order.registerOrder': { type: 'series', primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ] }
 ```
 
-No need to pass callback, the function returned by _erupt_ call will possess an injected callback function as parameter used as THE callback of the communication.
-Pretty nasty, huh?
+- 'waterfall' means a waterfall-like execution. Bender passes the result of 'Order.registerOrder' to 'DB.storeOrder' and 'DB.checkStore' will receive the result of 'DB.storeOrder' and so on...
+```javascript
+'Order.registerOrder': { type: 'waterfall', primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ] }
+```
+
+- 'spread' means concurrent message sending to all entities enlisted in the array of 'primers'. Basically this is the bulked execution of message sending of entities where no callback is defined expressing the ignorance to answers.
+```javascript
+'Order.registerOrder': { type: 'spread', primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ] }
+```
+
+The attribute 'skipIf' defines the 'execution-gate' for a given step.
+It can be a message string or a function. If it is
+
+- a string, so a message, the given message will be sent to the referred entity and the answer should possess the "allowed" attribute with a value coercing to true to allow the execution of the given step. Will be ignored otherwise. If error is sent back, all remaining steps will be ignored as well.
+
+- a function, the answer coerces to true will allow to perform the step. Will be ignored otherwise. If error is thrown, all remaining steps will be ignored as well.
+
+
+Attribute 'skipIf' can be used only for 'series' and 'waterfall' as logic follows.
+
 
 
 ## Fragmented in time
@@ -765,6 +860,40 @@ The param terms holds references about the incoming communication by the name of
 You can store the _externalID_ if the communication has been initiated by an external party or just the _flowID_ if continuity must be ensured.
 
 
+
+
+## Function erupt
+
+On the line to ease the management of workflows, [harcon](https://github.com/imrefazekas/harcon) introduces the _erupt_ function appearing in the published entities and in the terms object passed to the services functions during ongoing communication.
+It represents a simple trick to call ignite by returning the following:
+
+```javascript
+function (waterfall) {
+	return waterfall ? function (_obj, cb) { ... } : function (cb) { ... }
+}
+```
+
+In case, you are building up a complete chain of calls, you can use your favorite functional abstraction tool as the following example demonstrates through the popular _async.js_:
+
+```javascript
+async.series([
+	erupt()( 'Marie.greet', 'Hello' ),
+	erupt()( 'Julie.greet', 'Hello' )
+], function(err, res){ })
+```
+
+```javascript
+async.waterfall([
+	erupt()( 'Marie.greet', 'Hello' ),
+	erupt(true)( 'Julie.greet', 'Hello' )
+], function(err, res){ })
+```
+
+No need to pass callback, the function returned by _erupt_ call will possess an injected callback function as parameter used as THE callback of the communication.
+Pretty nasty, huh?
+
+
+
 ## License
 
 (The MIT License)
@@ -796,6 +925,8 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 5.0.0 : Bender added
+- 4.x : lots of great refactoring and improvements
 - 3.0.0 : promise support added and tons of tweaks and features
 - 2.0.0 : reimplemented architecture and division management
 - 1.2.X : plugin architecture added

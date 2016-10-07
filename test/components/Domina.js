@@ -15,5 +15,9 @@ module.exports = {
 				ignite( 1, null, self.division + '.click', 'Claire.simple', 'It is morning!', 'Time to wake up!', cb )
 			}
 		], callback )
+	},
+	permit: function (message, terms, ignite, callback) {
+		console.log( this.name + ' permit < ' + message + ' >' )
+		callback( null, { allowed: false } )
 	}
 }

@@ -16,5 +16,9 @@ module.exports = {
 	jolie: function (message, terms, ignite, callback) {
 		console.log( this.name + ' est jolie < ' + message + ' >' )
 		callback( null, 'Merci' )
+	},
+	tampis: function (message, terms, ignite, callback) {
+		console.log( this.name + ' est tampis < ' + message + ' >' )
+		callback( new Error('Tampis...') )
 	}
 }
