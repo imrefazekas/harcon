@@ -10,6 +10,7 @@ Need help? Join me on
 and level your problem with me freely. :)
 
 !Note: From version 3.0.0, harcon provides callback interface with Promise support in its functions.
+
 !Note: From version 5.0.0, harcon has explicit toolset to define and perform execution chains and workflows.
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
