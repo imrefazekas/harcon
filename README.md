@@ -57,7 +57,7 @@ $ npm install harcon
 ## Quick setup
 ```javascript
 var Harcon = require('harcon')
-var harcon = new Harcon( )
+new Harcon( { /* opts */ } )
 
 // define a listener function listening every message related to "greet" like "greet.goodmorning" or "greet.goodday"
 harcon.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
@@ -180,7 +180,7 @@ Returns with the following:
 
 In some cases, you might find useful to know which answer comes from which entity. If you add a single parameter to the harcon:
 
-	var harcon = new Harcon( { namedResponses: true } )
+	new Harcon( { namedResponses: true } )
 
 The returned object will look like this:
 
