@@ -51,6 +51,7 @@ describe('harcon', function () {
 			} )
 		} )
 		.then( function () {
+			console.log('\n\n-----------------------\n\n')
 			done()
 		} )
 		.catch(function (reason) {
