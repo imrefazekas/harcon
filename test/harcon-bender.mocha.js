@@ -24,7 +24,7 @@ describe('HarconBend', function () {
 	let inflicter
 
 	before(function (done) {
-		let logger = Logger.createWinstonLogger( { console: true } )
+		let logger = Logger.createWinstonLogger( { console: true, level: 'silly' } )
 		// let logger = Logger.createWinstonLogger( { file: 'mochaBendtest.log' } )
 
 		// Initializes the Harcon system
@@ -133,7 +133,9 @@ describe('HarconBend', function () {
 
 	after(function (done) {
 		// Shuts down Harcon when it is not needed anymore
-		inflicter.close()
-		done()
+		setTimeout( function () {
+			inflicter.close()
+			done()
+		}, 500 )
 	})
 })

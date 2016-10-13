@@ -58,6 +58,7 @@ describe('harcon', function () {
 			return done(reason)
 		} )
 	})
+
 	describe('Test Harcon status calls', function () {
 		it('Retrieve divisions...', function (done) {
 			setTimeout( function () {

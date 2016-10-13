@@ -44,6 +44,8 @@ For mqtt integration, please check this: [harcon-mqtt](https://github.com/imrefa
 
 - __Execution-chain__: toolset to easily define execution paths between entities to relay messages and results.
 
+- __Business-transaction__: small helpers to manage business executions paths as (distributed) transactions.
+
 __!Note__: Harcon's concept is to introduce a clean and high abstraction layer over messaging between entities. Like in case of every abstraction tool, for webapps which are simple as 1, it can be proven as a liability.
 
 This library starts to shine in a highly structured and distributed environment.
@@ -100,6 +102,13 @@ _In a simple way, you define entities and the communications among them then pub
 In a microservice architecture, the key to design and orchestrate a working and living system is to abstract out the control in some form and write business logic fitting that abstract description.
 
 [harcon](https://github.com/imrefazekas/harcon) provides the [Bender](#bender) chapter for details, but please learn the basics of harcon before entering the rabbit hole, it is not without a reason that chapter is at the end of the documentation... ;)
+
+
+## Business transactions
+
+When execution is defined by execution-chains, harcon is capable to tell when a given flow really terminated and inform all entities about the termination opening the gate to the distributed transaction management, when all entities participating to a given flow might react to its termination, performing DB operations for example.
+
+Please check chapter [Transactions](#transactions) for detail.
 
 
 #### Entities
@@ -827,6 +836,30 @@ It can be a message string or a function. If it is
 Attribute 'skipIf' can be used only for 'series' and 'waterfall' as logic follows.
 
 
+## Transactions
+
+When [Bender](#bender) is activated and your flows are well defined through its services, your entities became capable of reacting the termination of your business flows. That serves to handle flows as transactions.
+
+To be straightforward, when a business flow ends, your entities will be notified and can commit DB transactions to finalize their operations.
+
+Each entity you define will possess the following function:
+```javascript
+flowTerminated: function ( flowID, err, result, terms, ignite, callback ) {
+	return new Promise( (resolve, reject) => {
+		...
+	} )
+}
+```
+By default, it does not do anything. If your entity aims to react to 'flowTerminated' events, define such function in the source code of your entity paying attention to the Promise-callback design principle. The function must return a promise and has to allow to pass callback as well...
+
+During your business logic, you business logic functions look like this:
+```javascript
+sign: function ( document, terms, ignite, callback ) {
+	// terms.sourceComm.flowID hold the flowID of the current business flow
+	// use it to store some records in your favorite in-memory storage to access it when 'flowTerminated' is induced.
+}
+```
+
 
 ## Fragmented in time
 
@@ -925,7 +958,7 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
-- 5.0.0 : Bender added
+- 5.0.0 : Bender and transactions added
 - 4.x : lots of great refactoring and improvements
 - 3.0.0 : promise support added and tons of tweaks and features
 - 2.0.0 : reimplemented architecture and division management
