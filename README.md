@@ -873,6 +873,9 @@ let harcon = new Harcon( {
 } )
 ```
 
+__Note__: Please keep in mind, that if you are using a scaling solution, for the safety of the transactions,  [harcon](https://github.com/imrefazekas/harcon) does not distinguish the nodes, one has to facilitate the state sharing between nodes using Redis or similar tools.
+
+
 
 ## Fragmented in time
 
