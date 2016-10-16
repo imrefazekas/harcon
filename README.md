@@ -832,7 +832,6 @@ It can be a message string or a function. If it is
 
 - a function, the answer coerces to true will allow to perform the step. Will be ignored otherwise. If error is thrown, all remaining steps will be ignored as well.
 
-
 Attribute 'skipIf' can be used only for 'series' and 'waterfall' as logic follows.
 
 
@@ -863,6 +862,15 @@ sign: function ( document, terms, ignite, callback ) {
 	// terms.sourceComm.flowID hold the flowID of the current business flow
 	// use it to store some records in your favorite in-memory storage to access it when 'flowTerminated' is induced.
 }
+```
+
+If you want to use Bender without transaction management, the following configuration will turn it off :
+
+```javascript
+let harcon = new Harcon( {
+	bender: { enabled: true, igniteTermination: false },
+	...
+} )
 ```
 
 
