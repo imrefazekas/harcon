@@ -834,6 +834,8 @@ It can be a message string or a function. If it is
 
 Attribute 'skipIf' can be used only for 'series' and 'waterfall' as logic follows.
 
+__Note__: harcon tries to validate the passed definitions searching for circles or crossing references. The Bender entity will fail to initialise if the validation process on the definitions falls.
+
 
 ## Transactions
 
@@ -874,7 +876,6 @@ let harcon = new Harcon( {
 ```
 
 __Note__: Please keep in mind, that if you are using a scaling solution, for the safety of the transactions,  [harcon](https://github.com/imrefazekas/harcon) does not distinguish the nodes, one has to facilitate the state sharing between nodes using Redis or similar tool.
-
 
 
 ## Fragmented in time
@@ -974,7 +975,8 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
-- 5.0.0 : Bender and transactions added
+- 5.2.0 : Added transactions & flow validation
+- 5.0.0 : Bender added
 - 4.x : lots of great refactoring and improvements
 - 3.0.0 : promise support added and tons of tweaks and features
 - 2.0.0 : reimplemented architecture and division management
