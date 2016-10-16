@@ -842,17 +842,22 @@ When [Bender](#bender) is activated and your flows are well defined through its 
 
 To be straightforward, when a business flow ends, your entities will be notified and can commit DB transactions to finalize their operations.
 
-Each entity you define will possess the following function:
+Each entity you define will possess the following functions:
 ```javascript
-flowTerminated: function ( flowID, err, result, terms, ignite, callback ) {
+flowFailed: function ( flowID, errMessage, terms, ignite, callback ) {
+	return new Promise( (resolve, reject) => {
+		...
+	} )
+}
+flowSucceeded: function ( flowID, result, terms, ignite, callback ) {
 	return new Promise( (resolve, reject) => {
 		...
 	} )
 }
 ```
-By default, it does not do anything. If your entity aims to react to 'flowTerminated' events, define such function in the source code of your entity paying attention to the Promise-callback design principle. The function must return a promise and has to allow to pass callback as well...
+By default, it does not do anything. If your entity aims to react to 'flowFailed' or 'flowSucceeded' events, override those functions in the source code of your entity paying attention to the Promise-callback design principle. The function must return a promise and has to allow to pass callback as well...
 
-During your business logic, you business logic functions look like this:
+During your business logic, you business logic should access the flowID through the variable 'terms':
 ```javascript
 sign: function ( document, terms, ignite, callback ) {
 	// terms.sourceComm.flowID hold the flowID of the current business flow
