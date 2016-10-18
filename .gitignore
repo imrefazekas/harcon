@@ -6,3 +6,4 @@ dist/
 doc/
 *.list
 test/_*.js
+tmp
