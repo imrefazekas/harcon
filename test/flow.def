@@ -1,0 +1,13 @@
+# external call
+->[]A ->
+	B : message // series
+	C:message // series
+
+----------------------------------------------------------------
+
+# internal activity
+{}A:message => // waterfall
+	 B : message
+	 C : message
+	 D : message
+	 B : message

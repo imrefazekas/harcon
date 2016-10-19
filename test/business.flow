@@ -1,0 +1,9 @@
+# Komment
+Client->Assistant:registerWatcher // series message
+Assistant=>Client:matchingTrades // spread message
+Client>>Assistant:makeOffer // waterfall message
+nAssistant->Finster:letterLading
+Assistant->Trade:offer
+Trade->Finster:letterCredit
+Trade->Assistant:trade
+Assistant->Client:tradeGuaranteed
