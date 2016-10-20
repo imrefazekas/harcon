@@ -49,6 +49,8 @@ function extractSource ( title, def ) {
 	let res = { message: messagify(title) }
 	if ( def.startsWith('->') || def.startsWith('=>') || def.startsWith('>>') ) {
 		res.external = true
+		res.rest = true
+		res.websocket = true
 		def = def.substring( 2 )
 	} else {
 		res.internal = true
