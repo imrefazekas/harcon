@@ -1,0 +1,3 @@
+Assistant : makeOffer ->
+	Trade : offer
+	Client : offerReceived

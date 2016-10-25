@@ -14,6 +14,8 @@ let clerobee = new Clerobee(16)
 
 let harconName = 'HarconSys'
 
+let path = require('path')
+
 let Domina = require('./components/Domina')
 let Alizee = require('./components/Alizee')
 let Julie = require('./components/Julie')
@@ -38,6 +40,8 @@ describe('HarconBend', function () {
 			suppressing: true,
 			blower: { commTimeout: 2000, tolerates: [] },
 			FireBender: {
+				// defs: path.join( __dirname, 'fintech' )
+				// defs: require('./Fintech.flow')
 				defs: {
 					'Julie.rever': {
 						type: 'spread',

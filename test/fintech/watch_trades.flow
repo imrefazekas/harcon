@@ -1,0 +1,3 @@
+-> {}Client : watch ->
+	Assistant : registerWatcher
+	Storage: book
