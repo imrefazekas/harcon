@@ -22,8 +22,9 @@ It allows you to design and implement complex workflows and microservices where 
 
 The library has a stunning feature list beyond basic messaging functionality.
 
-- __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [MQTT](http://mqtt.org), [NSQ](http://nsq.io), etc...
+- __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [MQTT](http://mqtt.org), [Amazon SQS](https://aws.amazon.com/sqs/), etc...
 For amqp integration, please check this: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp)
+For sqs integration, please check this: [harcon-sqs](https://github.com/imrefazekas/harcon-sqs)
 For mqtt integration, please check this: [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt)
 
 - __Tracking__: you can monitor every message delivered (request or response) by only few lines of code
@@ -220,7 +221,7 @@ will result the following on your console:
 	[Error: Stay away, please.] null
 
 The default transport layer is designed for development purposes only.
-In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org) or [MQTT](http://mqtt.org) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp) and [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) accordingly.
+In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [SQS](https://aws.amazon.com/sqs/) or [MQTT](http://mqtt.org) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp), [harcon-sqs](https://github.com/imrefazekas/harcon-sqs) and [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) accordingly.
 
 By using a real transport layer, all occurred error messages will be delegated. In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
 

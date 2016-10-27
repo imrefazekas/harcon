@@ -19,4 +19,4 @@ gulp.task( 'doc', function (callback) {
 			.pipe( gulp.dest('./doc') )
 } )
 
-gulp.task( 'default', ['eslint', 'mocha', 'doc'] )
+gulp.task( 'default', gulp.series('eslint', 'mocha', 'doc') )
