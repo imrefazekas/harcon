@@ -63,7 +63,7 @@ describe('harcon', function () {
 		it('Retrieve divisions...', function (done) {
 			setTimeout( function () {
 				inflicter.divisions().then( function (divisions) {
-					expect( divisions ).to.eql( [ harconName, harconName + '.click' ] )
+					expect( divisions ).to.eql( [ harconName, harconName + '.click', 'HarconSys.maison.cache' ] )
 					done()
 				} ).catch(function (error) {
 					done(error)
@@ -75,7 +75,7 @@ describe('harcon', function () {
 			inflicter.entities( function (err, entities) {
 				let names = entities.map( function (entity) { return entity.name } )
 				console.log( '...', err, entities, names )
-				expect( names ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Bandit', 'Charlotte', 'Claire', 'Domina', 'Julie', 'Lina', 'Marie', 'Marion' ] )
+				expect( names ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Bandit', 'Charlotte', 'Claire', 'Domina', 'Julie', 'Lina', 'Margot', 'Marie', 'Marion' ] )
 				done(err)
 			} )
 		})
@@ -96,6 +96,21 @@ describe('harcon', function () {
 			} )
 		})
 
+	})
+
+	describe('Depth handling', function () {
+		it('multilevel domains', function (done) {
+			inflicter.ignite( clerobee.generate(), null, 'HarconSys.maison.cache', 'Margot.alors', (err, res) => {
+				console.log( '\n\n>>...........>', err, res )
+				done()
+			} )
+		})
+		it('multilevel contextes', function (done) {
+			inflicter.ignite( clerobee.generate(), null, 'HarconSys.maison.cache', 'paresseux.fille.alors', (err, res) => {
+				console.log( '\n\n>>>', err, res )
+				done()
+			} )
+		})
 	})
 
 	describe('Error handling', function () {
