@@ -9,7 +9,7 @@ gulp.task( 'eslint', function (callback) {
 } )
 
 gulp.task( 'mocha', function (callback) {
-	return gulp.src( [ './test/harcon.mocha.js' /* , './test/harcon-bender.mocha.js' */ ] ).pipe( plugins.mocha({reporter: 'nyan'}) )
+	return gulp.src( [ './test/harcon.mocha.js', './test/harcon-bender.mocha.js' ] ).pipe( plugins.mocha({reporter: 'nyan'}) )
 } )
 
 gulp.task( 'doc', function (callback) {

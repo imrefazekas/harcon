@@ -6,14 +6,13 @@ let expect = chai.expect
 
 let async = require('async')
 
+let fs = require('fs')
 let path = require('path')
 
 // Requires harcon. In your app the form 'require('harcon')' should be used
 let Harcon = require('../lib/Inflicter')
 
 let Logger = require('./WinstonLogger')
-
-let Publisher = require('./Publisher')
 
 let Clerobee = require('clerobee')
 let clerobee = new Clerobee(16)
@@ -31,13 +30,14 @@ describe('harcon', function () {
 			name: harconName,
 			logger: logger, idLength: 32,
 			blower: { commTimeout: 2000, tolerates: ['Alizee.superFlegme'] },
+			mortar: { enabled: true, folder: path.join( __dirname, 'components' ), liveReload: true },
 			Marie: {greetings: 'Hi!'}
 		} )
 		.then( function (_inflicter) {
 			inflicter = _inflicter
-			return inflicter.inflicterEntity.addicts( Publisher )
+			// return inflicter.inflicterEntity.addicts( Publisher )
 		} )
-		.then( () => { return Publisher.watch( path.join( process.cwd(), 'test', 'components' ) ) } )
+		// .then( () => { return Publisher.watch( path.join( process.cwd(), 'test', 'components' ) ) } )
 		.then( () => {
 			// Publishes an event listener function: Peter. It just sends a simple greetings in return
 			return inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
@@ -75,7 +75,7 @@ describe('harcon', function () {
 			inflicter.entities( function (err, entities) {
 				let names = entities.map( function (entity) { return entity.name } )
 				console.log( '...', err, entities, names )
-				expect( names ).to.eql( [ 'Inflicter', 'Publisher', 'peter', 'walter', 'Alizee', 'Bandit', 'Charlotte', 'Claire', 'Domina', 'Julie', 'Lina', 'Margot', 'Marie', 'Marion' ] )
+				expect( names ).to.eql( [ 'Inflicter', 'peter', 'walter', 'Mortar', 'Alizee', 'Bandit', 'Charlotte', 'Claire', 'Domina', 'Julie', 'Lina', 'Margot', 'Marie', 'Marion' ] )
 				done(err)
 			} )
 		})
@@ -334,6 +334,26 @@ describe('harcon', function () {
 			} )
 		})
 
+	})
+
+	describe('Live reload test', function () {
+		it('Changing Alizee', function (done) {
+			this.timeout( 15000 )
+
+			setTimeout( () => {
+				fs.writeFileSync( path.join( __dirname, 'components', 'Lina.js'), fs.readFileSync(
+					path.join( __dirname, 'livereload', 'Lina.js'), { encoding: 'utf8' }
+				), { encoding: 'utf8' } )
+			}, 2000 )
+
+			setTimeout( () => {
+				inflicter.ignite( '0', null, '', 'Lina.flying', (err, res) => {
+					should.not.exist(err)
+					expect( res ).to.eql( [ 'Flying in the clouds...' ] )
+					done()
+				} )
+			}, 7000 )
+		})
 	})
 
 	describe('Post health tests', function () {

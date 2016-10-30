@@ -52,6 +52,7 @@ __!Note__: Harcon's concept is to introduce a clean and high abstraction layer o
 This library starts to shine in a highly structured and distributed environment.
 
 
+
 ## Installation
 
 $ npm install harcon
@@ -85,6 +86,7 @@ harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?', function (e
 ```
 
 
+
 ## Workflows
 
 In an enterprise-level system, one has to realize complex communication structure where lots of entities are following business logic and rules, involving subsystems and external resources, policies and other considerations, in short form: workflows.
@@ -98,6 +100,7 @@ In the JS world, one should mind the introduction of [microservices](http://mart
 _In a simple way, you define entities and the communications among them then publish them._
 
 
+
 ## Execution-chain
 
 In a microservice architecture, the key to design and orchestrate a working and living system is to abstract out the control in some form and write business logic fitting that abstract description.
@@ -105,11 +108,13 @@ In a microservice architecture, the key to design and orchestrate a working and 
 [harcon](https://github.com/imrefazekas/harcon) provides the [Bender](#bender) chapter for details, but please learn the basics of harcon before entering the rabbit hole, it is not without a reason that chapter is at the end of the documentation... ;)
 
 
+
 ## Business transactions
 
 When execution is defined by execution-chains, harcon is capable to tell when a given flow really terminated and inform all entities about the termination opening the gate to the distributed transaction management, when all entities participating to a given flow might react to its termination, performing DB operations for example.
 
 Please check chapter [Transactions](#transactions) for detail.
+
 
 
 #### Entities
@@ -162,6 +167,11 @@ harcon.simpleIgnite( 'BookKeeper.ordersOfToday', function (err, res) {
 
 The simplest but not the only way to address is to quality entities with their names.
 
+__!Note:__ The following names are strictly forbidden to be used as entity names in any lower- or uppercase version: 'Barrel', 'Bender', 'Blower', 'Communication', 'Fire', 'Firestarter', 'Firestormstarter', 'FireBender', 'Flamestarter', 'FlowBuilder', 'FlowReader', 'Inflicter', 'Mortar', 'Warper'
+
+Those are used by [harcon](https://github.com/imrefazekas/harcon) itself.
+
+
 
 #### Responses
 
@@ -199,6 +209,7 @@ The returned object will look like this:
 __!Note:__ Harcon support special cases, where all message exchange is performed in 1:1 constellation and the result of a given call is always a single object. Please read [Unfolding](#unfolding) for details.
 
 
+
 #### Error responses
 
 Your callback might receive an error object in unwanted situations. The default transport channel of harcon will stop the message processing at the first error occurring as follows:
@@ -224,6 +235,7 @@ The default transport layer is designed for development purposes only.
 In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [SQS](https://aws.amazon.com/sqs/) or [MQTT](http://mqtt.org) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp), [harcon-sqs](https://github.com/imrefazekas/harcon-sqs) and [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) accordingly.
 
 By using a real transport layer, all occurred error messages will be delegated. In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
+
 
 
 #### Orchestration
@@ -341,6 +353,7 @@ harcon.simpleIgnite( 'reserve.address', '127.0.0.1' )
 Harcon will know, that sender does not expect any answer at all. But, considering that [harcon](https://github.com/imrefazekas/harcon) is designed for highly structured and fragmented context, receiver entities always __MUST__ have a callback, to let [harcon](https://github.com/imrefazekas/harcon) know about the termination of the given operation for operational prudence!
 
 
+
 #### Entity initialization
 
 The need to pass contextual parameters to entities might rise. The options object passed to the constructure of Harcon allows you to specify parameters for entities which will be passed while the init method defined in the entity is called.
@@ -355,6 +368,8 @@ var marie = {
 	// services ...
 }
 ```
+
+
 
 #### Distinguishing entities
 
@@ -377,6 +392,8 @@ The entity can be called with 'Charlotte-Unique.access' or 'Charlotte-1231441123
 This feature is useful in a largely scaled environment, where a given entity might appear in multiple instances and distinguishing them is a must-have behavior.
 
 The entity will be still available with its own name: 'Charlotte'. You can consider it as a synonym or alternative name.
+
+
 
 #### Logging
 
@@ -430,6 +447,7 @@ harcon = new Harcon( { seals: [ 'Marie' ] /* ... */ } )
 That will turn off the logging of all messages sent to Marie. So no answers received by other entities from Marie will be logged.
 
 
+
 #### Unique messages
 
 Every communication exchanged possesses the following properties (not exclusively):
@@ -445,6 +463,8 @@ By default, [harcon](https://github.com/imrefazekas/harcon) uses 32 as length of
 ```javascript
 harcon = new Harcon( { /* ... */ idLength: 32 } )
 ```
+
+
 
 ## Message exchange
 
@@ -481,6 +501,7 @@ var timer = {
 That ignite function is injected by the [harcon](https://github.com/imrefazekas/harcon) when you publish the components.
 
 
+
 ## The terms object
 
 In a workflow, a contextual object is much desired to set the context where business entities are participating and share some environmental state or values.
@@ -514,6 +535,7 @@ module.exports = {
 ```
 
 The 'tree' attribute set by entity 'Domina' will be seen by the entity 'Claire' when it receives the message.
+
 
 
 ## Divisions
@@ -566,6 +588,8 @@ By default, [harcon](https://github.com/imrefazekas/harcon) presumes to have one
 harcon = new Harcon( { division: 'District 8', ... } )
 ```
 
+
+
 ## Entity configuration
 
 Entities can be configured easily. The _init_ method of an entity if present, will be called at the end of its publishing process withing the [harcon](https://github.com/imrefazekas/harcon).
@@ -598,9 +622,11 @@ An entity's configuration is an merged object made from the followings (in order
 
 Should you use none of them, and your entity shall be initiated with empty object.
 
+
+
 ## Timeout management
 
-[harcon](https://github.com/imrefazekas/harcon) has an internal handler - which is off by default - to deal with messages not answered within a reasonable timeframe.
+[harcon](https://github.com/imrefazekas/harcon) has an internal handler to deal with messages not answered within a reasonable timeframe.
 
 ```javascript
 harcon = new Harcon( { ..., blower: { commTimeout: 2000 } } )
@@ -608,21 +634,39 @@ harcon = new Harcon( { ..., blower: { commTimeout: 2000 } } )
 
 This configuration will tell your running harcon instance to check if the messages sent to some entities have been answered within __2000__ millisecs. If not, an error will be sent to the sender with the message: __'Communication has not been received answer withing the given timeframe.'__
 
-The nature of your app might urge you to distinguish time management following some business logic. For example: operations involving third party APIs have to be performed with a wider or without time limitation. [harcon](https://github.com/imrefazekas/harcon) supports such logic in many ways:
+The nature of your app might urge you to distinguish time management following some business logic. For example: operations involving third party APIs have to be performed with a wider or without time limitation. [harcon](https://github.com/imrefazekas/harcon) supports such demand in many ways.
+
+In the simplest case:
 
 ```javascript
 harcon = new Harcon( { ..., blower: { commTimeout: 2000, tolerates: [ 'Alizee.superFlegme' ] } } )
 ```
 
-The field __'tolerates'__ defines the list of conditions turning off the global timeout management. It is an array with possible values of types: String, Regexp and Function.
+The field __'tolerates'__ can be defined as an array of strings turning off the global timeout management for the communication enclosing the given messages.
 
-- Strings will be matched to the address of the message
-- Regexp will be matched to the address of the message
-- Function will be called by passing the ongoing communication object and the return value will determine if timeout management should be applied.
+The array tolerate might be enlisting strings, regexp values, functions or objects evaluated as follows:
 
-In [harcon](https://github.com/imrefazekas/harcon), event the attribute _'commTimeout'_ can be a function to define custom timeouts to different communication.
+- Strings will be matched to the event of the message
+- Regexp will be matched to the event of the message
+- Function will be called by passing the ongoing communication object and the boolean return value will determine if timeout management should be applied.
+- Object's _event_ attribute will be matched as the string case above and the timeout will be set by the 'timeout' attribute of the object.
+
+Please find some examples below:
+
+```javascript
+harcon = new Harcon( { ..., blower: { commTimeout: 2000, tolerates: [ 'Alizee.superFlegme' ] } } )
+... or ...
+harcon = new Harcon( { ..., blower: { commTimeout: 2000, tolerates: [ /Alizee\.\w+/g ] } } )
+... or ...
+harcon = new Harcon( { ..., blower: { commTimeout: 2000, tolerates: [ function (comm) { return comm.event === 'Alizee.flegme' } ] } } )
+... or ...
+harcon = new Harcon( { ..., blower: { commTimeout: 2000, tolerates: [ { event: 'Alizee.flegme', timeout: 2000 } ] } } )
+```
+
+You can mix the techniques as your business logic demands.
 
 !Note: Please, keep it mind, that harcon is transport layer agnostic, so a preferred message broker can also provide some security over interaction.
+
 
 
 ## Extension
@@ -644,6 +688,7 @@ harcon.addicts( extension )
 In the current version, the harcon instance you are using will send to your components events about system closing, entity publishing and revoking. For a working example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
 
 
+
 ## Promises
 
 To think in terms of the current trends in the JS-world, the services of [harcon](https://github.com/imrefazekas/harcon) might give you back a promise of no callback is provided as last parameter.
@@ -654,6 +699,8 @@ harcon.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?' )
 .catch( function ( reason ) {
 } )
 ```
+
+
 
 ## Millieu
 
@@ -676,6 +723,8 @@ var Marie = {
 ```
 
 In any service of entity 'Marie', the _'self.options.workDir'_ will be a valid object.
+
+__!Note:__ please keep in mind, that some transport layers might restrict the size or the content of the packets relayed. Use millieu object wisely.
 
 
 
@@ -838,6 +887,7 @@ Attribute 'skipIf' can be used only for 'series' and 'waterfall' as logic follow
 __Note__: harcon tries to validate the passed definitions searching for circles or crossing references. The Bender entity will fail to initialise if the validation process on the definitions falls.
 
 
+
 ## Transactions
 
 When [Bender](#bender) is activated and your flows are well defined through its services, your entities became capable of reacting the termination of your business flows. That serves to handle flows as transactions.
@@ -879,6 +929,7 @@ let harcon = new Harcon( {
 __Note__: Please keep in mind, that if you are using a scaling solution, for the safety of the transactions,  [harcon](https://github.com/imrefazekas/harcon) does not distinguish the nodes, one has to facilitate the state sharing between nodes using Redis or similar tool.
 
 
+
 ## Fragmented in time
 
 Some operations cannot be performed within a reasonable short timeframe. Let's say, a task is sent to another devision requesting for manual acknowledgement. This will make a gap between request and response for sure. Could be proven the measure of days as well...
@@ -910,6 +961,21 @@ let ManCanDo = {
 The param terms holds references about the incoming communication by the name of _sourceComm_.
 You can store the _externalID_ if the communication has been initiated by an external party or just the _flowID_ if continuity must be ensured.
 
+
+
+## Live-reload entities
+
+There is a built-in entity in [harcon](https://github.com/imrefazekas/harcon): __Mortar__ dedicated to
+
+- collect the entities from a folder - not considering subfolders
+- publish them to [harcon](https://github.com/imrefazekas/harcon)
+- live-reload the ones which changed during runtime
+
+To activate it:
+
+```javascript
+harcon = new Harcon( { ..., mortar: { enable: true, folder: '', liveReload: false } } )
+```
 
 
 
