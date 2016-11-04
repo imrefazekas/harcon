@@ -35,9 +35,7 @@ describe('harcon', function () {
 		} )
 		.then( function (_inflicter) {
 			inflicter = _inflicter
-			// return inflicter.inflicterEntity.addicts( Publisher )
 		} )
-		// .then( () => { return Publisher.watch( path.join( process.cwd(), 'test', 'components' ) ) } )
 		.then( () => {
 			// Publishes an event listener function: Peter. It just sends a simple greetings in return
 			return inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
