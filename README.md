@@ -616,6 +616,7 @@ harcon = new Harcon( { logger: logger, idLength: 32, Claire: {greetings: 'Hi!'} 
 
 An entity's configuration is an merged object made from the followings (in order):
 
+- environment variables derived from process.env
 - the [millieu](#millieu) object in the configuration of harcon
 - object in harcon configuration associated through the name of the entity
 - the direct configuration passed to the function addicts
