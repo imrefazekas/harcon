@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "5.7.5",
+  "version": "5.8.0",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -22,7 +22,6 @@
   "main": "./lib/Inflicter.js",
   "dependencies": {
     "assign.js": "^2.3.0",
-    "async": "^2.1.2",
     "clerobee": "^0.6.8",
     "harcon-flow": "^1.8.0",
     "isa.js": "^1.7.5",

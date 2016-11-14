@@ -119,6 +119,7 @@ describe('HarconBend', function () {
 				done()
 			} )
 		})
+
 		it('Waterfall', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.chouchou', [ 'bonne nuite' ], function (err, res) {
 				console.log('Waterfall .....', err, res)
@@ -126,7 +127,8 @@ describe('HarconBend', function () {
 				done()
 			} )
 		})
-		it('Waterfall', function (done) {
+
+		it('Waterfall 2', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.choisi', [ 'bonne nuite' ], function (err, res) {
 				console.log('Waterfall .....', err, res)
 				expect( res ).to.eql( [ 'Non, Mais non!' ] )

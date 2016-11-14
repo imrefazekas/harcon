@@ -33,27 +33,31 @@ module.exports = {
 		let isComponent = function (filePath, stat) {
 			return !stat.isDirectory() && self.matcher(filePath)
 		}
-		self.readFiles( self.options.folder, function () {
-			self.igniteFiles( )
+		self.readFiles( self.options.folder, function (err) {
+			if (err) return callback(err)
 
-			if ( self.options.liveReload ) {
-				watch.createMonitor( self.options.folder, function (monitor) {
-					self.watchMonitors.push( monitor )
-					let handler = function (f, stat) {
-						if ( isComponent( f, stat ) )
-							self.scheduleFile( null, f )
-					}
-					events.forEach(function (eventName) {
-						monitor.on( eventName, handler )
+			try {
+				self.igniteFiles( )
+
+				if ( self.options.liveReload ) {
+					watch.createMonitor( self.options.folder, function (monitor) {
+						self.watchMonitors.push( monitor )
+						let handler = function (f, stat) {
+							if ( isComponent( f, stat ) )
+								self.scheduleFile( null, f )
+						}
+						events.forEach(function (eventName) {
+							monitor.on( eventName, handler )
+						})
 					})
-				})
-				self.intervalObject = setInterval( function () {
-					self.harconlog( null, 'Mortar is checking for entity changes', null, 'silly' )
-					self.igniteFiles( )
-				}, self.options.liveReloadTimeout || 5000 )
-			}
+					self.intervalObject = setInterval( function () {
+						self.harconlog( null, 'Mortar is checking for entity changes', null, 'silly' )
+						self.igniteFiles( )
+					}, self.options.liveReloadTimeout || 5000 )
+				}
 
-			callback()
+				callback()
+			} catch (err) { return callback(err) }
 		})
 	},
 	addGlobalConfig: function ( config ) {
@@ -102,15 +106,12 @@ module.exports = {
 	readFiles: function ( folder, callback ) {
 		let self = this
 		fs.readdir(folder, function (err, files) {
-			if (err)
-				console.error( err )
-			else {
+			if (err) return callback( err )
+			else
 				for (let i = 0; i < files.length; i += 1)
 					if ( self.matcher(files[i]) )
 						self.scheduleFile( folder, files[i] )
-			}
-			if ( callback )
-				callback()
+			callback()
 		})
 	},
 	close: function ( callback ) {
