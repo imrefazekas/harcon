@@ -18,8 +18,10 @@ module.exports = {
 
 		self.options = options
 
-		this.configs = {}
-		this.globalConfig = {}
+		if (!this.configs)
+			this.configs = {}
+		if (!this.globalConfig)
+			this.globalConfig = {}
 		this.watchMonitors = []
 
 		let extension = '.js'
