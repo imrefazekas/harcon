@@ -28,7 +28,8 @@ describe('harcon', function () {
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
 		new Harcon( {
 			name: harconName,
-			logger: logger, idLength: 32,
+			logger: logger,
+			idLength: 32,
 			blower: { commTimeout: 2000, tolerates: ['Alizee.superFlegme'] },
 			mortar: { enabled: true, folder: path.join( __dirname, 'components' ), liveReload: true },
 			Marie: {greetings: 'Hi!'}
