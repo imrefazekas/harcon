@@ -104,7 +104,6 @@ module.exports = {
 	    "no-useless-escape": 2,
 	    "no-useless-rename": 2,
 	    "no-with": 2,
-	    "object-property-newline": [2, { "allowMultiplePropertiesPerLine": true }],
 	    "operator-linebreak": [2, "after", { "overrides": { "?": "before", ":": "before" } }],
 	    "quotes": [2, "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
 	    "rest-spread-spacing": [2, "never"],
