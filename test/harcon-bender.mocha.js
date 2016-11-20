@@ -45,11 +45,13 @@ describe('HarconBend', function () {
 				defs: {
 					'Julie.rever': {
 						type: 'spread',
-						primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ]
+						primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ],
+						validation: function (s) { return s === 'bonne nuite' }
 					},
 					'Julie.repose': {
 						type: 'series',
-						primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ]
+						primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ],
+						validation: { required: true, element: ['bonne soirree'] }
 					},
 					'Julie.chouchou': {
 						type: 'waterfall',
@@ -113,9 +115,16 @@ describe('HarconBend', function () {
 			} )
 		})
 		it('Series', function (done) {
-			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne nuite' ], function (err, res) {
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne soirree' ], function (err, res) {
 				console.log('Series .....', err, res)
 				expect( res ).to.eql( [ 'Merci', 'Enchentée.' ] )
+				done()
+			} )
+		})
+		it('Series with validation failuer', function (done) {
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne nuite' ], function (err, res) {
+				console.log('Series .....', err, res)
+				should.exist(err)
 				done()
 			} )
 		})

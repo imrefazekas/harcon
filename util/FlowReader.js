@@ -15,12 +15,19 @@ module.exports = {
 		let files = fs.readdirSync(folder )
 		for ( let i in files ) {
 			let file = path.join(folder, files[i] )
-			if ( fs.statSync( file ).isDirectory() ) this.readFiles( file )
-			else if ( _.isString( matcher ) ? extensionMatcher(matcher)(file) : matcher( file ) )
+			if ( fs.statSync( file ).isDirectory() ) this.readFlows( file, matcher, defs )
+			else if ( _.isString( matcher ) ? extensionMatcher(matcher)(file) : matcher( file ) ) {
+				let title = files[i].substring( 0, files[i].lastIndexOf('.') )
+
+				let validationFile = path.join( folder, title + '.js' )
+				let validation = fs.existsSync( validationFile ) ? require( validationFile ) : ''
+
 				defs.push( {
-					title: files[i].substring( 0, files[i].lastIndexOf('.') ),
-					def: fs.readFileSync( file, 'utf8' )
+					title: title,
+					def: fs.readFileSync( file, 'utf8' ),
+					validation: validation
 				} )
+			}
 		}
 		return defs
 	}
