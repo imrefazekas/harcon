@@ -803,13 +803,13 @@ harcon.simpleIgnite( 'camille.simple', function (err, res) {
 
 ## Bender
 
-Bender is a proven high-level entity over microservices aims to introduce a simple, yet powerful execution-chain-tool for architects helping to drive message relaying between entities in a regulated environment.
+Bender is a high-level entity over microservices aims to introduce a simple, yet powerful execution-chain-tool for architects helping to drive message relaying between entities in a regulated environment.
 
 How it works: you define your execution logic which is a set of rules pairing
 - a message
 - a list of messages induced when that message is answered.
 
-Let's say you want to see that execution to be performed:
+Let's say you want to see the following informal execution to be performed:
 
 ```javascript
 'Order.registerOrder' -> 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif'
@@ -833,7 +833,11 @@ let harcon = new Harcon( {
 } )
 ```
 
-Syntax of a rule:
+One has 2 ways to set chain definitions:
+- read flow description files from a folder. For this option please check [harcon-flow](https://github.com/imrefazekas/harcon-flow) for details...
+- manual flow definition rules
+
+Syntax of a rule definition:
 
 ```javascript
 {event_name}: {
@@ -848,17 +852,23 @@ Syntax of a rule:
 {condition} : {event_name} || function
 ```
 
-Each rule is pair of message and a list of steps to make (called primers)
+Each rule is set of a message, a list of steps to make (called primers), and an optional validation object
 For example :
 
 ```javascript
-'Order.registerOrder': { primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ] }
+'Order.registerOrder': { primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ], validation: { minlength: '3' } }
+
+or
+
+'Order.registerOrder': { primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ], validation: function (payload) { return true } }
 ```
 
-That works as follows: an entity or external event triggers the message 'registerOrder'sent to entity 'Order'. The call will be performed and the result of that call will be passed as parameter to all messages enlisted in the array 'primer'. So the entity 'DB' will receive the message 'storeOrder' automatically triggered by the message 'Order.registerOrder'. When 'DB' is finished, 'checkStore' will be triggered and so on.
+That works as follows: an entity or external event triggers the message 'registerOrder' sent to entity 'Order'. The call will be performed and the result of that call will be passed as parameter to all messages enlisted in the array 'primer'. So the entity 'DB' will receive the message 'storeOrder' automatically triggered by the message 'Order.registerOrder'. When 'DB' is finished, 'checkStore' will be triggered and so on.
 Default execution type is 'series' means sequential execution of the given list.
 
-Bender is turns harcon into a strinct message delivery environment, which means if an event is not reckognised by Bender or in other words, there is no rule for that given event, an exception will be thrown to the caller and no message delivery will be performed.
+Validation object can be a JS object or a function. It is used to validate the payload of the message _'registerOrder'_ sent to entity _'Order'_. The functions should return a boolean value to tell if the payload is valid. If the validation is an object, the [vindication.js](https://github.com/imrefazekas/vindication.js) will be used for validation.
+
+Bender is turns harcon into a strict message delivery environment, which means if an event is not recognised by Bender or in other words, there is no rule for that given event, an exception will be thrown to the caller and no message delivery will be performed.
 
 There are several type of execution defined by the {execution_type} above.
 - 'series' means to execute all steps in sequential order passing the result of 'Order.registerOrder' to each of them and returning the collected results to the caller of 'Order.registerOrder'.
