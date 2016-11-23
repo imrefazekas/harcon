@@ -58,6 +58,7 @@ describe('HarconBend', function () {
 						primers: [ { division: 'HarconSys', event: 'Claire.jolie' }, 'Marie.jolie' ]
 					},
 					'Alizee.dormir': { type: 'series', primers: [] },
+					'Alizee.superFlegme': { type: 'series', primers: [], timeout: 1000 },
 					'Julie.choisi': {
 						type: 'series',
 						primers: [ { division: 'HarconSys', event: 'Claire.tampis', skipIf: 'Domina.permit' } ]
@@ -141,6 +142,17 @@ describe('HarconBend', function () {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.choisi', [ 'bonne nuite' ], function (err, res) {
 				console.log('Waterfall .....', err, res)
 				expect( res ).to.eql( [ 'Non, Mais non!' ] )
+				done()
+			} )
+		})
+	})
+
+	describe('Bending errors', function () {
+		it('Timeout', function (done) {
+			this.timeout(3500)
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Alizee.superFlegme', [ ], function (err, res) {
+				console.log('Superflegme .....', err, res)
+				should.exist(err)
 				done()
 			} )
 		})
