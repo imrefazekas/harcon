@@ -107,6 +107,17 @@ describe('HarconBend', function () {
 		})
 	})
 
+	describe('Test completeness', function () {
+		it('Firebender', function (done) {
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.completeness', function (err, res) {
+				console.log('completeness .....', err, res)
+				should.not.exist(err)
+				expect( Object.keys(res) ).to.eql( [ ] )
+				done()
+			} )
+		})
+	})
+
 	describe('Bending', function () {
 		it('Spread', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.rever', [ 'bonne nuite' ], function (err, res) {
