@@ -895,6 +895,8 @@ It can be a message string or a function. If it is
 
 Attribute 'skipIf' can be used only for 'series' and 'waterfall' as logic follows.
 
+__Important__: The Bender entity has a message 'completeness' telling which entities or services are still missing breaking the business flow(s) defined.
+
 __Note__: harcon tries to validate the passed definitions searching for circles or crossing references. The Bender entity will fail to initialise if the validation process on the definitions falls.
 
 
