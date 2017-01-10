@@ -31,5 +31,11 @@ module.exports = {
 	choisi: function ( message, terms, ignite, callback ) {
 		console.log( this.name + ' choisi < ' + message + ' >' )
 		callback( null, 'Non, Mais non!' )
+	},
+	distribute: function (terms, ignite, callback) {
+		callback( null, [ 10, 45, 50 ] )
+	},
+	waterfall: function (terms, ignite, callback) {
+		callback( null, [ 10, 45, 50 ] )
 	}
 }

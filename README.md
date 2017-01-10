@@ -144,7 +144,7 @@ harcon.simpleIgnite( 'john.job', {name: 'Stephen', customerID:123}, function (er
 } )
 ```
 
-- objects: plain object enclosing functions and a unique name. This is the recommended way to define entities.
+- objects: plain object enclosing callback-based or async functions and a unique name. This is the recommended way to define entities.
 ```javascript
 var bookKeeper = {
 	name: 'BookKeeper',
@@ -154,6 +154,11 @@ var bookKeeper = {
 	},
 	ordersOfToday: function ( callback ) {
 		callback( null, [] )
+	},
+	searchForOrders: async function ( ) {
+		return new Promise( (resolve, reject) => {
+			...
+		} )
 	}
 }
 ...
@@ -170,6 +175,8 @@ The simplest but not the only way to address is to quality entities with their n
 __!Note:__ The following names are strictly forbidden to be used as entity names in any lower- or uppercase version: 'Barrel', 'Bender', 'Blower', 'Communication', 'Fire', 'Firestarter', 'Firestormstarter', 'FireBender', 'Flamestarter', 'FlowBuilder', 'FlowReader', 'Inflicter', 'Mortar', 'Warper'
 
 Those are used by [harcon](https://github.com/imrefazekas/harcon) itself.
+
+__!Note:__ Async functions are available only in NodeJS v7+
 
 
 
@@ -1028,7 +1035,7 @@ Pretty nasty, huh?
 
 (The MIT License)
 
-Copyright (c) 2016 Imre Fazekas
+Copyright (c) 2017 Imre Fazekas
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -1055,6 +1062,7 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 5.2.0 : Added foreach support for harcon-flows and async functions for entities
 - 5.2.0 : Added transactions & flow validation
 - 5.0.0 : Bender added
 - 4.x : lots of great refactoring and improvements

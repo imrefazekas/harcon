@@ -62,6 +62,14 @@ describe('HarconBend', function () {
 					'Julie.choisi': {
 						type: 'series',
 						primers: [ { division: 'HarconSys', event: 'Claire.tampis', skipIf: 'Domina.permit' } ]
+					},
+					'Julie.distribute': {
+						type: 'series',
+						primers: [ { event: 'Marie.seek', foreach: true }, { event: 'Marie.seek', foreach: true } ]
+					},
+					'Julie.waterfall': {
+						type: 'waterfall',
+						primers: [ { event: 'Marie.seek', foreach: true }, { event: 'Marie.seek', foreach: true } ]
 					}
 				}
 			}
@@ -119,6 +127,7 @@ describe('HarconBend', function () {
 	})
 
 	describe('Bending', function () {
+
 		it('Spread', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.rever', [ 'bonne nuite' ], function (err, res) {
 				console.log('Spread .....', err, res)
@@ -133,6 +142,7 @@ describe('HarconBend', function () {
 				done()
 			} )
 		})
+
 		it('Series with validation failuer', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne nuite' ], function (err, res) {
 				console.log('Series .....', err, res)
@@ -153,6 +163,22 @@ describe('HarconBend', function () {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.choisi', [ 'bonne nuite' ], function (err, res) {
 				console.log('Waterfall .....', err, res)
 				expect( res ).to.eql( [ 'Non, Mais non!' ] )
+				done()
+			} )
+		})
+
+		it('Forech Series', function (done) {
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.distribute', [ ], function (err, res) {
+				console.log('Foreach .....', err, res)
+				expect( res ).to.eql( [ 100, 450, 500, 100, 450, 500 ] )
+				done()
+			} )
+		})
+
+		it('Foreach Waterfall', function (done) {
+			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.waterfall', [ ], function (err, res) {
+				console.log('Waterfall .....', err, res)
+				expect( res ).to.eql( 5000 )
 				done()
 			} )
 		})

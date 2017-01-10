@@ -52,7 +52,7 @@ module.exports = {
 							monitor.on( eventName, handler )
 						})
 					})
-					self.intervalObject = setInterval( function () {
+					self.setInterval( function () {
 						self.harconlog( null, 'Mortar is checking for entity changes', null, 'silly' )
 						self.igniteFiles( )
 					}, self.options.liveReloadTimeout || 5000 )
@@ -121,9 +121,6 @@ module.exports = {
 			monitor.stop()
 		} )
 		this.watchMonitors.length = 0
-
-		if ( this.intervalObject )
-			clearInterval( this.intervalObject )
 
 		if ( callback )
 			callback( null, 'Stopped' )

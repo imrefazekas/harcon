@@ -14,5 +14,20 @@ module.exports = {
 	jolie: function (message, callback) {
 		console.log( this.name + ' est jolie < ' + message + ' >' )
 		callback(null, 'Enchentée.')
+	},
+	seek: function (data, ignite, callback) {
+		console.log( this.name + ' seeking : ', data )
+		callback( null, data * 10 )
+	},
+	seekAll: function (data, ignite, callback) {
+		console.log( this.name + ' seeking : ', data )
+		callback( null, [data * 10] )
 	}
+	/* ,
+	gaminerie: async function (message, terms, ignite) {
+		console.log( this.name + ' est espiègle! < ' + message + ' >' )
+		return new Promise( (resolve, reject) => {
+			resolve( 'Ca va?' )
+		} )
+	} */
 }

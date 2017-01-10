@@ -8,7 +8,7 @@ gulp.task( 'eslint', function (callback) {
 		.pipe( plugins.eslint.failOnError() )
 } )
 
-gulp.task( 'mocha', function (callback) {
+gulp.task( 'mocha', function ( ) {
 	return gulp.src( [ './test/harcon.mocha.js', './test/harcon-bender.mocha.js' ] ).pipe( plugins.mocha({reporter: 'nyan'}) )
 } )
 

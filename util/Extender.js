@@ -1,5 +1,5 @@
 let Assigner = require('assign.js')
-let assigner = (new Assigner()).recursive(true)
+let assigner = (new Assigner()).respect(true).recursive(true)
 let fs = require('fs')
 let path = require('path')
 
@@ -13,13 +13,11 @@ module.exports = {
 	getExtensions: function ( path ) {
 		return getFiles( path, '.js' )
 	},
-	extend: function ( firestarter, protoType, extPath, opts ) {
-		assigner.respect( !opts.suppressing )
-
+	extend: function ( firestarter, protoType, extPath ) {
 		let extensions = this.getExtensions( extPath )
 		extensions.forEach( function ( extension ) {
 			let newServices = require( path.join( extPath, extension ) )
-			protoType = assigner.assign( protoType, newServices(firestarter) )
+			protoType = assigner.logger( firestarter.logger ).assign( protoType, newServices(firestarter) )
 		} )
 		return protoType
 	}
