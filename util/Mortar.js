@@ -91,14 +91,16 @@ module.exports = {
 			}
 			if ( fs.existsSync( newFile ) ) {
 				self.harconlog( null, '(Re)New entity file', newFile, 'info' )
-				let component = require( newFile.substring( 0, newFile.length - 3 ) )
-				if ( !component.name )
-					return self.harconlog( new Error( 'Entity has no name' ), newFile )
-				if ( RESERVATION.find( (name) => { return name.toLowerCase() === component.name.toLowerCase() } ) )
-					return self.harconlog( new Error( 'Entity has forbidden name' ), newFile )
-				if ( component.adequate && !component.adequate() )
-					return self.harconlog( new Error( 'Entity failed to be adequate' ), newFile )
-				self.ignite( 'Inflicter.addicts', component, self.configs[component.name] || self.globalConfig[component.name], fn )
+				try {
+					let component = require( newFile.substring( 0, newFile.length - 3 ) )
+					if ( !component.name )
+						return self.harconlog( new Error( 'Entity has no name' ), newFile )
+					if ( RESERVATION.find( (name) => { return name.toLowerCase() === component.name.toLowerCase() } ) )
+						return self.harconlog( new Error( 'Entity has forbidden name' ), newFile )
+					if ( component.adequate && !component.adequate() )
+						return self.harconlog( new Error( 'Entity failed to be adequate' ), newFile )
+					self.ignite( 'Inflicter.addicts', component, self.configs[component.name] || self.globalConfig[component.name], fn )
+				} catch ( reason ) { self.harconlog( reason, newFile ) }
 			} else {
 				self.harconlog( null, 'Removed entity file', newFile, 'info' )
 				self.ignite( 'Inflicter.detracts', path.basename( newFile, '.js'), fn )
