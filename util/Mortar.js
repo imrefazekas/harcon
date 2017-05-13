@@ -100,7 +100,10 @@ module.exports = {
 					if ( component.adequate && !component.adequate() )
 						return self.harconlog( new Error( 'Entity failed to be adequate' ), newFile )
 					self.ignite( 'Inflicter.addicts', component, self.configs[component.name] || self.globalConfig[component.name], fn )
-				} catch ( reason ) { self.harconlog( reason, newFile ) }
+				} catch ( reason ) {
+					console.error( reason )
+					self.harconlog( reason, newFile )
+				}
 			} else {
 				self.harconlog( null, 'Removed entity file', newFile, 'info' )
 				self.ignite( 'Inflicter.detracts', path.basename( newFile, '.js'), fn )
