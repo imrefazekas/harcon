@@ -12,7 +12,7 @@ let path = require('path')
 // Requires harcon. In your app the form 'require('harcon')' should be used
 let Harcon = require('../lib/Inflicter')
 
-let Logger = require('./WinstonLogger')
+let Logger = require('./PinoLogger')
 
 let Clerobee = require('clerobee')
 let clerobee = new Clerobee(16)
@@ -22,7 +22,7 @@ describe('harcon', function () {
 	let inflicter
 
 	before(function (done) {
-		let logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'silly' } )
+		let logger = Logger.createPinoLogger( { file: 'mochatest.log', level: 'debug' } )
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'

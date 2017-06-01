@@ -2,7 +2,7 @@ module.exports = {
 	name: 'Alizee',
 	context: 'morning.girls',
 	dormir: function ( ignite, callback ) {
-		console.log( this.name + ' dort ... ' )
+		// console.log( this.name + ' dort ... ' )
 		callback( null, 'Non, non, non!' )
 	},
 	flegme: function ( callback ) {

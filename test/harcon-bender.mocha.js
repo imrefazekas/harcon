@@ -7,7 +7,7 @@ let expect = chai.expect
 // Requires harcon. In your app the form 'require('harcon')' should be used
 let Harcon = require('../lib/Inflicter')
 
-let Logger = require('./WinstonLogger')
+let Logger = require('./PinoLogger')
 
 let Clerobee = require('clerobee')
 let clerobee = new Clerobee(16)
@@ -26,8 +26,8 @@ describe('HarconBend', function () {
 	let inflicter
 
 	before(function (done) {
-		let logger = Logger.createWinstonLogger( { console: true, level: 'silly' } )
-		// let logger = Logger.createWinstonLogger( { file: 'mochaBendtest.log' } )
+		let logger = Logger.createPinoLogger( { console: true, level: 'debug' } )
+		// let logger = Logger.createPinoLogger( { file: 'mochaBendtest.log' } )
 
 		// Initializes the Harcon system
 		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'

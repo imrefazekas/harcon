@@ -53,7 +53,7 @@ module.exports = {
 						})
 					})
 					self.setInterval( function () {
-						self.harconlog( null, 'Mortar is checking for entity changes', null, 'silly' )
+						self.harconlog( null, 'Mortar is checking for entity changes', null, 'trace' )
 						self.igniteFiles( )
 					}, self.options.liveReloadTimeout || 5000 )
 				}

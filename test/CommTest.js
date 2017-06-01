@@ -1,7 +1,7 @@
 let Inflicter = require('../lib/Inflicter')
 
-let Logger = require('./WinstonLogger')
-let logger = Logger.createWinstonLogger( { file: 'mochatest.log', level: 'debug' } )
+let Logger = require('./PinoLogger')
+let logger = Logger.createPinoLogger( { file: 'mochatest.log', level: 'debug' } )
 let inflicter = new Inflicter( { logger: logger, idLength: 32, marie: {greetings: 'Hi!'} } )
 
 

@@ -3,7 +3,7 @@ module.exports = {
 	division: 'maison.cache',
 	context: 'paresseux.fille',
 	init: function (options, callback) {
-		console.log('Init...', options)
+		// console.log('Init...', options)
 		callback()
 	},
 	alors: function ( callback ) {
