@@ -74,32 +74,32 @@ describe('HarconBend', function () {
 				}
 			}
 		} )
-		.then( function (_inflicter) {
-			inflicter = _inflicter
-			return 'ok'
-		} )
-		.then( () => {
-			return inflicter.inflicterEntity.addicts( Domina )
-		} )
-		.then( () => {
-			return inflicter.inflicterEntity.addicts( Alizee )
-		} )
-		.then( () => {
-			return inflicter.inflicterEntity.addicts( Julie )
-		} )
-		.then( () => {
-			return inflicter.inflicterEntity.addicts( Claire )
-		} )
-		.then( () => {
-			return inflicter.inflicterEntity.addicts( Marie )
-		} )
-		.then( function () {
-			console.log('\n\n-----------------------\n\n')
-			done()
-		} )
-		.catch(function (reason) {
-			return done(reason)
-		} )
+			.then( function (_inflicter) {
+				inflicter = _inflicter
+				return 'ok'
+			} )
+			.then( () => {
+				return inflicter.inflicterEntity.addicts( Domina )
+			} )
+			.then( () => {
+				return inflicter.inflicterEntity.addicts( Alizee )
+			} )
+			.then( () => {
+				return inflicter.inflicterEntity.addicts( Julie )
+			} )
+			.then( () => {
+				return inflicter.inflicterEntity.addicts( Claire )
+			} )
+			.then( () => {
+				return inflicter.inflicterEntity.addicts( Marie )
+			} )
+			.then( function () {
+				console.log('\n\n-----------------------\n\n')
+				done()
+			} )
+			.catch(function (reason) {
+				return done(reason)
+			} )
 	})
 
 	describe('Test Harcon status calls', function () {
@@ -123,6 +123,7 @@ describe('HarconBend', function () {
 				expect( Object.keys(res) ).to.eql( [ ] )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 	})
 
@@ -134,6 +135,7 @@ describe('HarconBend', function () {
 				expect( res ).to.eql( 'ok' )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 		it('Series', function (done) {
 			inflicter.ignite( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne soirree' ], function (err, res) {
@@ -141,6 +143,7 @@ describe('HarconBend', function () {
 				expect( res ).to.eql( [ 'Merci', 'Enchentée.' ] )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Series with validation failuer', function (done) {
@@ -149,6 +152,7 @@ describe('HarconBend', function () {
 				should.exist(err)
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Waterfall', function (done) {
@@ -157,6 +161,7 @@ describe('HarconBend', function () {
 				expect( res ).to.eql( 'Enchentée.' )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Waterfall 2', function (done) {
@@ -165,6 +170,7 @@ describe('HarconBend', function () {
 				expect( res ).to.eql( [ 'Non, Mais non!' ] )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Forech Series', function (done) {
@@ -173,6 +179,7 @@ describe('HarconBend', function () {
 				expect( res ).to.eql( [ 100, 450, 500, 100, 450, 500 ] )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Foreach Waterfall', function (done) {
@@ -181,6 +188,7 @@ describe('HarconBend', function () {
 				expect( res ).to.eql( 5000 )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 	})
 
@@ -192,6 +200,7 @@ describe('HarconBend', function () {
 				should.exist(err)
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 	})
 

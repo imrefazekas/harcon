@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -31,10 +31,10 @@
     "watch": "^1.0.2"
   },
   "devDependencies": {
-    "chai": "^4.0.1",
+    "chai": "^4.0.2",
     "memwatch-next": "^0.3.0",
     "mkdirp": "^0.5.1",
-    "pino": "^4.5.3"
+    "pino": "^4.5.4"
   },
   "engines": {
     "node": ">= 6.0.0"

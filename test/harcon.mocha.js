@@ -17,6 +17,10 @@ let Logger = require('./PinoLogger')
 let Clerobee = require('clerobee')
 let clerobee = new Clerobee(16)
 
+process.on('unhandledRejection', (reason, p) => {
+	console.log('Unhandled Rejection at: Promise', p, ' .... reason:', reason)
+})
+
 let harconName = 'HarconSys'
 describe('harcon', function () {
 	let inflicter
@@ -34,28 +38,28 @@ describe('harcon', function () {
 			mortar: { enabled: true, folder: path.join( __dirname, 'components' ), liveReload: true },
 			Marie: {greetings: 'Hi!'}
 		} )
-		.then( function (_inflicter) {
-			inflicter = _inflicter
-		} )
-		.then( () => {
-			// Publishes an event listener function: Peter. It just sends a simple greetings in return
-			return inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
-				callback(null, 'Hi there!')
+			.then( function (_inflicter) {
+				inflicter = _inflicter
 			} )
-		} )
-		.then( () => {
-			// Publishes another function listening all messages which name starts with 'greet'. It just sends a simple greetings in return
-			return inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
-				callback(null, 'My pleasure!')
+			.then( () => {
+				// Publishes an event listener function: Peter. It just sends a simple greetings in return
+				return inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
+					callback(null, 'Hi there!')
+				} )
 			} )
-		} )
-		.then( function () {
-			console.log('\n\n-----------------------\n\n')
-			done()
-		} )
-		.catch(function (reason) {
-			return done(reason)
-		} )
+			.then( () => {
+				// Publishes another function listening all messages which name starts with 'greet'. It just sends a simple greetings in return
+				return inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
+					callback(null, 'My pleasure!')
+				} )
+			} )
+			.then( function () {
+				console.log('\n\n-----------------------\n\n')
+				done()
+			} )
+			.catch(function (reason) {
+				return done(reason)
+			} )
 	})
 
 	describe('Test Harcon status calls', function () {
@@ -103,12 +107,14 @@ describe('harcon', function () {
 				console.log( '\n\n>>...........>', err, res )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 		it('multilevel contextes', function (done) {
 			inflicter.ignite( clerobee.generate(), null, 'HarconSys.maison.cache', 'paresseux.fille.alors', (err, res) => {
 				console.log( '\n\n>>>', err, res )
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 	})
 
@@ -118,6 +124,7 @@ describe('harcon', function () {
 				should.exist(err)
 				done()
 			} )
+			.catch( (reason) => { } )
 		})
 	})
 
@@ -140,6 +147,7 @@ describe('harcon', function () {
 					} )
 				}, 100 )
 			} )
+			.catch( (reason) => { } )
 		})
 	})
 	describe('Harcon distinguish', function () {
@@ -150,6 +158,7 @@ describe('harcon', function () {
 				expect( res ).to.include( 'D\'accord?' )
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 		it('Access distinguished entity', function (done) {
 			inflicter.ignite( '0', null, '', 'Charlotte-Unique.access', function (err, res) {
@@ -158,6 +167,7 @@ describe('harcon', function () {
 				expect( res ).to.include( 'D\'accord?' )
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 	})
 
@@ -179,6 +189,7 @@ describe('harcon', function () {
 
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 	} )
 
@@ -192,6 +203,7 @@ describe('harcon', function () {
 				expect( res ).to.include( 'Bonjour!' )
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Simple greetings is', function (done) {
@@ -207,6 +219,7 @@ describe('harcon', function () {
 
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Morning greetings is', function (done) {
@@ -218,6 +231,7 @@ describe('harcon', function () {
 				expect(res[0]).to.eql( [ 'Hi there!', 'My pleasure!' ] )
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('General dormir', function (done) {
@@ -228,6 +242,7 @@ describe('harcon', function () {
 				expect(res).to.eql( [ 'Non, non, non!', 'Non, Mais non!' ] )
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Specific dormir', function (done) {
@@ -238,18 +253,18 @@ describe('harcon', function () {
 				expect(res).to.eql( [ 'Non, non, non!', 'Non, Mais non!' ] )
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('No answer', function (done) {
 			// Sending a morning message and waiting for the proper answer
 			inflicter.ignite( '0', null, '', 'cave.echo', function (err, res) {
-				// console.log( '?????', err, res )
-
 				expect(err).to.be.an.instanceof( Error )
 				expect(res).to.be.a('null')
 
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Timeout test', function (done) {
@@ -260,6 +275,7 @@ describe('harcon', function () {
 
 				done( )
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Tolerated messages test', function (done) {
@@ -270,23 +286,24 @@ describe('harcon', function () {
 
 				done( err )
 			} )
+			.catch( (reason) => { } )
 		})
 
 		it('Division Promise test', function (done) {
 			inflicter.ignite( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?' )
-			.then( function ( res ) {
-				should.exist(res)
+				.then( function ( res ) {
+					should.exist(res)
 
-				expect( res ).to.include( 'Hi there!' )
-				expect( res ).to.include( 'My pleasure!' )
-				expect( res ).to.include( 'Bonjour!' )
-				expect( res ).to.include( 'Pas du tout!' )
+					expect( res ).to.include( 'Hi there!' )
+					expect( res ).to.include( 'My pleasure!' )
+					expect( res ).to.include( 'Bonjour!' )
+					expect( res ).to.include( 'Pas du tout!' )
 
-				done()
-			})
-			.catch( function ( reason ) {
-				done( reason )
-			} )
+					done()
+				})
+				.catch( function ( reason ) {
+					done( reason )
+				} )
 		})
 
 		it('Division test', function (done) {
