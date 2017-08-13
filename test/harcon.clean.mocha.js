@@ -37,14 +37,14 @@ describe('harcon', function () {
 			} )
 
 			inflicter = await harcon.init()
-
+			/*
 			await inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
 				callback(null, 'Hi there!')
 			} )
 			await inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
 				callback(null, 'My pleasure!')
 			} )
-
+			*/
 			console.log('\n\n-----------------------\n\n')
 			assert.ok( 'Harcon initiated...' )
 		} catch (err) { assert.fail( err ) }
@@ -57,7 +57,6 @@ describe('harcon', function () {
 			// expect( divisions ).to.eql( [ harconName, harconName + '.click', 'HarconSys.maison.cache' ] )
 		})
 
-		/*
 		it('Retrieve entities...', async function () {
 			let entities = await inflicter.entities( )
 			let names = entities.map( function (entity) { return entity.name } ).sort()
@@ -67,10 +66,10 @@ describe('harcon', function () {
 
 		it('Send for divisions...', async function () {
 			let res = await inflicter.ignite( clerobee.generate(), null, '', 'Inflicter.divisions')
-			console.log( '...', res )
+			console.log( '.>>>..', res )
 		})
-
-		it('Clean internals', async function () {
+		/*
+			it('Clean internals', async function () {
 			let comms = await inflicter.pendingComms( )
 			console.log('----------- ', comms)
 			comms.forEach( function (comm) {
