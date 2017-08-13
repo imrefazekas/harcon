@@ -16,6 +16,8 @@ let Logger = require('./PinoLogger')
 let Clerobee = require('clerobee')
 let clerobee = new Clerobee(16)
 
+let Proback = require('proback.js')
+
 process.on('unhandledRejection', (reason, p) => {
 	console.log('Unhandled Rejection at: Promise', p, ' .... reason:', reason)
 })
@@ -37,14 +39,14 @@ describe('harcon', function () {
 			} )
 
 			inflicter = await harcon.init()
-			/*
-			await inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
-				callback(null, 'Hi there!')
+
+			await inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2) {
+				return Proback.quicker('Hi there!')
 			} )
-			await inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
-				callback(null, 'My pleasure!')
+			await inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2) {
+				return Proback.quicker('My pleasure!')
 			} )
-			*/
+
 			console.log('\n\n-----------------------\n\n')
 			assert.ok( 'Harcon initiated...' )
 		} catch (err) { assert.fail( err ) }
@@ -68,15 +70,19 @@ describe('harcon', function () {
 			let res = await inflicter.ignite( clerobee.generate(), null, '', 'Inflicter.divisions')
 			console.log( '.>>>..', res )
 		})
-		/*
-			it('Clean internals', async function () {
+
+		it('Clean internals', async function () {
 			let comms = await inflicter.pendingComms( )
 			console.log('----------- ', comms)
 			comms.forEach( function (comm) {
 				expect( Object.keys(comm) ).to.have.lengthOf( 0 )
 			} )
 		})
-		*/
+
+		it('Walter check', async function () {
+			let res = await inflicter.ignite( clerobee.generate(), null, '', 'greet.hello', 'Bonjour!', 'Salut!')
+			console.log( '.>>>..', res )
+		})
 	})
 
 	/*
