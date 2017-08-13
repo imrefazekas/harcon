@@ -1,3 +1,4 @@
+const assert = require('assert')
 let chai = require('chai')
 let should = chai.should()
 let expect = chai.expect
@@ -23,43 +24,63 @@ let harconName = 'HarconSys'
 describe('harcon', function () {
 	let inflicter
 
-	before(function (done) {
+	before( async function () {
 		let logger = Logger.createPinoLogger( { file: 'mochatest.log', level: 'debug' } )
+		try {
+			let harcon = new Harcon( {
+				name: harconName,
+				logger: logger,
+				idLength: 32,
+				blower: { commTimeout: 2000, tolerates: ['Alizee.superFlegme'] },
+				mortar: { enabled: false, folder: path.join( __dirname, 'components' ), liveReload: true },
+				Marie: {greetings: 'Hi!'}
+			} )
 
-		// Initializes the Harcon system
-		// also initialize the deployer component which will automaticall publish every component found in folder './test/components'
-		new Harcon( {
-			name: harconName,
-			logger: logger,
-			idLength: 32,
-			blower: { commTimeout: 2000, tolerates: ['Alizee.superFlegme'] },
-			mortar: { enabled: true, folder: path.join( __dirname, 'components' ), liveReload: true },
-			Marie: {greetings: 'Hi!'}
-		} )
-			.then( function (_inflicter) {
-				inflicter = _inflicter
+			inflicter = await harcon.init()
+
+			await inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
+				callback(null, 'Hi there!')
 			} )
-			.then( () => {
-				// Publishes an event listener function: Peter. It just sends a simple greetings in return
-				return inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
-					callback(null, 'Hi there!')
-				} )
+			await inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
+				callback(null, 'My pleasure!')
 			} )
-			.then( () => {
-				// Publishes another function listening all messages which name starts with 'greet'. It just sends a simple greetings in return
-				return inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2, callback) {
-					callback(null, 'My pleasure!')
-				} )
-			} )
-			.then( function () {
-				console.log('\n\n-----------------------\n\n')
-				done()
-			} )
-			.catch(function (reason) {
-				return done(reason)
-			} )
+
+			console.log('\n\n-----------------------\n\n')
+			assert.ok( 'Harcon initiated...' )
+		} catch (err) { assert.fail( err ) }
 	})
 
+	describe('Test Harcon system calls', function () {
+		it('Retrieve divisions...', async function () {
+			let divisionts = await inflicter.divisions()
+			console.log('------', divisionts)
+			// expect( divisions ).to.eql( [ harconName, harconName + '.click', 'HarconSys.maison.cache' ] )
+		})
+
+		/*
+		it('Retrieve entities...', async function () {
+			let entities = await inflicter.entities( )
+			let names = entities.map( function (entity) { return entity.name } ).sort()
+			console.log( '...', entities, names )
+			// expect( names ).to.eql( [ 'Alizee', 'Bandit', 'Charlotte', 'Claire', 'Domina', 'Inflicter', 'Julie', 'Lina', 'Margot', 'Marie', 'Marion', 'Mortar', 'peter', 'walter' ] )
+		})
+
+		it('Send for divisions...', async function () {
+			let res = await inflicter.ignite( clerobee.generate(), null, '', 'Inflicter.divisions')
+			console.log( '...', res )
+		})
+
+		it('Clean internals', async function () {
+			let comms = await inflicter.pendingComms( )
+			console.log('----------- ', comms)
+			comms.forEach( function (comm) {
+				expect( Object.keys(comm) ).to.have.lengthOf( 0 )
+			} )
+		})
+		*/
+	})
+
+	/*
 	describe('Test Harcon status calls', function () {
 		it('Retrieve divisions...', function (done) {
 			setTimeout( function () {
@@ -333,14 +354,14 @@ describe('harcon', function () {
 				done( )
 			} )
 		})
-		/*
+
 		it('AsyncAwait', function (done) {
 			inflicter.simpleIgnite( 'Marie.gaminerie', 'Salut!', function (err, res) {
 				console.log(':::::::::', err, res)
 				done( )
 			} )
 		})
-		*/
+
 		it('Deactivate', function (done) {
 			// Sending a morning message and waiting for the proper answer
 			inflicter.deactivate('Claire')
@@ -387,11 +408,11 @@ describe('harcon', function () {
 			} )
 		})
 	})
+	*/
 
-
-	after(function (done) {
+	after(async function () {
 		// Shuts down Harcon when it is not needed anymore
 		if (inflicter)
-			inflicter.close( done )
+			await inflicter.close( )
 	})
 })
