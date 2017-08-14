@@ -1,7 +1,7 @@
 Harcon - Proven and reliable microservice solution for the harmonic convergence of JS entities.
-Designed to be scalable from prototypes till highly structured node-based enterprise components of real-time systems.
+Designed to be insanly scalable to serve enterprise components of real-time systems.
 
-Harcon is strong to build an endlessly scalable execution-chain or workflow-based or machine-learning solution for NodeJS applications.
+Harcon is strong to build a scalable execution-chain or workflow-based or machine-learning solution for NodeJS applications.
 
 Need help? Join me on
 
@@ -12,6 +12,8 @@ and level your problem with me freely. :)
 !Note: From version 3.0.0, harcon provides callback interface with Promise support in its functions.
 
 !Note: From version 5.0.0, harcon has powerful toolset to define and perform execution chains and workflows.
+
+!Note: From version 8.0.0, harcon supports only Node v8 and await functions. For callback-based version please use v7 or below.
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
@@ -26,6 +28,7 @@ The library has a stunning feature list beyond basic messaging functionality.
 For amqp integration, please check this: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp)
 For sqs integration, please check this: [harcon-sqs](https://github.com/imrefazekas/harcon-sqs)
 For mqtt integration, please check this: [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt)
+For kafka integration, please check this: [harcon-kafka](https://github.com/imrefazekas/harcon-kafka)
 
 - __Tracking__: you can monitor every message delivered (request or response) by only few lines of code
 
@@ -61,11 +64,13 @@ $ npm install harcon
 ## Quick setup
 ```javascript
 var Harcon = require('harcon')
-new Harcon( { /* opts */ } )
+let harcon = new Harcon( { /* opts */ } )
+let inflicter = await harcon.init()
+
 
 // define a listener function listening every message related to "greet" like "greet.goodmorning" or "greet.goodday"
-harcon.addict( null, 'peter', 'greet.*', function (greetings1, greetings2, callback) {
-	callback(null, 'Hi there!')
+await inflicter.addict( null, 'peter', 'greet.*', function (greetings1, greetings2) {
+	return Proback.quicker('Hi there!')
 } )
 
 // define an plain object serving as listener withing the context "greet" to messages "warm"
@@ -76,13 +81,11 @@ marie = {
 		callback( null, 'Bonjour!' )
 	}
 }
-harcon.addicts( marie )
+await inflicter.addicts( marie )
 
 // sends a communication 'greet.everyone' with parameters and defines a callback to handle responses
 // will receive back 2 answers: 'Hi there!' and 'Bonjour!'
-harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?', function (err, res) {
-	console.log( err, res )
-} )
+await harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?' )
 ```
 
 
@@ -124,24 +127,20 @@ One can define 2 type of entities:
 - simple function: when you associate a function with an event-pattern. Recommended to be used as observer, job-like, surveillance-, or interface-related asset.
 ```javascript
 // Qualified name - will answer to only this message
-harcon.addict( null, 'hugh', 'allocate.ip', function (callback) {
-	callback(null, 'Done.')
+inflicter.addict( null, 'hugh', 'allocate.ip', function () {
+	return new Promise( resolve => resolve('Done.') )
 } )
 // Wildcards - will answer anything within the context greet
-harcon.addict( null, 'peter', 'greet.*', function (callback) {
-	callback(null, 'Done.')
+inflicter.addict( null, 'peter', 'greet.*', function () {
+	return new Promise( resolve => resolve('Done.') )
 } )
 // Regular expression - will answer anything where message name start with string 'job'
-harcon.addict( null, 'john', /job.*/, function ( partner, callback) {
-	callback(null, 'Done.')
+inflicter.addict( null, 'john', /job.*/, function ( partner ) {
+	return new Promise( resolve => resolve('Done.') )
 } )
 ...
-harcon.simpleIgnite( 'job.order', {name: 'Stephen', customerID:123}, function (err, res) {
-	console.log( 'Finished.', err, res )
-} )
-harcon.simpleIgnite( 'john.job', {name: 'Stephen', customerID:123}, function (err, res) {
-	console.log( 'Finished.', err, res )
-} )
+let res = await inflicter.simpleIgnite( 'job.order', { name: 'Stephen', customerID:123 } )
+let res = await inflicter.simpleIgnite( 'john.job', { name: 'Stephen', customerID:123 } )
 ```
 
 - objects: plain object enclosing callback-based or async functions and a unique name. This is the recommended way to define entities.
@@ -149,25 +148,16 @@ harcon.simpleIgnite( 'john.job', {name: 'Stephen', customerID:123}, function (er
 var bookKeeper = {
 	name: 'BookKeeper',
 	...
-	newOrder: function ( customer, callback ) {
-		callback( null, 'Done.' )
+	newOrder: function ( customer ) {
+		return new Promise( resolve => resolve('Done.') )
 	},
-	ordersOfToday: function ( callback ) {
-		callback( null, [] )
-	},
-	searchForOrders: async function ( ) {
-		return new Promise( (resolve, reject) => {
-			...
-		} )
+	ordersOfToday: function ( ) {
+		return new Promise( resolve => resolve( [] ) )
 	}
 }
 ...
-harcon.simpleIgnite( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123}, function (err, res) {
-	console.log( 'Finished', err, res )
-} )
-harcon.simpleIgnite( 'BookKeeper.ordersOfToday', function (err, res) {
-	console.log( 'Finished.', err, res )
-} )
+let res = await inflicter.simpleIgnite( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123} )
+let res = await inflicter.simpleIgnite( 'BookKeeper.ordersOfToday' )
 ```
 
 The simplest but not the only way to address is to quality entities with their names.
@@ -176,34 +166,30 @@ __!Note:__ The following names are strictly forbidden to be used as entity names
 
 Those are used by [harcon](https://github.com/imrefazekas/harcon) itself.
 
-__!Note:__ Async functions are available only in NodeJS v7+
+All services have to return with a Promise object.
 
 
 
 #### Responses
 
-By default, [harcon](https://github.com/imrefazekas/harcon) returns and array of response objects returned by the entities addressed by a message sent.
+By default, [harcon](https://github.com/imrefazekas/harcon) returns and array of response objects returned by the entities addressed by a message sent or a single object if only one entity has been addressed by the request.
 
 Let's have 2 simple entities:
 
 ```javascript
-harcon.addict( null, 'peter', 'greet.*', function (callback) {
-	callback(null, 'Hi.')
+inflicter.addict( null, 'peter', 'greet.*', function () {
+	return new Promise( resolve => resolve('Hi.') )
 } )
-harcon.addict( null, 'camille', 'greet.*', function (callback) {
-	callback(null, 'Hello.')
+inflicter.addict( null, 'camille', 'greet.*', function () {
+	return new Promise( resolve => resolve('Hello.') )
 } )
 
-harcon.simpleIgnite( 'greet.simple', function (err, res) {
-	console.error( err, res )
-} )
+let res = await inflicter.simpleIgnite( 'greet.simple' )
 ```
 
 Returns with the following:
 
 	[ 'Hi.', 'Hello.' ]
-
-(Note: for consistency reason, you got an array even if one entity has been addressed.)
 
 In some cases, you might find useful to know which answer comes from which entity. If you add a single parameter to the harcon:
 
@@ -213,7 +199,7 @@ The returned object will look like this:
 
 	{ peter: 'Hi.', camille: 'Hello.' }
 
-__!Note:__ Harcon support special cases, where all message exchange is performed in 1:1 constellation and the result of a given call is always a single object. Please read [Unfolding](#unfolding) for details.
+__!Note:__ Harcon allows you to enforce the "responses are always arrays" behaviour. Please read [Unfolding](#unfolding) for details.
 
 
 
@@ -222,24 +208,26 @@ __!Note:__ Harcon support special cases, where all message exchange is performed
 Your callback might receive an error object in unwanted situations. The default transport channel of harcon will stop the message processing at the first error occurring as follows:
 
 ```javascript
-harcon.addict( null, 'peter', 'greet.*', function (callback) {
-	callback( new Error('Stay away, please.') )
+inflicter.addict( null, 'peter', 'greet.*', function (callback) {
+	return new Promise( (resolve, reject) => reject( new Error('Stay away, please.') ) )
 } )
-harcon.addict( null, 'camille', 'greet.*', function (callback) {
-	callback( new Error('Do not bother me.') )
+inflicter.addict( null, 'camille', 'greet.*', function (callback) {
+	return new Promise( (resolve, reject) => reject( new Error('Do not bother me.') ) )
 } )
 
-harcon.simpleIgnite( 'greet.simple', function (err, res) {
+try {
+	await inflicter.simpleIgnite( 'greet.simple')
+} catch (err) {
 	console.error( err, res )
-} )
+}
 ```
 
 will result the following on your console:
 
-	[Error: Stay away, please.] null
+	[Error: Stay away, please.]
 
 The default transport layer is designed for development purposes only.
-In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [SQS](https://aws.amazon.com/sqs/) or [MQTT](http://mqtt.org) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp), [harcon-sqs](https://github.com/imrefazekas/harcon-sqs) and [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) accordingly.
+In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [SQS](https://aws.amazon.com/sqs/), [MQTT](http://mqtt.org) or [Kafka](https://kafka.apache.org) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp), [harcon-sqs](https://github.com/imrefazekas/harcon-sqs), [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) and [harcon-kafka](https://github.com/imrefazekas/harcon-kafka) accordingly.
 
 By using a real transport layer, all occurred error messages will be delegated. In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
 
@@ -258,15 +246,15 @@ You can structure your entities like the following:
 var parser = {
 	name: 'JSONParser',
 	context: 'transfer.json',
-	parse: function ( document, callback ) {
-		callback( null, 'Done.' )
+	parse: function ( document ) {
+		return new Promise( resolve => resolve('Done.') )
 	}
 }
 var observer = {
 	name: 'XMLParser',
 	context: 'transfer.xml',
-	parse: function ( document, callback ) {
-		callback( null, null )
+	parse: function ( document ) {
+		return new Promise( resolve => resolve('Done.') )
 	}
 }
 ```
@@ -274,11 +262,11 @@ var observer = {
 In this case, such messages can be sent:
 
 ```javascript
-harcon.simpleIgnite( 'transfer.json.parse', function (err, res) { ... } )
+await inflicter.simpleIgnite( 'transfer.json.parse' )
 or
-harcon.simpleIgnite( 'transfer.xml.parse', function (err, res) { ... } )
+await inflicter.simpleIgnite( 'transfer.xml.parse' )
 or
-harcon.simpleIgnite( 'transfer.'+document.type+'.parse', function (err, res) { ... } )
+await inflicter.simpleIgnite( 'transfer.'+document.type+'.parse' )
 ```
 
 addressing directly to one of those entities, depending the type of the document you want to parse.
@@ -289,13 +277,14 @@ var observer = {
 	name: 'Observer',
 	context: 'transfer',
 	parse: function ( document, callback ) {
-		callback( null, null )
+		return new Promise( resolve => resolve('Done.') )
 	}
 }
 ```
 
 Such entity will also receive those message and might do logging or measuring or perform preliminary actions.
 In short form: you can address multiple entities with a single message.
+
 The matching algorithm is simple: spliting the title by _'.'_ matching with the context you specify and fails only if the compared strings are not equals.
 This means, that:
 
@@ -327,43 +316,23 @@ If you work with workflows, the sequence/order of your messages will get an impo
 var order = {
 	name: 'Order',
 	context: 'order',
-	newVPN: function ( customer, ignite, callback ) {
-		ignite( 'allocate.address', '127.0.0.1', function (err, res) {
-			callback(err, res)
-		} )
+	newVPN: function ( customer, ignite ) {
+		return new Promise( resolve => await ignite( 'allocate.address', '127.0.0.1' ) )
 	}
 }
 ...
-harcon.simpleIgnite( 'order.newVPN', {name: 'Stephen', customerID:123}, function (err, res) {
-	console.log( 'Finished', err, res )
-} )
+await inflicter.simpleIgnite( 'order.newVPN', {name: 'Stephen', customerID:123} )
 ```
 That will initiate a small workflow. __harcon.simpleIgnite__ sends a message to entity Order who will send within the same workflow to the Allocator. When it answeres, then the message of the beginning will be answered. [harcon](https://github.com/imrefazekas/harcon) will know if you initiate a message within the processing of another one and considers it as part of the ongoing workflow and tracks it.
 Mind the async execution to keep everything in track!
 
 
-#### Call back or not?
-
-You are not forced to always expect answer, in some cases a quite entity is desired.
-If you do not pass a callback when a communication is initiated, [harcon](https://github.com/imrefazekas/harcon) will consider it as a one-ways message sending.
-
-```javascript
-// Qualified name - will answer to only this message
-harcon.addict( null, 'karl', 'reserve.address', function ( address, callback ) {
-	// Do something...
-	callback(null, 'Done.')
-} )
-...
-harcon.simpleIgnite( 'reserve.address', '127.0.0.1' )
-```
-
-Harcon will know, that sender does not expect any answer at all. But, considering that [harcon](https://github.com/imrefazekas/harcon) is designed for highly structured and fragmented context, receiver entities always __MUST__ have a callback, to let [harcon](https://github.com/imrefazekas/harcon) know about the termination of the given operation for operational prudence!
-
-
 
 #### Entity initialization
 
-The need to pass contextual parameters to entities might rise. The options object passed to the constructure of Harcon allows you to specify parameters for entities which will be passed while the init method defined in the entity is called.
+The need to pass contextual parameters to entities might rise. The options object passed to the constructure of [harcon](https://github.com/imrefazekas/harcon) allows you to specify parameters for entities which will be passed while the init method defined in the entity is called.
+The __init__ function like all services, must return with a promise object!
+
 ```javascript
 harcon = new Harcon( { /* ... */ marie: {greetings: 'Hi!'} } )
 var marie = {
@@ -371,6 +340,7 @@ var marie = {
 	context: 'test',
 	init: function (options) {
 		// {greetings: 'Hi!'} will be passed
+		return new Promise( resolve => resolve('Initiated.') )
 	}
 	// services ...
 }
@@ -386,15 +356,15 @@ There is an option for an object-based entity to enforce uniqueness:
 module.exports = {
 	name: 'Charlotte',
 	distinguish: 'Unique',
-	access: function ( callback ) {
-		callback( null, 'D\'accord?')
+	access: function ( ) {
+		return new Promise( resolve => resolve('D\'accord?') )
 	}
 }
 ```
 
 The attribute 'distinguish' can be a boolean or a string which will be added to its name as a postfix. In case of boolean value, a random value will be generated.
 
-The entity can be called with 'Charlotte-Unique.access' or 'Charlotte-1231441123.access' where '1231441123' is the random string generated by the [harcon](https://github.com/imrefazekas/harcon).
+The entity can be called with __'Charlotte-Unique.access'__ or __'Charlotte-1231441123.access'__ where __'1231441123'__ is the random string generated by the [harcon](https://github.com/imrefazekas/harcon).
 
 This feature is useful in a largely scaled environment, where a given entity might appear in multiple instances and distinguishing them is a must-have behavior.
 
@@ -419,9 +389,9 @@ That function can be used anything within your entity object:
 var Marie = {
 	name: 'Marie',
 	context: 'greet',
-	whiny: function (greetings, callback) {
+	whiny: function (greetings) {
 		this.harconlog( null, 'Some logging', { data: greetings }, 'silly' )
-		callback( null, 'Pas du tout!' )
+		return new Promise( resolve => resolve('Pas du tout!') )
 	}
 }
 ```
@@ -483,10 +453,8 @@ As you saw above, the serices functions might possess a parameter before the __c
 var order = {
 	name: 'Order',
 	context: 'order',
-	newVPN: function ( customer, ignite, callback ) {
-		ignite( 'allocate.address', '127.0.0.1', function (err, res) {
-			callback(err, res)
-		} )
+	newVPN: function ( customer, ignite ) {
+		return new Promise( resolve => await ignite( 'allocate.address', '127.0.0.1' )
 	}
 }
 ```
@@ -499,8 +467,7 @@ Of course components are not just reacting entities, they might launch new workf
 var timer = {
 	name: 'Timer',
 	scheduling: function ( ) {
-		this.ignite( 'validate.accounts', function (err, res) {
-		} )
+		return new Promise( resolve => await this.ignite( 'validate.accounts' )
 	}
 }
 ```
@@ -519,11 +486,11 @@ Should you define your business functions as below, the terms will be passed and
 ```javascript
 module.exports = {
 	name: 'Claire',
-	init: function (options, callback) {
-		callback()
+	init: function (options) {
+		return new Promise( resolve => resolve('Initiated.') )
 	},
-	simple: function (greetings1, greetings2, terms, ignite, callback) {
-		callback( null, 'Pas du tout!' )
+	simple: function (greetings1, greetings2, terms, ignite) {
+		return new Promise( resolve => resolve('Pas du tout!') )
 	}
 }
 ```
@@ -533,10 +500,10 @@ Along the parameters you need for your business logic, and the ignite function a
 ```javascript
 module.exports = {
 	name: 'Domina',
-	force: function ( terms, ignite, callback ) {
+	force: function ( terms, ignite ) {
 		var self = this
 		terms.tree = 'grow'
-		ignite( 'Claire.simple', 'It is morning!', 'Time to wake up!', callback )
+		return new Promise( resolve => await ignite( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
 	}
 }
 ```
@@ -557,16 +524,16 @@ Let's define components and add them to divisions:
 
 ```javascript
 // This will add John to the division 'workers'
-harcon.addict( 'workers', 'john', /job.*/, function (callback) {
-	callback(null, 'Done.')
+harcon.addict( 'workers', 'john', /job.*/, function () {
+	return new Promise( resolve => resolve('Done.') )
 } )
 // This will add Claire to the division 'entrance'
 var claire = {
 	name: 'claire',
 	division: 'entrance',
 	context: 'greet',
-	simple: function (greetings1, greetings2, callback) {
-		callback(null, 'Enchanté, mon plaisir!')
+	simple: function (greetings1, greetings2) {
+		return new Promise( resolve => resolve('Enchanté, mon plaisir!') )
 	}
 }
 ```
@@ -574,8 +541,7 @@ var claire = {
 Components in a division can be called to:
 
 ```javascript
-harcon.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?', function (err, res) {
-} )
+await inflicter.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?' )
 ```
 
 Note: please keep in mind, that __harcon.ignite__ can be and should be used only when you initiate a workflow from outside the harcon!
@@ -607,14 +573,14 @@ module.exports = {
 	context: 'greet',
 	init: function (options, callback) {
 		console.log('Init...', options)
-		callback()
+		return new Promise( resolve => resolve('Initiated.') )
 	}
 }
 ```
 The method receives a configuration object and a callback to be called when the init method finishes.
 That configuration object can be passed when an entity is published:
 ```javascript
-harcon.addicts( Claire, config )
+await inflicter.addicts( Claire, config )
 ```
 or even before, when [harcon](https://github.com/imrefazekas/harcon) is created.
 ```javascript
@@ -685,28 +651,20 @@ var extension = {
 	name: 'As you design it',
 	context: harcon.name,
 	castOf: function ( name, firestarter ) {
+		return new Promise( resolve => resolve('OK') )
 	},
 	affiliate: function ( firestarter ) {
+		return new Promise( resolve => resolve('OK') )
 	},
 	close: function () {
+		return new Promise( resolve => resolve('OK') )
 	}
 }
-harcon.addicts( extension )
+await inflicter.addicts( extension )
 ```
 In the current version, the harcon instance you are using will send to your components events about system closing, entity publishing and revoking. For a working example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
 
-
-
-## Promises
-
-To think in terms of the current trends in the JS-world, the services of [harcon](https://github.com/imrefazekas/harcon) might give you back a promise of no callback is provided as last parameter.
-```javascript
-harcon.ignite( '0', 'Inflicter.click', 'greet.simple', 'Hi', 'Ca vas?' )
-.then( function ( res ) {
-})
-.catch( function ( reason ) {
-} )
-```
+All funtions must return a promise object.
 
 
 
@@ -726,6 +684,7 @@ var Marie = {
 	init: function (options) {
 		// options = { workDir: '/temp' }
 		self.options = options
+		return new Promise( resolve => resolve('OK') )
 	}
 }
 ```
@@ -748,11 +707,12 @@ module.exports = {
 	name: 'Lina',
 	...
 	registerForShift: function () {
-		self.ignite('Marie.notify', 'data', 'Lina.marieChanged', function (err) { if (err) { self.harconlog(err) } } )
-	}, ...
-	marieChanged: function ( payload, callback ) {
+		await self.ignite('Marie.notify', 'data', 'Lina.marieChanged' )
+	},
+	...
+	marieChanged: function ( payload ) {
 		console.log( '>>>>>>>>>>>', payload )
-		callback( null, 'OK' )
+		return new Promise( resolve => resolve('OK') )
 	}
 }
 ```
@@ -765,9 +725,9 @@ How Marie can "shift" state:
 ```javascript
 module.exports = {
 	name: 'Marie',
-	simple: function (greetings1, greetings2, callback) {
+	simple: function (greetings1, greetings2) {
 		this.shifted( { data: 'content' } )
-		callback(null, 'Bonjour!')
+		return Proback.quicker( 'Bonjour!' )
 	}
 }
 ```
@@ -786,26 +746,17 @@ If you pass an attribute _'connectedDivisions'_ to the config of harcon, it will
 
 ## Unfolding
 
-The basic concept of [harcon](https://github.com/imrefazekas/harcon) is to relay messages between entities where m:n quantity relationship for delivery is much encouraged. That is why, harcon always returns with an array. It is in the nature of Javascript and harcon, that a lib can not decide in advance who will respond to a given message (domains, contextes, auditors, etc.) and if an addressed entity will respond anything.
-
-However, if your system is designed to leverage only 1:1 interactions, harcon can be forced to unfold the array of results and return only the single answer you expect.
+The basic concept of [harcon](https://github.com/imrefazekas/harcon) is to relay messages between entities where m:n quantity relationship for delivery is supported. Harcon measures if the response means a single object or a list of objects and returns accordingly.
+That behaviour can be turned off to force harcon to return always with an array:
 
 ```javascript
 let harcon = new Harcon( {
 	name: harconName,
-	unfoldAnswer: true,
+	unfoldAnswer: false,
 	...
 } )
 ```
 
-That will unlock the unfolding feature of harcon as follows:
-
-```javascript
-harcon.simpleIgnite( 'camille.simple', function (err, res) {
-	console.error( 'res will be \'Hello.\' and not [\'Hello.\'] ')
-	///
-} )
-```
 
 
 ## Bender
@@ -916,12 +867,12 @@ To be straightforward, when a business flow ends, your entities will be notified
 
 Each entity you define will possess the following functions:
 ```javascript
-flowFailed: function ( flowID, errMessage, terms, ignite, callback ) {
+flowFailed: function ( flowID, errMessage, terms, ignite ) {
 	return new Promise( (resolve, reject) => {
 		...
 	} )
 }
-flowSucceeded: function ( flowID, result, terms, ignite, callback ) {
+flowSucceeded: function ( flowID, result, terms, ignite ) {
 	return new Promise( (resolve, reject) => {
 		...
 	} )
@@ -931,7 +882,7 @@ By default, it does not do anything. If your entity aims to react to 'flowFailed
 
 During your business logic, you business logic should access the flowID through the variable 'terms':
 ```javascript
-sign: function ( document, terms, ignite, callback ) {
+sign: function ( document, terms, ignite ) {
 	// terms.sourceComm.flowID hold the flowID of the current business flow
 	// use it to store some records in your favorite in-memory storage to access it when 'flowTerminated' is induced.
 }
@@ -958,22 +909,20 @@ The design you app should follow for such cases as follows:
 The entity receiving the request must send back 'Request accepted'-like message to the sender and store the externalID and flowID of the communication:
 
 ```javascript
-ignite( 'ManCanDo.sign', document, function () {
-	console.log('Accepted.')
-} )
+await ignite( 'ManCanDo.sign', document )
+console.log('Accepted.')
 
 ...
 
 let ManCanDo = {
 	auditor: true,
-	sign: function ( document, terms, ignite, callback ) {
-		database.store( terms.sourceComm, document, callback )
+	sign: function ( document, terms, ignite ) {
+		await database.store( terms.sourceComm, document )
 	},
 	_signed: function( document ) {
 		let self = this
-		database.readRequest( document, function(err, record){
-			self.ignite( record.externalId, record.flowId, record.sourceDivision, record.source + '.signed', document )
-		} )
+		let record = await database.readRequest( document )
+		await self.ignite( record.externalId, record.flowId, record.sourceDivision, record.source + '.signed', document )
 	}
 }
 ```
@@ -996,38 +945,6 @@ To activate it:
 ```javascript
 harcon = new Harcon( { ..., mortar: { enable: true, folder: '', liveReload: false } } )
 ```
-
-
-
-## Function erupt
-
-On the line to ease the management of workflows, [harcon](https://github.com/imrefazekas/harcon) introduces the _erupt_ function appearing in the published entities and in the terms object passed to the services functions during ongoing communication.
-It represents a simple trick to call ignite by returning the following:
-
-```javascript
-function (waterfall) {
-	return waterfall ? function (_obj, cb) { ... } : function (cb) { ... }
-}
-```
-
-In case, you are building up a complete chain of calls, you can use your favorite functional abstraction tool as the following example demonstrates through the popular _async.js_:
-
-```javascript
-async.series([
-	erupt()( 'Marie.greet', 'Hello' ),
-	erupt()( 'Julie.greet', 'Hello' )
-], function(err, res){ })
-```
-
-```javascript
-async.waterfall([
-	erupt()( 'Marie.greet', 'Hello' ),
-	erupt(true)( 'Julie.greet', 'Hello' )
-], function(err, res){ })
-```
-
-No need to pass callback, the function returned by _erupt_ call will possess an injected callback function as parameter used as THE callback of the communication.
-Pretty nasty, huh?
 
 
 
@@ -1062,6 +979,7 @@ See <https://github.com/imrefazekas/harcon/issues>.
 
 ## Changelog
 
+- 8.0.0 : Moving to Node 8 & await functions
 - 5.2.0 : Added foreach support for harcon-flows and async functions for entities
 - 5.2.0 : Added transactions & flow validation
 - 5.0.0 : Bender added
