@@ -6,12 +6,9 @@ module.exports = {
 		return Proback.quicker( 'Non, non, non!' )
 	},
 	flegme: function ( ) {
-		console.log('>>>>>>>>>')
-		return new Promise( (resolve, reject) => {
-			setTimeout( function () {
-				console.log('??????')
-				resolve( 'Quoi?')
-			}, 2500 )
+		return new Promise( async (resolve, reject) => {
+			await Proback.timeout( 2500 )
+			resolve( 'Quoi?')
 		} )
 	},
 	superFlegme: function ( ) {

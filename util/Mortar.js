@@ -57,7 +57,6 @@ module.exports = {
 						})
 					})
 					self.setInterval( function () {
-						console.log('????????????? Mortar is checking for entity changes')
 						self.harconlog( null, 'Mortar is checking for entity changes', null, 'trace' )
 						self.igniteFiles( )
 					}, self.options.liveReloadTimeout || 5000 )
@@ -81,7 +80,6 @@ module.exports = {
 		let fPath = folder ? folder + path.sep + fileName : fileName
 		if ( this.files.indexOf( fPath ) === -1 )
 			this.files.push( fPath )
-		console.log( '>>>>>>>>>>>', this.files )
 		return this
 	},
 	igniteFiles: function ( ) {
