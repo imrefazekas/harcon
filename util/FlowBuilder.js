@@ -6,7 +6,7 @@ function Element ( name, parents, children ) {
 	this.children = children || []
 }
 
-function findMessage (roots, message, callback) {
+function findMessage (roots, message) {
 	for ( let i = 0; i < roots.length; ++i ) { let root = roots[i]
 		if (root.name === message) return root
 		let found = findMessage( root.children, message )
@@ -70,22 +70,24 @@ module.exports = {
 
 			root.checked = true
 			let err = self.validate( root.children )
-			if (err) return err
+			if (err) throw err
 			self.clean( roots )
 		}
 		return null
 	},
-	build: function (defs, callback) {
+	build: function (defs) {
 		let roots = []
-		try {
-			for (let key in defs) {
-				// console.log('::::', key, selectMessages( defs[key].primers || [] ) )
-				buildTree( roots, key, defs[key] )
-			}
-			let realRoots = roots.filter( function (element) { return element.parents.length === 0 } )
-			realRoots.forEach( function (element) { element.root = true } )
-			let valid = this.validate( realRoots )
-			callback( valid, realRoots )
-		} catch (err) { callback( err ) }
+		return new Promise( (resolve, reject) => {
+			try {
+				for (let key in defs) {
+					// console.log('::::', key, selectMessages( defs[key].primers || [] ) )
+					buildTree( roots, key, defs[key] )
+				}
+				let realRoots = roots.filter( function (element) { return element.parents.length === 0 } )
+				realRoots.forEach( function (element) { element.root = true } )
+				this.validate( realRoots )
+				resolve( realRoots )
+			} catch (err) { reject( err ) }
+		} )
 	}
 }

@@ -13,16 +13,16 @@ let RESERVATION = [ 'Barrel', 'Bender', 'Blower', 'Communication', 'Fire', 'Fire
 module.exports = {
 	name: 'Mortar',
 	files: [],
-	init: function (options = {}, callback) {
+	init: function (options = {}) {
 		let self = this
 
 		self.options = options
 
-		if (!this.configs)
-			this.configs = {}
-		if (!this.globalConfig)
-			this.globalConfig = {}
-		this.watchMonitors = []
+		if (!self.configs)
+			self.configs = {}
+		if (!self.globalConfig)
+			self.globalConfig = {}
+		self.watchMonitors = []
 
 		let extension = '.js'
 		self.matcher = self.options.matcher || ( self.options.pattern ? function (filePath) { return self.options.pattern.test(filePath) } : function (filePath) { return filePath.endsWith( extension ) } )
@@ -32,13 +32,17 @@ module.exports = {
 
 		self.files = []
 
+		return self.firstRead()
+	},
+	firstRead: function () {
+		let self = this
 		let isComponent = function (filePath, stat) {
 			return !stat.isDirectory() && self.matcher(filePath)
 		}
-		self.readFiles( self.options.folder, function (err) {
-			if (err) return callback(err)
-
+		return new Promise( async (resolve, reject) => {
 			try {
+				await self.readFiles( self.options.folder )
+
 				self.igniteFiles( )
 
 				if ( self.options.liveReload ) {
@@ -53,13 +57,14 @@ module.exports = {
 						})
 					})
 					self.setInterval( function () {
+						console.log('????????????? Mortar is checking for entity changes')
 						self.harconlog( null, 'Mortar is checking for entity changes', null, 'trace' )
 						self.igniteFiles( )
 					}, self.options.liveReloadTimeout || 5000 )
 				}
 
-				callback()
-			} catch (err) { return callback(err) }
+				resolve('ok')
+			} catch (err) { return reject(err) }
 		})
 	},
 	addGlobalConfig: function ( config ) {
@@ -76,58 +81,61 @@ module.exports = {
 		let fPath = folder ? folder + path.sep + fileName : fileName
 		if ( this.files.indexOf( fPath ) === -1 )
 			this.files.push( fPath )
+		console.log( '>>>>>>>>>>>', this.files )
 		return this
 	},
 	igniteFiles: function ( ) {
 		let self = this
 
-		let newFiles = self.files.slice()
-		self.files.length = 0
-		// liveReloadTimeout: -1
-		newFiles.forEach( function (newFile) {
-			let fn = function (err, res) {
-				if ( err )
-					self.harconlog( err, newFile )
-			}
-			if ( fs.existsSync( newFile ) ) {
-				self.harconlog( null, '(Re)New entity file', newFile, 'info' )
-				try {
-					let component = require( newFile.substring( 0, newFile.length - 3 ) )
-					if ( !component.name )
-						return self.harconlog( new Error( 'Entity has no name' ), newFile )
-					if ( RESERVATION.find( (name) => { return name.toLowerCase() === component.name.toLowerCase() } ) )
-						return self.harconlog( new Error( 'Entity has forbidden name' ), newFile )
-					if ( component.adequate && !component.adequate() )
-						return self.harconlog( new Error( 'Entity failed to be adequate' ), newFile )
-					self.ignite( 'Inflicter.addicts', component, self.configs[component.name] || self.globalConfig[component.name], fn )
-				} catch ( reason ) {
-					console.error( reason )
-					self.harconlog( reason, newFile )
-				}
-			} else {
-				self.harconlog( null, 'Removed entity file', newFile, 'info' )
-				self.ignite( 'Inflicter.detracts', path.basename( newFile, '.js'), fn )
+		return new Promise( async (resolve, reject) => {
+			try {
+				let newFiles = self.files.slice()
+				self.files.length = 0
+				// liveReloadTimeout: -1
+				newFiles.forEach( async function (newFile) {
+					if ( fs.existsSync( newFile ) ) {
+						self.harconlog( null, '(Re)New entity file', newFile, 'info' )
+						let component = require( newFile.substring( 0, newFile.length - 3 ) )
+						if ( !component.name )
+							throw new Error( 'Entity has no name', newFile )
+						if ( RESERVATION.find( (name) => { return name.toLowerCase() === component.name.toLowerCase() } ) )
+							throw new Error( 'Entity has forbidden name', newFile )
+						if ( component.adequate && !component.adequate() )
+							throw new Error( 'Entity failed to be adequate', newFile )
+						await self.ignite( 'Inflicter.addicts', component, self.configs[component.name] || self.globalConfig[component.name] )
+					} else {
+						self.harconlog( null, 'Removed entity file', newFile, 'info' )
+						await self.ignite( 'Inflicter.detracts', path.basename( newFile, '.js') )
+					}
+				} )
+				resolve('ok')
+			} catch (err) {
+				self.harconlog( err )
+				reject(err)
 			}
 		} )
 	},
-	readFiles: function ( folder, callback ) {
+	readFiles: function ( folder ) {
 		let self = this
-		fs.readdir(folder, function (err, files) {
-			if (err) return callback( err )
-			else
-				for (let i = 0; i < files.length; i += 1)
-					if ( self.matcher(files[i]) )
-						self.scheduleFile( folder, files[i] )
-			callback()
-		})
-	},
-	close: function ( callback ) {
-		this.watchMonitors.forEach( function ( monitor ) {
-			monitor.stop()
+		return new Promise( (resolve, reject) => {
+			fs.readdir(folder, function (err, files) {
+				if (err) return reject( err )
+				else
+					for (let i = 0; i < files.length; i += 1)
+						if ( self.matcher(files[i]) )
+							self.scheduleFile( folder, files[i] )
+				resolve('ok')
+			})
 		} )
-		this.watchMonitors.length = 0
-
-		if ( callback )
-			callback( null, 'Stopped' )
+	},
+	close: function ( ) {
+		let self = this
+		return new Promise( (resolve, reject) => {
+			self.watchMonitors.forEach( function ( monitor ) {
+				monitor.stop()
+			} )
+			self.watchMonitors.length = 0
+			resolve('Stopped')
+		} )
 	}
 }
