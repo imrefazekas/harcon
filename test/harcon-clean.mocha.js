@@ -3,8 +3,6 @@ let chai = require('chai')
 let should = chai.should()
 let expect = chai.expect
 
-let async = require('async')
-
 let fs = require('fs')
 let util = require('util')
 let readFile = util.promisify(fs.readFile)
