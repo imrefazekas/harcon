@@ -40,7 +40,7 @@ For kafka integration, please check this: [harcon-kafka](https://github.com/imre
 
 - __Log-free coding__: no more mixture of logging and business logic. Harcon logs all messages exchanged.
 
-- __Transparent__: although harcon introduces lots of complex types and structures, your code and callbacks will be kept clean and pure, everything is (un)packed in the background in a transparent way
+- __Transparent__: although harcon introduces lots of complex types and structures, your code will be kept clean and pure, everything is (un)packed in the background in a transparent way
 
 - __Smooth infiltration__: your objects / functions will possess the necessary services via injection, no need to create complex structures and compounds
 
@@ -70,20 +70,20 @@ let inflicter = await harcon.init()
 
 // define a listener function listening every message related to "greet" like "greet.goodmorning" or "greet.goodday"
 await inflicter.addict( null, 'peter', 'greet.*', function (greetings1, greetings2) {
-	return Proback.quicker('Hi there!')
+	return new Promise( resolve => resolve('Hi there!') )
 } )
 
 // define an plain object serving as listener withing the context "greet" to messages "warm"
 marie = {
 	name: 'marie',
 	context: 'greet',
-	warm: function (greetings1, greetings2, callback) {
-		callback( null, 'Bonjour!' )
+	warm: function (greetings1, greetings2) {
+		return new Promise( resolve => resolve('Bonjour!') )
 	}
 }
 await inflicter.addicts( marie )
 
-// sends a communication 'greet.everyone' with parameters and defines a callback to handle responses
+// sends a communication 'greet.everyone' with parameters and waits for responses
 // will receive back 2 answers: 'Hi there!' and 'Bonjour!'
 await harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?' )
 ```
@@ -143,7 +143,7 @@ let res = await inflicter.simpleIgnite( 'job.order', { name: 'Stephen', customer
 let res = await inflicter.simpleIgnite( 'john.job', { name: 'Stephen', customerID:123 } )
 ```
 
-- objects: plain object enclosing callback-based or async functions and a unique name. This is the recommended way to define entities.
+- objects: plain object enclosing functions and a unique name. This is the recommended way to define entities.
 ```javascript
 var bookKeeper = {
 	name: 'BookKeeper',
@@ -205,13 +205,13 @@ __!Note:__ Harcon allows you to enforce the "responses are always arrays" behavi
 
 #### Error responses
 
-Your callback might receive an error object in unwanted situations. The default transport channel of harcon will stop the message processing at the first error occurring as follows:
+Your functions might receive an error object in unwanted situations. The default transport channel of harcon will stop the message processing at the first error occurring as follows:
 
 ```javascript
-inflicter.addict( null, 'peter', 'greet.*', function (callback) {
+inflicter.addict( null, 'peter', 'greet.*', function () {
 	return new Promise( (resolve, reject) => reject( new Error('Stay away, please.') ) )
 } )
-inflicter.addict( null, 'camille', 'greet.*', function (callback) {
+inflicter.addict( null, 'camille', 'greet.*', function () {
 	return new Promise( (resolve, reject) => reject( new Error('Do not bother me.') ) )
 } )
 
@@ -276,7 +276,7 @@ Let's define the following entity:
 var observer = {
 	name: 'Observer',
 	context: 'transfer',
-	parse: function ( document, callback ) {
+	parse: function ( document ) {
 		return new Promise( resolve => resolve('Done.') )
 	}
 }
@@ -447,7 +447,7 @@ harcon = new Harcon( { /* ... */ idLength: 32 } )
 
 When you defined your components, the need to send and receive messages arises. In a workflow, your component might initiate a message, response one or while responding one sends other ones.
 The function-based components can perform only the latter 2 cases, cannot initiate anything by its own. This type of components are present to define services, listeners, definitely not serious business entities.
-As you saw above, the serices functions might possess a parameter before the __callback__: _ignite_
+As you saw above, the serices functions might possess a parameter: _ignite_
 
 ```javascript
 var order = {
@@ -495,7 +495,7 @@ module.exports = {
 }
 ```
 
-Along the parameters you need for your business logic, and the ignite function and callback object introduced earlier, the terms can be added to the parameter list in the right order shown above.
+Along the parameters you need for your business logic, and the ignite function introduced earlier, the terms can be added to the parameter list in the right order shown above.
 
 ```javascript
 module.exports = {
@@ -571,13 +571,13 @@ The function can be used to set up DB connections or anything required for your 
 module.exports = {
 	name: 'Claire',
 	context: 'greet',
-	init: function (options, callback) {
+	init: function (options) {
 		console.log('Init...', options)
 		return new Promise( resolve => resolve('Initiated.') )
 	}
 }
 ```
-The method receives a configuration object and a callback to be called when the init method finishes.
+The method receives the associated configuration object.
 That configuration object can be passed when an entity is published:
 ```javascript
 await inflicter.addicts( Claire, config )
@@ -839,7 +839,7 @@ There are several type of execution defined by the {execution_type} above.
 'Order.registerOrder': { type: 'waterfall', primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ] }
 ```
 
-- 'spread' means concurrent message sending to all entities enlisted in the array of 'primers'. Basically this is the bulked execution of message sending of entities where no callback is defined expressing the ignorance to answers.
+- 'spread' means concurrent message sending to all entities enlisted in the array of 'primers'. Basically this is the bulked execution of message sending of entities.
 ```javascript
 'Order.registerOrder': { type: 'spread', primers: [ 'DB.storeOrder', 'DB.checkStore', 'Mailer.sendNotif' ] }
 ```
@@ -878,7 +878,7 @@ flowSucceeded: function ( flowID, result, terms, ignite ) {
 	} )
 }
 ```
-By default, it does not do anything. If your entity aims to react to 'flowFailed' or 'flowSucceeded' events, override those functions in the source code of your entity paying attention to the Promise-callback design principle. The function must return a promise and has to allow to pass callback as well...
+By default, it does not do anything. If your entity aims to react to 'flowFailed' or 'flowSucceeded' events, override those functions in the source code of your entity. The function must return a promise...
 
 During your business logic, you business logic should access the flowID through the variable 'terms':
 ```javascript
