@@ -93,7 +93,9 @@ module.exports = {
 				newFiles.forEach( async function (newFile) {
 					if ( fs.existsSync( newFile ) ) {
 						self.harconlog( null, '(Re)New entity file', newFile, 'info' )
-						let component = require( newFile.substring( 0, newFile.length - 3 ) )
+						let compName = newFile.substring( 0, newFile.length - 3 )
+						delete require.cache[require.resolve( compName )]
+						let component = require( compName )
 						if ( !component.name )
 							throw new Error( 'Entity has no name', newFile )
 						if ( RESERVATION.find( (name) => { return name.toLowerCase() === component.name.toLowerCase() } ) )

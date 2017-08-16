@@ -2,7 +2,7 @@ let Proback = require('proback.js')
 module.exports = {
 	name: 'Lina',
 	init: function (options) {
-		// console.log('Init...', options)
+		// console.log('Init_NEW...', options)
 		return Proback.quicker('ok')
 	},
 	marieChanged: function ( payload ) {
