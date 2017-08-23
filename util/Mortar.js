@@ -1,10 +1,10 @@
-'use strict'
-
 let fs = require('fs')
 let watch = require('watch')
 let mkdirp = require('mkdirp')
 
 let path = require('path')
+
+let Proback = require('proback.js')
 
 let events = ['created', 'removed', 'changed']
 
@@ -15,24 +15,33 @@ module.exports = {
 	files: [],
 	init: function (options = {}) {
 		let self = this
+		return new Promise( async (resolve, reject) => {
+			try {
+				self.options = options
 
-		self.options = options
+				if (!self.configs)
+					self.configs = {}
+				if (!self.globalConfig)
+					self.globalConfig = {}
+				self.watchMonitors = []
 
-		if (!self.configs)
-			self.configs = {}
-		if (!self.globalConfig)
-			self.globalConfig = {}
-		self.watchMonitors = []
+				let extension = '.js'
+				self.matcher = self.options.matcher || ( self.options.pattern ? function (filePath) { return self.options.pattern.test(filePath) } : function (filePath) { return filePath.endsWith( extension ) } )
 
-		let extension = '.js'
-		self.matcher = self.options.matcher || ( self.options.pattern ? function (filePath) { return self.options.pattern.test(filePath) } : function (filePath) { return filePath.endsWith( extension ) } )
+				if ( !fs.existsSync( self.options.folder ) )
+					mkdirp.sync( self.options.folder )
 
-		if ( !fs.existsSync( self.options.folder ) )
-			mkdirp.sync( self.options.folder )
+				self.files = []
 
-		self.files = []
-
-		return self.firstRead()
+				if ( options.waitForEntity ) {
+					await Proback.until( () => {
+						return !!self.inflicterContext._barrel.firestarter( options.waitForEntity )
+					} )
+				}
+				await self.firstRead()
+				resolve('ok')
+			} catch (err) { return reject(err) }
+		} )
 	},
 	firstRead: function () {
 		let self = this
