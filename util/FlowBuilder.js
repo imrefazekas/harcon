@@ -75,19 +75,15 @@ module.exports = {
 		}
 		return null
 	},
-	build: function (defs) {
+	build: async function (defs) {
 		let roots = []
-		return new Promise( (resolve, reject) => {
-			try {
-				for (let key in defs) {
-					// console.log('::::', key, selectMessages( defs[key].primers || [] ) )
-					buildTree( roots, key, defs[key] )
-				}
-				let realRoots = roots.filter( function (element) { return element.parents.length === 0 } )
-				realRoots.forEach( function (element) { element.root = true } )
-				this.validate( realRoots )
-				resolve( realRoots )
-			} catch (err) { reject( err ) }
-		} )
+		for (let key in defs) {
+			// console.log('::::', key, selectMessages( defs[key].primers || [] ) )
+			buildTree( roots, key, defs[key] )
+		}
+		let realRoots = roots.filter( function (element) { return element.parents.length === 0 } )
+		realRoots.forEach( function (element) { element.root = true } )
+		this.validate( realRoots )
+		return realRoots
 	}
 }
