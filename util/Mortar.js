@@ -7,8 +7,6 @@ let path = require('path')
 let { promisify } = require('util')
 let readdir = promisify( fs.readdir )
 
-let Proback = require('proback.js')
-
 let events = ['created', 'removed', 'changed']
 
 let RESERVATION = [ 'Barrel', 'Bender', 'Blower', 'Communication', 'Fire', 'Firestarter', 'Firestormstarter', 'FireBender', 'Flamestarter', 'FlowBuilder', 'FlowReader', 'Inflicter', 'Mortar', 'Warper' ]
@@ -34,16 +32,18 @@ module.exports = {
 
 		self.files = []
 
-		if ( options.waitForEntity ) {
-			await Proback.until( () => {
-				return !!self.inflicterContext._barrel.firestarter( options.waitForEntity )
-			} )
-		}
 		await self.firstRead()
 		return 'ok'
 	},
 	firstRead: async function () {
 		let self = this
+
+		if ( self.options.waitFor && self.options.waitFor.entity && !self.inflicterContext._barrel.firestarter( self.options.waitFor.entity ) ) {
+			return setTimeout( () => {
+				self.firstRead().then( () => {} ).catch( (reason) => { self.harconlog(reason) } )
+			}, self.options.waitFor.timeout || 1000 )
+		}
+
 		let isComponent = function (filePath, stat) {
 			return !stat.isDirectory() && self.matcher(filePath)
 		}
