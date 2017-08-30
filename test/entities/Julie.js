@@ -1,5 +1,3 @@
-let Proback = require('proback.js')
-
 module.exports = {
 	name: 'Julie',
 	context: 'morning',
@@ -9,33 +7,33 @@ module.exports = {
 		let res = await ignite( 'greet.gentle', 'It is morning!', 'Time to wake up!')
 		return res
 	},
-	dormir: function ( ) {
-		return Proback.quicker( 'Non, Mais non!' )
+	dormir: async function ( ) {
+		return 'Non, Mais non!'
 	},
-	rever: function ( message ) {
+	rever: async function ( message ) {
 		console.log( this.name + ' reve < ' + message + ' >' )
-		return Proback.quicker( 'Non, Mais non!' )
+		return 'Non, Mais non!'
 	},
-	repose: function ( message ) {
+	repose: async function ( message ) {
 		console.log( this.name + ' repose < ' + message + ' >' )
-		return Proback.quicker( 'Non, Mais non!' )
+		return 'Non, Mais non!'
 	},
-	chouchou: function ( message, terms, ignite ) {
+	chouchou: async function ( message, terms, ignite ) {
 		console.log( this.name + ' chouchou < ' + message + ' >' )
 		return ignite( 'Alizee.dormir' )
 	},
-	moi: function ( message, terms, ignite ) {
+	moi: async function ( message, terms, ignite ) {
 		console.log( this.name + ' moi < ' + message + ' >' )
-		return Proback.quicker( message )
+		return message
 	},
-	choisi: function ( message, terms, ignite ) {
+	choisi: async function ( message, terms, ignite ) {
 		console.log( this.name + ' choisi < ' + message + ' >' )
-		return Proback.quicker( 'Non, Mais non!' )
+		return 'Non, Mais non!'
 	},
-	distribute: function (terms, ignite) {
-		return Proback.quicker( [ 10, 45, 50 ] )
+	distribute: async function (terms, ignite) {
+		return [ 10, 45, 50 ]
 	},
-	waterfall: function (terms, ignite) {
-		return Proback.quicker( [ 10, 45, 50 ] )
+	waterfall: async function (terms, ignite) {
+		return [ 10, 45, 50 ]
 	}
 }

@@ -2,16 +2,14 @@ let Proback = require('proback.js')
 module.exports = {
 	name: 'Alizee',
 	context: 'morning.girls',
-	dormir: function ( ignite ) {
-		return Proback.quicker( 'Non, non, non!' )
+	dormir: async function ( ignite ) {
+		return 'Non, non, non!'
 	},
-	flegme: function ( ) {
-		return new Promise( async (resolve, reject) => {
-			await Proback.timeout( 2500 )
-			resolve( 'Quoi?')
-		} )
+	flegme: async function ( ) {
+		await Proback.timeout( 2500 )
+		return 'Quoi?'
 	},
-	superFlegme: function ( ) {
+	superFlegme: async function ( ) {
 		return new Promise( (resolve, reject) => {
 			setTimeout( function () {
 				resolve( 'Quoi???')

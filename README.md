@@ -9,10 +9,6 @@ Need help? Join me on
 
 and level your problem with me freely. :)
 
-!Note: From version 3.0.0, harcon provides callback interface with Promise support in its functions.
-
-!Note: From version 5.0.0, harcon has powerful toolset to define and perform execution chains and workflows.
-
 !Note: From version 8.0.0, harcon supports only Node v8 and await functions. For callback-based version please use v7 or below.
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
@@ -69,16 +65,16 @@ let inflicter = await harcon.init()
 
 
 // define a listener function listening every message related to "greet" like "greet.goodmorning" or "greet.goodday"
-await inflicter.addict( null, 'peter', 'greet.*', function (greetings1, greetings2) {
-	return new Promise( resolve => resolve('Hi there!') )
+await inflicter.addict( null, 'peter', 'greet.*', async function (greetings1, greetings2) {
+	return 'Hi there!'
 } )
 
 // define an plain object serving as listener withing the context "greet" to messages "warm"
 marie = {
 	name: 'marie',
 	context: 'greet',
-	warm: function (greetings1, greetings2) {
-		return new Promise( resolve => resolve('Bonjour!') )
+	warm: async function (greetings1, greetings2) {
+		return 'Bonjour!'
 	}
 }
 await inflicter.addicts( marie )
@@ -127,16 +123,16 @@ One can define 2 type of entities:
 - simple function: when you associate a function with an event-pattern. Recommended to be used as observer, job-like, surveillance-, or interface-related asset.
 ```javascript
 // Qualified name - will answer to only this message
-inflicter.addict( null, 'hugh', 'allocate.ip', function () {
-	return new Promise( resolve => resolve('Done.') )
+inflicter.addict( null, 'hugh', 'allocate.ip', async function () {
+	return 'Done.'
 } )
 // Wildcards - will answer anything within the context greet
-inflicter.addict( null, 'peter', 'greet.*', function () {
-	return new Promise( resolve => resolve('Done.') )
+inflicter.addict( null, 'peter', 'greet.*', async function () {
+	return 'Done.'
 } )
 // Regular expression - will answer anything where message name start with string 'job'
-inflicter.addict( null, 'john', /job.*/, function ( partner ) {
-	return new Promise( resolve => resolve('Done.') )
+inflicter.addict( null, 'john', /job.*/, async function ( partner ) {
+	return 'Done.'
 } )
 ...
 let res = await inflicter.simpleIgnite( 'job.order', { name: 'Stephen', customerID:123 } )
@@ -148,11 +144,11 @@ let res = await inflicter.simpleIgnite( 'john.job', { name: 'Stephen', customerI
 var bookKeeper = {
 	name: 'BookKeeper',
 	...
-	newOrder: function ( customer ) {
-		return new Promise( resolve => resolve('Done.') )
+	newOrder: async function ( customer ) {
+		return 'Done.'
 	},
-	ordersOfToday: function ( ) {
-		return new Promise( resolve => resolve( [] ) )
+	ordersOfToday: async function ( ) {
+		return []
 	}
 }
 ...
@@ -177,11 +173,11 @@ By default, [harcon](https://github.com/imrefazekas/harcon) returns and array of
 Let's have 2 simple entities:
 
 ```javascript
-inflicter.addict( null, 'peter', 'greet.*', function () {
-	return new Promise( resolve => resolve('Hi.') )
+inflicter.addict( null, 'peter', 'greet.*', async function () {
+	return 'Hi.'
 } )
-inflicter.addict( null, 'camille', 'greet.*', function () {
-	return new Promise( resolve => resolve('Hello.') )
+inflicter.addict( null, 'camille', 'greet.*', async function () {
+	return 'Hello.'
 } )
 
 let res = await inflicter.simpleIgnite( 'greet.simple' )
@@ -208,11 +204,11 @@ __!Note:__ Harcon allows you to enforce the "responses are always arrays" behavi
 Your functions might receive an error object in unwanted situations. The default transport channel of harcon will stop the message processing at the first error occurring as follows:
 
 ```javascript
-inflicter.addict( null, 'peter', 'greet.*', function () {
-	return new Promise( (resolve, reject) => reject( new Error('Stay away, please.') ) )
+inflicter.addict( null, 'peter', 'greet.*', async function () {
+	throw new Error('Stay away, please.')
 } )
-inflicter.addict( null, 'camille', 'greet.*', function () {
-	return new Promise( (resolve, reject) => reject( new Error('Do not bother me.') ) )
+inflicter.addict( null, 'camille', 'greet.*', async function () {
+	throw new Error('Do not bother me.')
 } )
 
 try {
@@ -246,15 +242,15 @@ You can structure your entities like the following:
 var parser = {
 	name: 'JSONParser',
 	context: 'transfer.json',
-	parse: function ( document ) {
-		return new Promise( resolve => resolve('Done.') )
+	parse: async function ( document ) {
+		return 'Done.'
 	}
 }
 var observer = {
 	name: 'XMLParser',
 	context: 'transfer.xml',
-	parse: function ( document ) {
-		return new Promise( resolve => resolve('Done.') )
+	parse: async function ( document ) {
+		return 'Done.'
 	}
 }
 ```
@@ -276,8 +272,8 @@ Let's define the following entity:
 var observer = {
 	name: 'Observer',
 	context: 'transfer',
-	parse: function ( document ) {
-		return new Promise( resolve => resolve('Done.') )
+	parse: async  function ( document ) {
+		return 'Done.'
 	}
 }
 ```
@@ -316,8 +312,8 @@ If you work with workflows, the sequence/order of your messages will get an impo
 var order = {
 	name: 'Order',
 	context: 'order',
-	newVPN: function ( customer, ignite ) {
-		return new Promise( resolve => await ignite( 'allocate.address', '127.0.0.1' ) )
+	newVPN: async function ( customer, ignite ) {
+		return await ignite( 'allocate.address', '127.0.0.1' )
 	}
 }
 ...
@@ -338,9 +334,9 @@ harcon = new Harcon( { /* ... */ marie: {greetings: 'Hi!'} } )
 var marie = {
 	name: 'marie',
 	context: 'test',
-	init: function (options) {
+	init: async function (options) {
 		// {greetings: 'Hi!'} will be passed
-		return new Promise( resolve => resolve('Initiated.') )
+		return 'Initiated.'
 	}
 	// services ...
 }
@@ -356,8 +352,8 @@ There is an option for an object-based entity to enforce uniqueness:
 module.exports = {
 	name: 'Charlotte',
 	distinguish: 'Unique',
-	access: function ( ) {
-		return new Promise( resolve => resolve('D\'accord?') )
+	access: async function ( ) {
+		return 'D\'accord?'
 	}
 }
 ```
@@ -389,9 +385,9 @@ That function can be used anything within your entity object:
 var Marie = {
 	name: 'Marie',
 	context: 'greet',
-	whiny: function (greetings) {
+	whiny: async function (greetings) {
 		this.harconlog( null, 'Some logging', { data: greetings }, 'silly' )
-		return new Promise( resolve => resolve('Pas du tout!') )
+		return 'Pas du tout!'
 	}
 }
 ```
@@ -453,8 +449,8 @@ As you saw above, the serices functions might possess a parameter: _ignite_
 var order = {
 	name: 'Order',
 	context: 'order',
-	newVPN: function ( customer, ignite ) {
-		return new Promise( resolve => await ignite( 'allocate.address', '127.0.0.1' )
+	newVPN: async function ( customer, ignite ) {
+		return await ignite( 'allocate.address', '127.0.0.1' )
 	}
 }
 ```
@@ -466,8 +462,8 @@ Of course components are not just reacting entities, they might launch new workf
 ```javascript
 var timer = {
 	name: 'Timer',
-	scheduling: function ( ) {
-		return new Promise( resolve => await this.ignite( 'validate.accounts' )
+	scheduling: async function ( ) {
+		return await this.ignite( 'validate.accounts' )
 	}
 }
 ```
@@ -486,11 +482,11 @@ Should you define your business functions as below, the terms will be passed and
 ```javascript
 module.exports = {
 	name: 'Claire',
-	init: function (options) {
-		return new Promise( resolve => resolve('Initiated.') )
+	init: async function (options) {
+		return 'Initiated.'
 	},
-	simple: function (greetings1, greetings2, terms, ignite) {
-		return new Promise( resolve => resolve('Pas du tout!') )
+	simple: async function (greetings1, greetings2, terms, ignite) {
+		return 'Pas du tout!'
 	}
 }
 ```
@@ -500,10 +496,10 @@ Along the parameters you need for your business logic, and the ignite function i
 ```javascript
 module.exports = {
 	name: 'Domina',
-	force: function ( terms, ignite ) {
+	force: async function ( terms, ignite ) {
 		var self = this
 		terms.tree = 'grow'
-		return new Promise( resolve => await ignite( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
+		return await ignite( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
 	}
 }
 ```
@@ -524,16 +520,16 @@ Let's define components and add them to divisions:
 
 ```javascript
 // This will add John to the division 'workers'
-harcon.addict( 'workers', 'john', /job.*/, function () {
-	return new Promise( resolve => resolve('Done.') )
+harcon.addict( 'workers', 'john', /job.*/, async function () {
+	return 'Done.'
 } )
 // This will add Claire to the division 'entrance'
 var claire = {
 	name: 'claire',
 	division: 'entrance',
 	context: 'greet',
-	simple: function (greetings1, greetings2) {
-		return new Promise( resolve => resolve('Enchanté, mon plaisir!') )
+	simple: async function (greetings1, greetings2) {
+		return 'Enchanté, mon plaisir!'
 	}
 }
 ```
@@ -571,9 +567,9 @@ The function can be used to set up DB connections or anything required for your 
 module.exports = {
 	name: 'Claire',
 	context: 'greet',
-	init: function (options) {
+	init: async function (options) {
 		console.log('Init...', options)
-		return new Promise( resolve => resolve('Initiated.') )
+		return 'Initiated.'
 	}
 }
 ```
@@ -650,14 +646,14 @@ You can mix the techniques as your business logic demands.
 var extension = {
 	name: 'As you design it',
 	context: harcon.name,
-	castOf: function ( name, firestarter ) {
-		return new Promise( resolve => resolve('OK') )
+	castOf: async function ( name, firestarter ) {
+		return 'OK'
 	},
-	affiliate: function ( firestarter ) {
-		return new Promise( resolve => resolve('OK') )
+	affiliate: async function ( firestarter ) {
+		return 'OK'
 	},
-	close: function () {
-		return new Promise( resolve => resolve('OK') )
+	close: async function () {
+		return 'OK'
 	}
 }
 await inflicter.addicts( extension )
@@ -681,10 +677,10 @@ That object will be inserted into the initial configuration of all Entities publ
 ```javascript
 var Marie = {
 	name: 'Marie',
-	init: function (options) {
+	init: async function (options) {
 		// options = { workDir: '/temp' }
 		self.options = options
-		return new Promise( resolve => resolve('OK') )
+		return 'OK'
 	}
 }
 ```
@@ -710,9 +706,9 @@ module.exports = {
 		await self.ignite('Marie.notify', 'data', 'Lina.marieChanged' )
 	},
 	...
-	marieChanged: function ( payload ) {
+	marieChanged: async function ( payload ) {
 		console.log( '>>>>>>>>>>>', payload )
-		return new Promise( resolve => resolve('OK') )
+		return 'OK'
 	}
 }
 ```
@@ -725,9 +721,9 @@ How Marie can "shift" state:
 ```javascript
 module.exports = {
 	name: 'Marie',
-	simple: function (greetings1, greetings2) {
+	simple: async function (greetings1, greetings2) {
 		this.shifted( { data: 'content' } )
-		return Proback.quicker( 'Bonjour!' )
+		return 'Bonjour!'
 	}
 }
 ```
@@ -867,22 +863,18 @@ To be straightforward, when a business flow ends, your entities will be notified
 
 Each entity you define will possess the following functions:
 ```javascript
-flowFailed: function ( flowID, errMessage, terms, ignite ) {
-	return new Promise( (resolve, reject) => {
-		...
-	} )
+flowFailed: async function ( flowID, errMessage, terms, ignite ) {
+	...
 }
-flowSucceeded: function ( flowID, result, terms, ignite ) {
-	return new Promise( (resolve, reject) => {
-		...
-	} )
+flowSucceeded: async function ( flowID, result, terms, ignite ) {
+	...
 }
 ```
 By default, it does not do anything. If your entity aims to react to 'flowFailed' or 'flowSucceeded' events, override those functions in the source code of your entity. The function must return a promise...
 
 During your business logic, you business logic should access the flowID through the variable 'terms':
 ```javascript
-sign: function ( document, terms, ignite ) {
+sign: async function ( document, terms, ignite ) {
 	// terms.sourceComm.flowID hold the flowID of the current business flow
 	// use it to store some records in your favorite in-memory storage to access it when 'flowTerminated' is induced.
 }
@@ -916,10 +908,10 @@ console.log('Accepted.')
 
 let ManCanDo = {
 	auditor: true,
-	sign: function ( document, terms, ignite ) {
+	sign: async function ( document, terms, ignite ) {
 		await database.store( terms.sourceComm, document )
 	},
-	_signed: function( document ) {
+	_signed: async function( document ) {
 		let self = this
 		let record = await database.readRequest( document )
 		await self.ignite( record.externalId, record.flowId, record.sourceDivision, record.source + '.signed', document )

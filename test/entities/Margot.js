@@ -4,11 +4,11 @@ module.exports = {
 	name: 'Margot',
 	division: 'maison.cache',
 	context: 'paresseux.fille',
-	init: function (options) {
+	init: async function (options) {
 		// console.log('Init...', options)
-		return Proback.quicker( 'ok' )
+		return 'ok'
 	},
-	alors: function ( ) {
-		return Proback.quicker( 'Oui?' )
+	alors: async function ( ) {
+		return 'Oui?'
 	}
 }
