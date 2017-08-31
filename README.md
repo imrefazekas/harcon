@@ -967,22 +967,3 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ## Bugs
 
 See <https://github.com/imrefazekas/harcon/issues>.
-
-
-## Changelog
-
-- 8.0.0 : Moving to Node 8 & await functions
-- 5.2.0 : Added foreach support for harcon-flows and async functions for entities
-- 5.2.0 : Added transactions & flow validation
-- 5.0.0 : Bender added
-- 4.x : lots of great refactoring and improvements
-- 3.0.0 : promise support added and tons of tweaks and features
-- 2.0.0 : reimplemented architecture and division management
-- 1.2.X : plugin architecture added
-- 1.1.X : division concept added
-- 1.0.X : serious fixes
-- 1.0.0 : first stable release
-- 0.9.0 : small redesign
-- 0.8.0 : automated (re/un)deployment added, rewritten event coordination subsystem
-- 0.6.0 : delivery fixes
-- 0.5.0 : initial release
