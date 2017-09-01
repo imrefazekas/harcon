@@ -1,12 +1,11 @@
-let Proback = require('proback.js')
 module.exports = {
 	name: 'Lina',
-	init: function (options) {
-		// console.log('Init...', options)
-		return Proback.quicker('ok')
+	init: async function (options) {
+		console.log('Init...', options)
+		return 'ok'
 	},
-	marieChanged: function ( payload ) {
+	marieChanged: async function ( payload ) {
 		this.hasMarieChanged = true
-		return Proback.quicker( 'OK' )
+		return 'OK'
 	}
 }
