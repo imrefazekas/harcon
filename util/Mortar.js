@@ -11,6 +11,9 @@ let events = ['created', 'removed', 'changed']
 
 let RESERVATION = [ 'Barrel', 'Bender', 'Blower', 'Communication', 'Fire', 'Firestarter', 'Firestormstarter', 'FireBender', 'Flamestarter', 'FlowBuilder', 'FlowReader', 'Inflicter', 'Mortar', 'Warper' ]
 
+let Assigner = require('assign.js')
+let assigner = new Assigner()
+
 module.exports = {
 	name: 'Mortar',
 	files: [],
@@ -106,7 +109,7 @@ module.exports = {
 					throw new Error( 'Entity has forbidden name', newFile )
 				if ( component.adequate && !component.adequate() )
 					throw new Error( 'Entity failed to be adequate', newFile )
-				await self.ignite( 'Inflicter.addicts', component, self.configs[component.name] || self.globalConfig[component.name] )
+				await self.ignite( 'Inflicter.addicts', component, assigner.assign( {}, self.globalConfig[component.name], self.configs[component.name] ) )
 			} else {
 				self.harconlog( null, 'Removed entity file', newFile, 'info' )
 				await self.ignite( 'Inflicter.detracts', path.basename( newFile, '.js') )
