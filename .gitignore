@@ -4,6 +4,4 @@
 node_modules/
 dist/
 doc/
-*.list
-test/_*.js
-tmp
+tmp/
