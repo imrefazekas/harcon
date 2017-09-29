@@ -939,6 +939,38 @@ harcon = new Harcon( { ..., mortar: { enable: true, folder: '', liveReload: fals
 ```
 
 
+## Wrappers
+
+Wrappers are a special services in [harcon](https://github.com/imrefazekas/harcon) allowing to specialize messages before sending them out and - as a gatekeeper, - validate them before delivering them. That functionality is meant to define some kind of contract between entities or [harcon](https://github.com/imrefazekas/harcon) systems.
+
+For example, in order to provide an inter-service security in a highly fragmented microservice architecture, the entities must know if the message is really cominng fron the given entity and answers also have to be ensured to be not forged by any third party, independently of any geographical distribution.
+A Warper can ensure, that messages are creating for example signed messages which can be verified by the other entities easily and vica versa.
+The system has a default global warper, defining an "always allow" policy for all services and communication. To provide a custom warper, you might want to refine the 'Barrel' settings when initializing the harcon as follows:
+
+```javascript
+harcon = new Harcon( { ..., barrel: { Warper: [WarperCreatorFunction] } } )
+```
+
+A [WarperCreatorFunction] will be called and instantiated as follows:
+
+```javascript
+let warper = new [WarperCreatorFunction]( this.division, config.connectedDivisions )
+```
+
+The current division and all connected divisions of the current [harcon](https://github.com/imrefazekas/harcon) will be passed.
+
+Warpers define the following services to be implemented:
+
+```javascript
+function conform( comm ) ... // to be called before sending out a message
+function referenceMatrix ( object ) ... // to be called optionally if some external data should be considered
+function allow ( communication ) ... // to be called before delivering a message
+```
+
+All functions are synchronous.
+
+The [harcon-ecdsa-warper](https://github.com/imrefazekas/harcon-ecdsa-warper) defines az ECDSA-based security layer for [harcon](https://github.com/imrefazekas/harcon), please check for details.
+
 
 ## License
 
