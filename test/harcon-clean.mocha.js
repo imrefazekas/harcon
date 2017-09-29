@@ -35,6 +35,7 @@ describe('harcon', function () {
 				name: harconName,
 				logger: logger,
 				idLength: 32,
+				barrel: { Warper: require( './EcdsaWarper' ), warper: { message: Buffer.from( clerobee.generate( 32 ), 'utf8' ).toString('hex') } },
 				blower: { commTimeout: 2000, tolerates: ['Alizee.flegme'] },
 				mortar: { enabled: true, folder: path.join( __dirname, 'entities' ), liveReload: true, liveReloadTimeout: 2000 },
 				Marie: {greetings: 'Hi!'}
