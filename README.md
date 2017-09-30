@@ -84,7 +84,7 @@ await inflicter.addicts( marie )
 await harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?' )
 ```
 
-## Logical view
+## Logical view - Terms of Harcon
 
 ![harcon system](https://raw.githubusercontent.com/imrefazekas/harcon/master/docs/harcon-system.png)
 
