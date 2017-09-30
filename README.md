@@ -84,6 +84,9 @@ await inflicter.addicts( marie )
 await harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?' )
 ```
 
+## Logical view
+
+![harcon system](https://raw.githubusercontent.com/imrefazekas/harcon/master/docs/harcon-system.png)
 
 
 ## Workflows
