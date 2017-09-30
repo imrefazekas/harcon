@@ -962,6 +962,7 @@ The current division and all connected divisions of the current [harcon](https:/
 Warpers define the following services to be implemented:
 
 ```javascript
+function inpose( exposed ) ... // inposes information from other harcon nodes
 function expose() ... // to share information public among harcon nodes
 function conform( comm ) ... // to be called before sending out a message
 function referenceMatrix ( object ) ... // to be called optionally if some external data should be considered
