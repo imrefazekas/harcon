@@ -21,14 +21,14 @@ function Mortar () {
 
 let mortar = Mortar.prototype
 
+let globalConfig = {}
+
 mortar.init = async function (options = {}) {
 	let self = this
 	self.options = options
 
 	if (!self.configs)
 		self.configs = {}
-	if (!self.globalConfig)
-		self.globalConfig = {}
 	self.watchMonitors = []
 
 	let extension = '.js'
@@ -77,11 +77,6 @@ mortar.firstRead = async function () {
 	}
 	return 'ok'
 }
-mortar.addGlobalConfig = function ( config ) {
-	this.globalConfig = config
-
-	return this
-}
 mortar.addConfig = function ( name, config ) {
 	this.configs[name] = config
 
@@ -113,7 +108,7 @@ mortar.igniteFiles = async function ( ) {
 				throw new Error( 'Entity has forbidden name', newFile )
 			if ( component.adequate && !component.adequate() )
 				throw new Error( 'Entity failed to be adequate', newFile )
-			await self.ignite( 'Inflicter.addicts', component, assigner.assign( {}, self.globalConfig[component.name], self.configs[component.name] ) )
+			await self.ignite( 'Inflicter.addicts', component, assigner.assign( {}, globalConfig[component.name], self.configs[component.name] ) )
 		} else {
 			self.harconlog( null, 'Removed entity file', newFile, 'info' )
 			await self.ignite( 'Inflicter.detracts', path.basename( newFile, '.js') )
@@ -136,4 +131,11 @@ mortar.close = async function ( ) {
 	return 'Stopped'
 }
 
-module.exports = Mortar
+module.exports = {
+	addGlobalConfig: function ( config ) {
+		globalConfig = config
+	},
+	newMortar: function () {
+		return new Mortar()
+	}
+}
