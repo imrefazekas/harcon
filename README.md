@@ -510,6 +510,25 @@ module.exports = {
 The 'tree' attribute set by entity 'Domina' will be seen by the entity 'Claire' when it receives the message.
 
 
+#### Rest parameters
+
+[harcon](https://github.com/imrefazekas/harcon) allows you to define your services with [Rest parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters) as follows:
+
+```javascript
+comp: async function ( ...args ) {
+	console.log('Arguments received: ', args)
+	return 'ok'
+},
+shrink: async function ( terms, ignite, ...args ) {
+	console.log('Arguments received: ', args)
+	return 'ok'
+}
+```
+
+The given services can receive any number of parameters and will be enclosed by the parameter 'args'. The naming is a convention which should be followed.
+Such service can also define the optional __terms__ and __ignite__ objects as first parameters demonstrated above.
+
+
 
 ## Divisions
 

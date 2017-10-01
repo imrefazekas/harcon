@@ -66,7 +66,7 @@ describe('harcon', function () {
 		it('Retrieve entities...', async function () {
 			let entities = await inflicter.entities( )
 			let names = entities.map( function (entity) { return entity.name } ).sort()
-			expect( names ).to.eql( [ 'Alizee', 'Bandit', 'Charlotte', 'Claire', 'Domina', 'Inflicter', 'Julie', 'Lina', 'Margot', 'Marie', 'Marion', 'Mortar', 'peter', 'walter' ] )
+			expect( names ).to.eql( [ 'Alizee', 'Bandit', 'Boss', 'Charlotte', 'Claire', 'Domina', 'Inflicter', 'Julie', 'Lina', 'Margot', 'Marie', 'Marion', 'Mortar', 'peter', 'walter' ] )
 		})
 		it('Send for divisions...', async function () {
 			let res = await inflicter.ignite( clerobee.generate(), null, '', 'Inflicter.divisions')
@@ -100,6 +100,11 @@ describe('harcon', function () {
 				await inflicter.ignite( clerobee.generate(), null, '', 'Alizee.superFlegme' )
 				assert.fail( 'Should not be here...' )
 			} catch (err) { expect(err).to.be.an.instanceof( Error ) }
+		})
+		it('Boss shrinking', async function () {
+			this.timeout(5000)
+			let res = await inflicter.ignite( clerobee.generate(), null, '', 'Boss.shrink', 'hello?' )
+			expect(res).to.eql( 'ok' )
 		})
 	})
 

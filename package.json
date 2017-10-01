@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "8.4.3",
+  "version": "8.4.5",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
