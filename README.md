@@ -24,7 +24,7 @@ The library has a stunning feature list beyond basic messaging functionality.
 For amqp integration, please check this: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp)
 For sqs integration, please check this: [harcon-sqs](https://github.com/imrefazekas/harcon-sqs)
 For mqtt integration, please check this: [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt)
-For kafka integration, please check this: [harcon-kafka](https://github.com/imrefazekas/harcon-kafka)
+For nats.io integration, please check this: [harcon-nats](https://github.com/imrefazekas/harcon-nats)
 
 - __Tracking__: you can monitor every message delivered (request or response) by only few lines of code
 
@@ -226,7 +226,7 @@ will result the following on your console:
 	[Error: Stay away, please.]
 
 The default transport layer is designed for development purposes only.
-In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [SQS](https://aws.amazon.com/sqs/), [MQTT](http://mqtt.org) or [Kafka](https://kafka.apache.org) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp), [harcon-sqs](https://github.com/imrefazekas/harcon-sqs), [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) and [harcon-kafka](https://github.com/imrefazekas/harcon-kafka) accordingly.
+In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [SQS](https://aws.amazon.com/sqs/), [MQTT](http://mqtt.org) or [Nats](http://nats.io) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp), [harcon-sqs](https://github.com/imrefazekas/harcon-sqs), [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) and [harcon-nats](https://github.com/imrefazekas/harcon-nats) accordingly.
 
 By using a real transport layer, all occurred error messages will be delegated. In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
 
