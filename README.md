@@ -20,7 +20,7 @@ It allows you to design and implement complex workflows and microservices where 
 
 The library has a stunning feature list beyond basic messaging functionality.
 
-- __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [MQTT](http://mqtt.org), [Amazon SQS](https://aws.amazon.com/sqs/), etc...
+- __Channel-agnostic__: harcon represents a very abstract messaging framework allowing you to use any underlaying technology your application requires: [AMQP](http://www.amqp.org), [MQTT](http://mqtt.org), [Amazon SQS](https://aws.amazon.com/sqs/), [NATS](http://nats.io) etc...
 For amqp integration, please check this: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp)
 For sqs integration, please check this: [harcon-sqs](https://github.com/imrefazekas/harcon-sqs)
 For mqtt integration, please check this: [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt)
