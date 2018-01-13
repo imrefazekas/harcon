@@ -108,6 +108,13 @@ describe('harcon', function () {
 		})
 	})
 
+	describe('Harcon broadcasting', function () {
+		it('Broatcasting', async function () {
+			let res = await inflicter.ignite( clerobee.generate(), null, '', '*|Alizee.dormir' )
+			expect(res).to.eql( 'Non, non, non!' )
+		})
+	})
+
 	describe('Depth handling', function () {
 		it('multilevel domains', async function () {
 			let res = await inflicter.ignite( clerobee.generate(), null, 'HarconSys.maison.cache', 'Margot.alors' )
