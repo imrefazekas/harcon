@@ -16,6 +16,7 @@ let assigner = new Assigner()
 
 function Mortar () {
 	this.name = 'Mortar'
+	this.systemEntity = true
 	this.files = []
 }
 
