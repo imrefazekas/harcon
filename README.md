@@ -579,6 +579,15 @@ By default, [harcon](https://github.com/imrefazekas/harcon) presumes to have one
 harcon = new Harcon( { division: 'District 8', ... } )
 ```
 
+Subdivision is an option to represent an interoperability for distinct legal / organisational entities.
+Let's say, you want to build a private network, where you interconnect 3 companies working on the same business processes. they share services, data but they keep their own privacy.
+That means, that all companies / nodes belong to the same main division introduced above, but each of them represents a unique subdivision confining their own services and entities.
+
+So your cross-company project is called 'antidotum' which is a theoretical medical experiment project between big market players.
+You involve a clinic, a research facility and a production facility. Their domain will be:
+'antidotum.clinic', 'antidotum.research' and 'antidotum.production'.
+
+Each node can scale and define own entities and can also address entities defined by other nodes as well.
 
 
 ## Entity configuration
@@ -823,7 +832,7 @@ Syntax of a rule definition:
 
 {execution_type} : 'series' || 'waterfall' || 'spread'
 
-{target} : { division: {domain_name}, event: {event_name}, skipIf: {condition} } || {event_name}
+{target} : { division: {division_name}, event: {event_name}, skipIf: {condition} } || {event_name}
 
 {condition} : {event_name} || function
 ```
