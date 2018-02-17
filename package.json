@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "8.6.5",
+  "version": "8.6.6",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -26,7 +26,7 @@
     "harcon-flow": "^2.6.5",
     "isa.js": "^2.2.0",
     "mkdirp": "^0.5.1",
-    "proback.js": "^2.1.5",
+    "proback.js": "^2.1.6",
     "vindication.js": "^4.12.0",
     "watch": "^1.0.2"
   },
