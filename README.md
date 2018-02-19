@@ -3,9 +3,11 @@ Designed to be insanly scalable to serve enterprise components of real-time syst
 
 Harcon is strong to build a scalable execution-chain or workflow-based or machine-learning solution for NodeJS applications.
 
-Need help? Join me on
+Need help?
 
-[![Join the chat at https://gitter.im/imrefazekas/harcon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imrefazekas/harcon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![npm version](https://badge.fury.io/js/harcon.svg)](http://badge.fury.io/js/harcon) [![Code Climate](https://codeclimate.com/github/imrefazekas/harcon/badges/gpa.svg)](https://codeclimate.com/github/imrefazekas/harcon)
+[Open discussion at Discord](https://discord.gg/pjHUaMU)
+
+[![npm version](https://badge.fury.io/js/harcon.svg)](http://badge.fury.io/js/harcon) [![Code Climate](https://codeclimate.com/github/imrefazekas/harcon/badges/gpa.svg)](https://codeclimate.com/github/imrefazekas/harcon)
 
 and level your problem with me freely. :)
 
