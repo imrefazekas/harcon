@@ -43,6 +43,8 @@ describe('harcon', function () {
 
 			inflicter = await harcon.init()
 
+			inflicter.inflicterEntity.terms['*'] = { reference: 'secret' }
+
 			await inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2) {
 				return Proback.quicker('Hi there!')
 			} )
