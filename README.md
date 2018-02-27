@@ -479,8 +479,9 @@ That ignite function is injected by the [harcon](https://github.com/imrefazekas/
 
 ## The terms object
 
-In a workflow, a contextual object is much desired to set the context where business entities are participating and share some environmental state or values.
+In a workflow, a contextual object is very desired to be set for the business entities participating and sharing some environmental state or values.
 If you implement a financial transaction management system, currencies should be added to the terms object making the information accessible to all entities interoperating within the workflow.
+Or if you have a "logged in" entity, you might want to pass on the token of that given entity to be validated by other entities in the workflow in progress.
 
 Should you define your business functions as below, the terms will be passed and managed by [harcon](https://github.com/imrefazekas/harcon)
 
@@ -510,6 +511,25 @@ module.exports = {
 ```
 
 The 'tree' attribute set by entity 'Domina' will be seen by the entity 'Claire' when it receives the message.
+That is an adhoc terms definition which can be set globally in your entity as follows:
+
+```javascript
+module.exports = {
+	name: 'Domina',
+	terms: {
+		'*': { forEveryone: 'pass this' }
+	},
+	force: async function ( terms, ignite ) {
+		var self = this
+		terms.tree = 'grow'
+		return await ignite( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
+	}
+}
+```
+
+In [harcon](https://github.com/imrefazekas/harcon), an initiated workflow will be defined by the terms of the is starter entity. You can set the terms for all communication started by the entity 'Domina' by marking the objects with the key '*', or you can set the terms individually by setting the terms with the key of the externalID of the communication.
+In case of a rest-based service, you might want to channel the request and session information to the terms forcing you to perform the requests individually with a generated externalID and setting the "terms" of the web client with the key set to the value of the externalID. For a great example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
+
 
 
 #### Rest parameters
