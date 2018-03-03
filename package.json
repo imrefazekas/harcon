@@ -22,8 +22,8 @@
   "main": "./lib/Inflicter.js",
   "dependencies": {
     "assign.js": "^2.8.0",
-    "clerobee": "^0.9.0",
-    "harcon-flow": "^2.6.7",
+    "clerobee": "^0.9.5",
+    "harcon-flow": "^2.6.8",
     "isa.js": "^2.2.0",
     "mkdirp": "^0.5.1",
     "proback.js": "^2.1.6",
