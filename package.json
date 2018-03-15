@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "8.7.2",
+  "version": "8.7.4",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -22,7 +22,7 @@
   "main": "./lib/Inflicter.js",
   "dependencies": {
     "assign.js": "^2.8.0",
-    "clerobee": "^0.9.5",
+    "clerobee": "^0.9.6",
     "harcon-flow": "^2.6.8",
     "isa.js": "^2.2.0",
     "mkdirp": "^0.5.1",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "memwatch-next": "^0.3.0",
-    "pino": "^4.13.0",
+    "pino": "^4.14.0",
     "secp256k1": "^3.5.0"
   },
   "engines": {
