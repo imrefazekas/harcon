@@ -33,7 +33,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "memwatch-next": "^0.3.0",
-    "pino": "^4.14.0",
+    "pino": "^4.15.0",
     "secp256k1": "^3.5.0"
   },
   "engines": {
