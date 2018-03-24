@@ -1,10 +1,11 @@
-let Proback = require('proback.js')
-
 module.exports = {
 	name: 'Marie',
 	context: 'greet',
 	init: async function (options) {
 		// console.log('Init...', this.name, this.division, options)
+		return 'ok'
+	},
+	started: async function () {
 		return 'ok'
 	},
 	// Simple service function listening to the greet.simple message where greet comes from context and simple is identified by the name of the fuction.

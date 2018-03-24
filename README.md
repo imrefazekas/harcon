@@ -347,6 +347,28 @@ var marie = {
 }
 ```
 
+Keep it mind, that the function init does serve only to init the component so read files or connect to DB, should not be used to swift state or send message to other entities being deployed.
+
+Should you want to notify entity when it has been successfully deployed, shoudl you implement a __started__ function as follows:
+
+```javascript
+harcon = new Harcon( { /* ... */ marie: {greetings: 'Hi!'} } )
+var marie = {
+	name: 'marie',
+	context: 'test',
+	init: async function (options) {
+		// {greetings: 'Hi!'} will be passed
+		return 'Initiated.'
+	},
+	started: async function () {
+		return 'ok'
+	}
+	// services ...
+}
+```
+
+The call of that function means that the component is up and running and ready to serve.
+
 
 
 #### Distinguishing entities
