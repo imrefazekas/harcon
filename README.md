@@ -332,6 +332,7 @@ Mind the async execution to keep everything in track!
 #### Entity initialization
 
 The need to pass contextual parameters to entities might rise. The options object passed to the constructure of [harcon](https://github.com/imrefazekas/harcon) allows you to specify parameters for entities which will be passed while the init method defined in the entity is called.
+This function must perform well in order to be published, so the entity is not live when this function is called!
 The __init__ function like all services, must return with a promise object!
 
 ```javascript
