@@ -24,7 +24,7 @@
     "assign.js": "^2.8.0",
     "clerobee": "^0.9.6",
     "harcon-flow": "^2.6.8",
-    "isa.js": "^2.2.0",
+    "isa.js": "^2.2.1",
     "mkdirp": "^0.5.1",
     "proback.js": "^2.1.6",
     "vindication.js": "^4.12.0",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "memwatch-next": "^0.3.0",
-    "pino": "^4.15.0",
+    "pino": "^4.16.0",
     "secp256k1": "^3.5.0"
   },
   "engines": {
