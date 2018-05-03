@@ -15,5 +15,9 @@ module.exports = {
 				resolve( 'Quoi???')
 			}, 2500 )
 		} )
+	},
+	silent: async function ( ) {
+		await Proback.timeout( 1900 )
+		return 'ssss'
 	}
 }

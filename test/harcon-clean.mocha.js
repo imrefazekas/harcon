@@ -86,6 +86,21 @@ describe('harcon', function () {
 		})
 	})
 
+	describe('parallelism', function () {
+		it('Alize silent', async function () {
+			this.timeout(15000)
+			for (let i = 1; i <= 25; ++i) {
+				await Proback.timeout( i * 25 )
+				let time = Date.now()
+				inflicter.ignite( clerobee.generate(), null, '', 'Alizee.silent' ).then( (res) => {
+					console.log( (Date.now() - time) + ' :: ' + res )
+				} ).catch( (reason) => {
+					console.log( (Date.now() - time) + ' !! ' + reason )
+				} )
+			}
+		})
+	})
+
 	describe('simple messages', function () {
 		it('Alize dormir', async function () {
 			let res = await inflicter.ignite( clerobee.generate(), null, '', 'Alizee.dormir' )
