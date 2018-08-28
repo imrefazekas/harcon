@@ -31,6 +31,9 @@ describe('harcon', function () {
 	before( async function () {
 		let logger = Logger.createPinoLogger( { file: 'mochatest.log', level: 'debug' } )
 		try {
+			const oldLina = await readFile( path.join( __dirname, 'livereload', 'Lina_orig.js'), { encoding: 'utf8' } )
+			await writeFile( path.join( __dirname, 'entities', 'Lina.js'), oldLina, { encoding: 'utf8' } )
+
 			let harcon = new Harcon( {
 				name: harconName,
 				logger: logger,
@@ -51,9 +54,6 @@ describe('harcon', function () {
 			await inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2) {
 				return Proback.quicker('My pleasure!')
 			} )
-
-			const oldLina = await readFile( path.join( __dirname, 'livereload', 'Line_orig.js'), { encoding: 'utf8' } )
-			await writeFile( path.join( __dirname, 'entities', 'Lina.js'), oldLina, { encoding: 'utf8' } )
 
 			console.log('\n\n-----------------------\n\n')
 			assert.ok( 'Harcon initiated...' )
@@ -290,13 +290,15 @@ describe('harcon', function () {
 
 	describe('Live reload test', function () {
 		it('Changing Alizee', async function () {
-			this.timeout( 15000 )
+			this.timeout( 20000 )
 			try {
-				await Proback.timeout( 2000 )
+				assert.rejects( inflicter.ignite( '0', null, '', 'Lina.flying'), 'Nobody is listening to: Lina.flying' )
+
 				const newLina = await readFile( path.join( __dirname, 'livereload', 'Lina_new.js'), { encoding: 'utf8' } )
 				await writeFile( path.join( __dirname, 'entities', 'Lina.js'), newLina, { encoding: 'utf8' } )
 
-				await Proback.timeout( 8000 )
+				await Proback.timeout( 5000 )
+
 				let res = await inflicter.ignite( '0', null, '', 'Lina.flying')
 				expect( res ).to.eql( 'Flying in the clouds...' )
 			} catch (err) { assert.fail( 'Should not be here...' ) }
@@ -315,7 +317,8 @@ describe('harcon', function () {
 	})
 
 	after(async function () {
-		if (inflicter)
+		if (inflicter) {
 			await inflicter.close( )
+		}
 	})
 })

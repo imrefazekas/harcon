@@ -1,5 +1,4 @@
 let fs = require('fs')
-let watch = require('watch')
 let mkdirp = require('mkdirp')
 
 let path = require('path')
@@ -7,12 +6,12 @@ let path = require('path')
 let { promisify } = require('util')
 let readdir = promisify( fs.readdir )
 
-let events = ['created', 'removed', 'changed']
-
 let RESERVATION = [ 'Barrel', 'Bender', 'Blower', 'Communication', 'Fire', 'Firestarter', 'Firestormstarter', 'FireBender', 'Flamestarter', 'FlowBuilder', 'FlowReader', 'Inflicter', 'Mortar', 'Warper' ]
 
 let Assigner = require('assign.js')
 let assigner = new Assigner()
+
+let { OK } = require('../lib/Static')
 
 function Mortar () {
 	this.name = 'Mortar'
@@ -41,7 +40,7 @@ mortar.init = async function (options = {}) {
 	self.files = []
 
 	await self.firstRead()
-	return 'ok'
+	return OK
 }
 mortar.firstRead = async function () {
 	let self = this
@@ -52,8 +51,8 @@ mortar.firstRead = async function () {
 		}, self.options.waitFor.timeout || 1000 )
 	}
 
-	let isComponent = function (filePath, stat) {
-		return !stat.isDirectory() && self.matcher(filePath)
+	let isComponent = function (filePath) {
+		return self.matcher(filePath)
 	}
 
 	await self.readFiles( self.options.folder )
@@ -61,22 +60,27 @@ mortar.firstRead = async function () {
 	await self.igniteFiles( )
 
 	if ( self.options.liveReload ) {
-		watch.createMonitor( self.options.folder, function (monitor) {
-			self.watchMonitors.push( monitor )
-			let handler = function (f, stat) {
-				if ( isComponent( f, stat ) )
-					self.scheduleFile( null, f )
-			}
-			events.forEach(function (eventName) {
-				monitor.on( eventName, handler )
-			})
-		})
-		self.setInterval( async function () {
+		self.watchMonitors.push(
+			fs.watch( self.options.folder, {
+				persistent: true,
+				recursive: false,
+				encoding: 'utf8'
+			}, (eventType, filename) => {
+				let filePath = path.resolve( self.options.folder, filename )
+				fs.exists( filePath, (exists) => {
+					if ( !exists || !isComponent( filePath ) ) return
+					self.scheduleFile( null, filePath )
+				} )
+			} )
+		)
+
+		self.setInterval( function () {
 			self.harconlog( null, 'Mortar is checking for entity changes', null, 'trace' )
-			await self.igniteFiles( )
+			self.igniteFiles( ).then( () => {} )
+				.catch( self.harconlog )
 		}, self.options.liveReloadTimeout || 5000 )
 	}
-	return 'ok'
+	return OK
 }
 mortar.addConfig = function ( name, config ) {
 	this.configs[name] = config
@@ -115,18 +119,18 @@ mortar.igniteFiles = async function ( ) {
 			await self.ignite( 'Inflicter.detracts', path.basename( newFile, '.js') )
 		}
 	} )
-	return 'ok'
+	return OK
 }
 mortar.readFiles = async function ( folder ) {
 	let files = await readdir( folder )
 	for (let i = 0; i < files.length; i += 1)
 		if ( this.matcher(files[i]) )
 			this.scheduleFile( folder, files[i] )
-	return 'ok'
+	return OK
 }
 mortar.close = async function ( ) {
-	this.watchMonitors.forEach( function ( monitor ) {
-		monitor.stop()
+	this.watchMonitors.forEach( function ( watcher ) {
+		watcher.close()
 	} )
 	this.watchMonitors.length = 0
 	return 'Stopped'
