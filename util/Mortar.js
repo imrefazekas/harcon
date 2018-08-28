@@ -113,7 +113,11 @@ mortar.igniteFiles = async function ( ) {
 				throw new Error( 'Entity has forbidden name', newFile )
 			if ( component.adequate && !component.adequate() )
 				throw new Error( 'Entity failed to be adequate', newFile )
-			await self.ignite( 'Inflicter.addicts', component, assigner.assign( {}, globalConfig[component.name], self.configs[component.name] ) )
+			try {
+				await self.ignite( 'Inflicter.addicts', component, assigner.assign( {}, globalConfig[component.name], self.configs[component.name] ) )
+			} catch (err) {
+				self.harconlog( err )
+			}
 		} else {
 			self.harconlog( null, 'Removed entity file', newFile, 'info' )
 			await self.ignite( 'Inflicter.detracts', path.basename( newFile, '.js') )
