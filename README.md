@@ -644,7 +644,6 @@ module.exports = {
 	name: 'Claire',
 	context: 'greet',
 	init: async function (options) {
-		console.log('Init...', options)
 		return 'Initiated.'
 	}
 }
