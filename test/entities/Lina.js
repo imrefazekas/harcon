@@ -1,7 +1,7 @@
 module.exports = {
 	name: 'Lina',
 	init: async function (options) {
-		console.log('Init_NEW...', options)
+		// console.log('Init_NEW...', options)
 		return 'ok'
 	},
 	marieChanged: async function ( payload ) {
