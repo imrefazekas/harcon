@@ -120,7 +120,7 @@ mortar.igniteFiles = async function ( ) {
 			}
 		} else {
 			self.harconlog( null, 'Removed entity file', newFile, 'info' )
-			await self.request( 'Inflicter.detracts', path.basename( newFile, '.js') )
+			await self.request( 'Inflicter.conclude', path.basename( newFile, '.js') )
 		}
 	} )
 	return OK
