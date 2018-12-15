@@ -2,9 +2,9 @@ module.exports = {
 	name: 'Julie',
 	context: 'morning',
 	// When Julie is woken up, send a gentle message to everyone listening to such messages...  Walter and Pater namely
-	wakeup: async function ( ignite ) {
+	wakeup: async function ( terms ) {
 		this.harconlog( null, 'Simple logging test', {}, 'info' )
-		let res = await ignite( 'greet.gentle', 'It is morning!', 'Time to wake up!')
+		let res = await terms.request( 'greet.gentle', 'It is morning!', 'Time to wake up!')
 		return res
 	},
 	dormir: async function ( ) {
@@ -18,22 +18,22 @@ module.exports = {
 		console.log( this.name + ' repose < ' + message + ' >' )
 		return 'Non, Mais non!'
 	},
-	chouchou: async function ( message, terms, ignite ) {
+	chouchou: async function ( message, terms ) {
 		console.log( this.name + ' chouchou < ' + message + ' >' )
-		return ignite( 'Alizee.dormir' )
+		return terms.request( 'Alizee.dormir' )
 	},
-	moi: async function ( message, terms, ignite ) {
+	moi: async function ( message, terms ) {
 		console.log( this.name + ' moi < ' + message + ' >' )
 		return message
 	},
-	choisi: async function ( message, terms, ignite ) {
+	choisi: async function ( message, terms ) {
 		console.log( this.name + ' choisi < ' + message + ' >' )
 		return 'Non, Mais non!'
 	},
-	distribute: async function (terms, ignite) {
+	distribute: async function (terms) {
 		return [ 10, 45, 50 ]
 	},
-	waterfall: async function (terms, ignite) {
+	waterfall: async function (terms) {
 		return [ 10, 45, 50 ]
 	}
 }

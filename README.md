@@ -317,8 +317,8 @@ If you work with workflows, the sequence/order of your messages will get an impo
 var order = {
 	name: 'Order',
 	context: 'order',
-	newVPN: async function ( customer, ignite ) {
-		return await ignite( 'allocate.address', '127.0.0.1' )
+	newVPN: async function ( customer, terms ) {
+		return await terms.request( 'allocate.address', '127.0.0.1' )
 	}
 }
 ...
@@ -477,8 +477,8 @@ As you saw above, the serices functions might possess a parameter: _ignite_
 var order = {
 	name: 'Order',
 	context: 'order',
-	newVPN: async function ( customer, ignite ) {
-		return await ignite( 'allocate.address', '127.0.0.1' )
+	newVPN: async function ( customer, terms ) {
+		return await terms.request( 'allocate.address', '127.0.0.1' )
 	}
 }
 ```
@@ -514,7 +514,7 @@ module.exports = {
 	init: async function (options) {
 		return 'Initiated.'
 	},
-	simple: async function (greetings1, greetings2, terms, ignite) {
+	simple: async function (greetings1, greetings2, terms) {
 		return 'Pas du tout!'
 	}
 }
@@ -525,10 +525,10 @@ Along the parameters you need for your business logic, and the ignite function i
 ```javascript
 module.exports = {
 	name: 'Domina',
-	force: async function ( terms, ignite ) {
+	force: async function ( terms ) {
 		var self = this
 		terms.tree = 'grow'
-		return await ignite( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
+		return await terms.request( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
 	}
 }
 ```
@@ -542,10 +542,10 @@ module.exports = {
 	terms: {
 		'*': { forEveryone: 'pass this' }
 	},
-	force: async function ( terms, ignite ) {
+	force: async function ( terms ) {
 		var self = this
 		terms.tree = 'grow'
-		return await ignite( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
+		return await terms.request( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
 	}
 }
 ```
@@ -564,7 +564,7 @@ comp: async function ( ...args ) {
 	console.log('Arguments received: ', args)
 	return 'ok'
 },
-shrink: async function ( terms, ignite, ...args ) {
+shrink: async function ( terms, ...args ) {
 	console.log('Arguments received: ', args)
 	return 'ok'
 }
@@ -938,10 +938,10 @@ To be straightforward, when a business flow ends, your entities will be notified
 
 Each entity you define will possess the following functions:
 ```javascript
-flowFailed: async function ( flowID, errMessage, terms, ignite ) {
+flowFailed: async function ( flowID, errMessage, terms ) {
 	...
 }
-flowSucceeded: async function ( flowID, result, terms, ignite ) {
+flowSucceeded: async function ( flowID, result, terms ) {
 	...
 }
 ```
@@ -949,7 +949,7 @@ By default, it does not do anything. If your entity aims to react to 'flowFailed
 
 During your business logic, you business logic should access the flowID through the variable 'terms':
 ```javascript
-sign: async function ( document, terms, ignite ) {
+sign: async function ( document, terms ) {
 	// terms.sourceComm.flowID hold the flowID of the current business flow
 	// use it to store some records in your favorite in-memory storage to access it when 'flowTerminated' is induced.
 }
@@ -983,7 +983,7 @@ console.log('Accepted.')
 
 let ManCanDo = {
 	auditor: true,
-	sign: async function ( document, terms, ignite ) {
+	sign: async function ( document, terms ) {
 		await database.store( terms.sourceComm, document )
 	},
 	_signed: async function( document ) {

@@ -10,14 +10,14 @@ module.exports = {
 	usual: async function () {
 		return 'Enchanté, mon plaisir!'
 	},
-	simple: async function (greetings1, greetings2, terms, ignite) {
+	simple: async function (greetings1, greetings2, terms) {
 		return 'Pas du tout!'
 	},
-	jolie: async function (message, terms, ignite) {
+	jolie: async function (message, terms) {
 		console.log( this.name + ' est jolie < ' + message + ' >' )
 		return 'Merci'
 	},
-	tampis: async function (message, terms, ignite) {
+	tampis: async function (message, terms) {
 		console.log( this.name + ' est tampis < ' + message + ' >' )
 		throw new Error('Tampis...')
 	}

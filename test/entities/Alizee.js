@@ -2,7 +2,7 @@ let Proback = require('proback.js')
 module.exports = {
 	name: 'Alizee',
 	context: 'morning.girls',
-	dormir: async function ( ignite ) {
+	dormir: async function ( terms ) {
 		return 'Non, non, non!'
 	},
 	flegme: async function ( ) {
