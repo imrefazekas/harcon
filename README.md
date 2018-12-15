@@ -67,7 +67,7 @@ let inflicter = await harcon.init()
 
 
 // define a listener function listening every message related to "greet" like "greet.goodmorning" or "greet.goodday"
-await inflicter.addict( null, 'peter', 'greet.*', async function (greetings1, greetings2) {
+await inflicter.deploy( null, 'peter', 'greet.*', async function (greetings1, greetings2) {
 	return 'Hi there!'
 } )
 
@@ -79,46 +79,44 @@ marie = {
 		return 'Bonjour!'
 	}
 }
-await inflicter.addicts( marie )
+await inflicter.deploy( marie )
 
 // sends a communication 'greet.everyone' with parameters and waits for responses
 // will receive back 2 answers: 'Hi there!' and 'Bonjour!'
-await harcon.simpleIgnite( 'greet.everyone', 'Whatsup?', 'How do you do?' )
+await harcon.simpleRequest( 'greet.everyone', 'Whatsup?', 'How do you do?' )
 ```
+
 
 ## Logical view - Terms of Harcon
 
 ![harcon system](https://raw.githubusercontent.com/imrefazekas/harcon/master/docs/harcon-system.png)
 
 
-## Workflows
+## Send messages between entities
 
-In an enterprise-level system, one has to realize complex communication structure where lots of entities are following business logic and rules, involving subsystems and external resources, policies and other considerations, in short form: workflows.
-I take the liberty to define the workflow now as well defined routes and causality of messages.
-In a workflow, you are not dependent on the response timeframe, workflows manage distance in time and space. The recipient of a message can be on another server or city or planet. Recipient can answer right away or tomorrow or never.
+[harcon](https://github.com/imrefazekas/harcon) distinguishes three message flow:
+- request: entity __A__ sends a message to __B__ and requests an answer. Normal RPC model.
+- inform: entity __A__ sends a message to __B__ and continues right away __not considering whether B even received / processed__ the message. Signals / notifications are meant to be realised.
+- delegate: entity __A__ sends a message to __B__ and requests an answer to a __specified address__. Usual delegation model.
 
-In the JS world, one should mind the introduction of [microservices](http://martinfowler.com/articles/microservices.html) to start with right in the beginning. Just take the advantage of better orchestration, simpler development and debugging, easier deployment, scaling and monitoring.
-
-
-[harcon](https://github.com/imrefazekas/harcon) is __"just"__ a low-level library to leverage such concept.
-_In a simple way, you define entities and the communications among them then publish them._
+These flows are available as services for all entities within [harcon](https://github.com/imrefazekas/harcon).
 
 
+#### Unique messages
 
-## Execution-chain
+Every communication exchanged possesses the following properties (not exclusively):
+- unique ID
+- reference to the parent message if exists
+- uniqued ID of the workflow itself
+- external ID of the workflow started by an external communication involving a reference number to consider
+- timestamp
 
-In a microservice architecture, the key to design and orchestrate a working and living system is to abstract out the control in some form and write business logic fitting that abstract description.
+Any time you sends a message or receives an answer, such objects are bypassing through the harcon system which logs and tracks all of them.
 
-[harcon](https://github.com/imrefazekas/harcon) provides the [Bender](#bender) chapter for details, but please learn the basics of harcon before entering the rabbit hole, it is not without a reason that chapter is at the end of the documentation... ;)
-
-
-
-## Business transactions
-
-When execution is defined by execution-chains, harcon is capable to tell when a given flow really terminated and inform all entities about the termination opening the gate to the distributed transaction management, when all entities participating to a given flow might react to its termination, performing DB operations for example.
-
-Please check chapter [Transactions](#transactions) for detail.
-
+By default, [harcon](https://github.com/imrefazekas/harcon) uses 32 as length of the IDs which are unique over time and among computer nodes. You can override this default when initiating Harcon
+```javascript
+harcon = new Harcon( { /* ... */ idLength: 32 } )
+```
 
 
 #### Entities
@@ -128,20 +126,20 @@ One can define 2 type of entities:
 - simple function: when you associate a function with an event-pattern. Recommended to be used as observer, job-like, surveillance-, or interface-related asset.
 ```javascript
 // Qualified name - will answer to only this message
-inflicter.addict( null, 'hugh', 'allocate.ip', async function () {
+inflicter.deploy( null, 'hugh', 'allocate.ip', async function () {
 	return 'Done.'
 } )
 // Wildcards - will answer anything within the context greet
-inflicter.addict( null, 'peter', 'greet.*', async function () {
+inflicter.deploy( null, 'peter', 'greet.*', async function () {
 	return 'Done.'
 } )
 // Regular expression - will answer anything where message name start with string 'job'
-inflicter.addict( null, 'john', /job.*/, async function ( partner ) {
+inflicter.deploy( null, 'john', /job.*/, async function ( partner ) {
 	return 'Done.'
 } )
 ...
-let res = await inflicter.simpleIgnite( 'job.order', { name: 'Stephen', customerID:123 } )
-let res = await inflicter.simpleIgnite( 'john.job', { name: 'Stephen', customerID:123 } )
+let res = await inflicter.simpleRequest( 'job.order', { name: 'Stephen', customerID:123 } )
+let res = await inflicter.simpleRequest( 'john.job', { name: 'Stephen', customerID:123 } )
 ```
 
 - objects: plain object enclosing functions and a unique name. This is the recommended way to define entities.
@@ -157,8 +155,8 @@ var bookKeeper = {
 	}
 }
 ...
-let res = await inflicter.simpleIgnite( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123} )
-let res = await inflicter.simpleIgnite( 'BookKeeper.ordersOfToday' )
+let res = await inflicter.simpleRequest( 'BookKeeper.newOrder', {name: 'Stephen', customerID:123} )
+let res = await inflicter.simpleRequest( 'BookKeeper.ordersOfToday' )
 ```
 
 The simplest but not the only way to address is to quality entities with their names.
@@ -167,8 +165,27 @@ __!Note:__ The following names are strictly forbidden to be used as entity names
 
 Those are used by [harcon](https://github.com/imrefazekas/harcon) itself.
 
-All services have to return with a Promise object.
+The message flows introduced above appear as functions injected to all entities you publish. So - among many management-typed others - three functions will be injected:
+- request
+- inform
+- delegate
 
+One can use these functions to send messages to other entities as follows:
+
+```javascript
+var bookKeeper = {
+	name: 'BookKeeper',
+	...
+	newOrder: async function ( customer ) {
+		this.request( 'Post.sendMaik', 'greetings', 'Dear Guest...' )
+		return 'Done.'
+	}
+}
+```
+
+Function _request_ will send the message _"sendMaik"_ to the entity _Post_ with the given parameters.
+
+Note: keep it mind, that all service functions must be async and act accordingly!
 
 
 #### Responses
@@ -178,14 +195,14 @@ By default, [harcon](https://github.com/imrefazekas/harcon) returns and array of
 Let's have 2 simple entities:
 
 ```javascript
-inflicter.addict( null, 'peter', 'greet.*', async function () {
+inflicter.deploy( null, 'peter', 'greet.*', async function () {
 	return 'Hi.'
 } )
-inflicter.addict( null, 'camille', 'greet.*', async function () {
+inflicter.deploy( null, 'camille', 'greet.*', async function () {
 	return 'Hello.'
 } )
 
-let res = await inflicter.simpleIgnite( 'greet.simple' )
+let res = await inflicter.simpleRequest( 'greet.simple' )
 ```
 
 Returns with the following:
@@ -209,15 +226,15 @@ __!Note:__ Harcon allows you to enforce the "responses are always arrays" behavi
 Your functions might receive an error object in unwanted situations. The default transport channel of harcon will stop the message processing at the first error occurring as follows:
 
 ```javascript
-inflicter.addict( null, 'peter', 'greet.*', async function () {
+inflicter.deploy( null, 'peter', 'greet.*', async function () {
 	throw new Error('Stay away, please.')
 } )
-inflicter.addict( null, 'camille', 'greet.*', async function () {
+inflicter.deploy( null, 'camille', 'greet.*', async function () {
 	throw new Error('Do not bother me.')
 } )
 
 try {
-	await inflicter.simpleIgnite( 'greet.simple')
+	await inflicter.simpleRequest( 'greet.simple')
 } catch (err) {
 	console.error( err, res )
 }
@@ -231,102 +248,6 @@ The default transport layer is designed for development purposes only.
 In an EE, environment, please mind the introduction of a message queue solution like: [AMQP](http://www.amqp.org), [SQS](https://aws.amazon.com/sqs/), [MQTT](http://mqtt.org) or [Nats](http://nats.io) using official plugins: [harcon-amqp](https://github.com/imrefazekas/harcon-amqp), [harcon-sqs](https://github.com/imrefazekas/harcon-sqs), [harcon-mqtt](https://github.com/imrefazekas/harcon-mqtt) and [harcon-nats](https://github.com/imrefazekas/harcon-nats) accordingly.
 
 By using a real transport layer, all occurred error messages will be delegated. In such cases, harcon will retrieve an Error object encapsulating all error object received from entities.
-
-
-
-#### Orchestration
-
-You have seen how to call service functions using qualified names and regular expressions (function-based entity).
-If a much structured system must be orchestrated, a set of finer toolset is at you disposal: __contexts and divisions__, representing different abstraction levels.
-
-__Context__: is a named set of object-based entities and contexts. a qualified name identifying the field/purpose the entity is operating. To refine the structure of your service.
-For example you can have multiple entities providing service like _parse_ but in different context like: _"xml"_ or _"json"_.
-You can structure your entities like the following:
-
-```javascript
-var parser = {
-	name: 'JSONParser',
-	context: 'transfer.json',
-	parse: async function ( document ) {
-		return 'Done.'
-	}
-}
-var observer = {
-	name: 'XMLParser',
-	context: 'transfer.xml',
-	parse: async function ( document ) {
-		return 'Done.'
-	}
-}
-```
-
-In this case, such messages can be sent:
-
-```javascript
-await inflicter.simpleIgnite( 'transfer.json.parse' )
-or
-await inflicter.simpleIgnite( 'transfer.xml.parse' )
-or
-await inflicter.simpleIgnite( 'transfer.'+document.type+'.parse' )
-```
-
-addressing directly to one of those entities, depending the type of the document you want to parse.
-Let's define the following entity:
-
-```javascript
-var observer = {
-	name: 'Observer',
-	context: 'transfer',
-	parse: async  function ( document ) {
-		return 'Done.'
-	}
-}
-```
-
-Such entity will also receive those message and might do logging or measuring or perform preliminary actions.
-In short form: you can address multiple entities with a single message.
-
-The matching algorithm is simple: spliting the title by _'.'_ matching with the context you specify and fails only if the compared strings are not equals.
-This means, that:
-
-__The title 'transfer.xml.parse' will target the XMLParser and Observer entities.__
-
-and
-
-__The title 'transfer.parse' will target the XMLParser, JSONParser and Observer entities.__
-
-Contexts are very good way to refine your structures and entities and express overlapping functional behaviors.
-
-
-__Division__: divisions is a different angle on the plane of orchestration. A _division_ is a closed "box" of entities, meaning that an entity can operate only within the division it is a member of.
-In fact, every entity belongs to a division defined explicitly or implicitly by the harcon.
-Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application.
-The reason why divisions are important, because it represents a responsibility and/or legal unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
-
-Please find the [Divisions](#divisions) chapter for details.
-
-
-_Note_: contexts and divisions are not mandatory to be used. The complexity will tell you how to orchestrate your app. It might happen, that simple function-based named entities are fitting your need. Feel free to act on your own, there is no pattern to follow.
-
-
-
-#### Chain messages
-
-If you work with workflows, the sequence/order of your messages will get an importance. To chain messages, define the next point in the workflow you have to add another parameter to your service function:
-```javascript
-var order = {
-	name: 'Order',
-	context: 'order',
-	newVPN: async function ( customer, terms ) {
-		return await terms.request( 'allocate.address', '127.0.0.1' )
-	}
-}
-...
-await inflicter.simpleIgnite( 'order.newVPN', {name: 'Stephen', customerID:123} )
-```
-That will initiate a small workflow. __harcon.simpleIgnite__ sends a message to entity Order who will send within the same workflow to the Allocator. When it answeres, then the message of the beginning will be answered. [harcon](https://github.com/imrefazekas/harcon) will know if you initiate a message within the processing of another one and considers it as part of the ongoing workflow and tracks it.
-Mind the async execution to keep everything in track!
-
 
 
 #### Entity initialization
@@ -372,27 +293,23 @@ The call of that function means that the component is up and running and ready t
 
 
 
-#### Distinguishing entities
+## Message exchange
 
-There is an option for an object-based entity to enforce uniqueness:
+When your components are deployed, the need to send and receive messages arises. In a workflow, your component might initiate a message, response one or while responding one sends other ones. As introduced above, 3 different message flows are implemented in harcon: request, inform and delegate.
+Your components can perform these functions to send messages to each other.
 
 ```javascript
-module.exports = {
-	name: 'Charlotte',
-	distinguish: 'Unique',
-	access: async function ( ) {
-		return 'D\'accord?'
+var order = {
+	name: 'Order',
+	context: 'order',
+	newVPN: async function ( customer ) {
+		await this.inform( 'apn.notify', 'deviceID', 'Refresh network' )
+		return this.request( 'allocate.address', '127.0.0.1' )
 	}
 }
 ```
 
-The attribute 'distinguish' can be a boolean or a string which will be added to its name as a postfix. In case of boolean value, a random value will be generated.
-
-The entity can be called with __'Charlotte-Unique.access'__ or __'Charlotte-1231441123.access'__ where __'1231441123'__ is the random string generated by the [harcon](https://github.com/imrefazekas/harcon).
-
-This feature is useful in a largely scaled environment, where a given entity might appear in multiple instances and distinguishing them is a must-have behavior.
-
-The entity will be still available with its own name: 'Charlotte'. You can consider it as a synonym or alternative name.
+The messaging functions are injected by the [harcon](https://github.com/imrefazekas/harcon) when you publish the components.
 
 
 
@@ -449,54 +366,106 @@ That will turn off the logging of all messages sent to Marie. So no answers rece
 
 
 
-#### Unique messages
+## Workflows
 
-Every communication exchanged possesses the following properties (not exclusively):
-- unique ID
-- reference to the parent message if exists
-- uniqued ID of the workflow itself
-- external ID of the workflow started by an external communication involving a reference number to consider
-- timestamp
+In an enterprise-level system, one has to realize complex communication structure where lots of entities are following business logic and rules, involving subsystems and external resources, policies and other considerations, in short form: workflows.
+I take the liberty to define the workflow now as well defined routes and causality of messages.
+In a workflow, you are not dependent on the response timeframe, workflows manage distance in time and space. The recipient of a message can be on another server or city or planet. Recipient can answer right away or tomorrow or never.
 
-Any time you sends a message or receives an answer, such objects are bypassing through the harcon system which logs and tracks all of them.
+In the JS world, one should mind the introduction of [microservices](http://martinfowler.com/articles/microservices.html) to start with right in the beginning. Just take the advantage of better orchestration, simpler development and debugging, easier deployment, scaling and monitoring.
 
-By default, [harcon](https://github.com/imrefazekas/harcon) uses 32 as length of the IDs which are unique over time and among computer nodes. You can override this default when initiating Harcon
+[harcon](https://github.com/imrefazekas/harcon) is __"just"__ a low-level library to leverage such concept.
+_In a simple way, you define entities and the communications among them then publish them._
+
+
+## Execution-chain
+
+In a microservice architecture, the key to design and orchestrate a working and living system is to abstract out the control in some form and write business logic fitting that abstract description.
+
+[harcon](https://github.com/imrefazekas/harcon) provides the [Bender](#bender) chapter for details, but please learn the basics of harcon before entering the rabbit hole, it is not without a reason that chapter is at the end of the documentation... ;)
+
+
+## Business transactions
+
+When execution is defined by execution-chains, harcon is capable to tell when a given flow really terminated and inform all entities about the termination opening the gate to the distributed transaction management, when all entities participating to a given flow might react to its termination, performing DB operations for example.
+
+Please check chapter [Transactions](#transactions) for detail.
+
+
+
+#### Orchestration
+
+You have seen how to call service functions using qualified names and regular expressions (function-based entity).
+If a much structured system must be orchestrated, a set of finer toolset is at you disposal: __contexts and divisions__, representing different abstraction levels.
+
+__Context__: is a named set of object-based entities and contexts. a qualified name identifying the field/purpose the entity is operating. To refine the structure of your service.
+For example you can have multiple entities providing service like _parse_ but in different context like: _"xml"_ or _"json"_.
+You can structure your entities like the following:
+
 ```javascript
-harcon = new Harcon( { /* ... */ idLength: 32 } )
-```
-
-
-
-## Message exchange
-
-When you defined your components, the need to send and receive messages arises. In a workflow, your component might initiate a message, response one or while responding one sends other ones.
-The function-based components can perform only the latter 2 cases, cannot initiate anything by its own. This type of components are present to define services, listeners, definitely not serious business entities.
-As you saw above, the serices functions might possess a parameter: _ignite_
-
-```javascript
-var order = {
-	name: 'Order',
-	context: 'order',
-	newVPN: async function ( customer, terms ) {
-		return await terms.request( 'allocate.address', '127.0.0.1' )
+var parser = {
+	name: 'JSONParser',
+	context: 'transfer.json',
+	parse: async function ( document ) {
+		return 'Done.'
+	}
+}
+var observer = {
+	name: 'XMLParser',
+	context: 'transfer.xml',
+	parse: async function ( document ) {
+		return 'Done.'
 	}
 }
 ```
 
-That ignite can be used to chain messages, which means to send messages during the processing of a received one. The tool to initiate sub-workflows.
-
-Of course components are not just reacting entities, they might launch new workflows as well. Object-based components possesses an injected function: _ignite_ and can be used as follows:
+In this case, such messages can be sent:
 
 ```javascript
-var timer = {
-	name: 'Timer',
-	scheduling: async function ( ) {
-		return await this.ignite( 'validate.accounts' )
+await inflicter.simpleRequest( 'transfer.json.parse' )
+or
+await inflicter.simpleRequest( 'transfer.xml.parse' )
+or
+await inflicter.simpleRequest( 'transfer.'+document.type+'.parse' )
+```
+
+addressing directly to one of those entities, depending the type of the document you want to parse.
+Let's define the following entity:
+
+```javascript
+var observer = {
+	name: 'Observer',
+	context: 'transfer',
+	parse: async  function ( document ) {
+		return 'Done.'
 	}
 }
 ```
 
-That ignite function is injected by the [harcon](https://github.com/imrefazekas/harcon) when you publish the components.
+Such entity will also receive those message and might do logging or measuring or perform preliminary actions.
+In short form: you can address multiple entities with a single message.
+
+The matching algorithm is simple: spliting the title by _'.'_ matching with the context you specify and fails only if the compared strings are not equals.
+This means, that:
+
+__The title 'transfer.xml.parse' will target the XMLParser and Observer entities.__
+
+and
+
+__The title 'transfer.parse' will target the XMLParser, JSONParser and Observer entities.__
+
+Contexts are very good way to refine your structures and entities and express overlapping functional behaviors.
+
+
+__Division__: divisions is a different angle on the plane of orchestration. A _division_ is a closed "box" of entities, meaning that an entity can operate only within the division it is a member of.
+In fact, every entity belongs to a division defined explicitly or implicitly by the harcon.
+Divisions can be encapsulated, so a complete division-tree can be built-up in a harcon application.
+The reason why divisions are important, because it represents a responsibility and/or legal unit. Entities within it (in normal cases) cannot see outside and an entity published to a container division can answer to messages initiated by an entity somewhere lower in the tree. This gives you a control to define surveillance-like or control-like features and much higher complexity of communication-management.
+
+Please find the [Divisions](#divisions) chapter for details.
+
+
+_Note_: contexts and divisions are not mandatory to be used. The complexity will tell you how to orchestrate your app. It might happen, that simple function-based named entities are fitting your need. Feel free to act on your own, there is no pattern to follow.
 
 
 
@@ -505,8 +474,9 @@ That ignite function is injected by the [harcon](https://github.com/imrefazekas/
 In a workflow, a contextual object is very desired to be set for the business entities participating and sharing some environmental state or values.
 If you implement a financial transaction management system, currencies should be added to the terms object making the information accessible to all entities interoperating within the workflow.
 Or if you have a "logged in" entity, you might want to pass on the token of that given entity to be validated by other entities in the workflow in progress.
+It is very important to note, that the same object is used by the [harcon](https://github.com/imrefazekas/harcon) itself to share services with the entities.
 
-Should you define your business functions as below, the terms will be passed and managed by [harcon](https://github.com/imrefazekas/harcon)
+Should you define your business functions as below, the terms will be passed automatically:
 
 ```javascript
 module.exports = {
@@ -520,7 +490,42 @@ module.exports = {
 }
 ```
 
-Along the parameters you need for your business logic, and the ignite function introduced earlier, the terms can be added to the parameter list in the right order shown above.
+Along the parameters you need for your business logic, the terms can be added to the parameter list in the right order shown above.
+
+
+#### Chain messages
+
+If you work with workflows, the sequence/order of your messages will get an importance. To chain messages, define the next point in the workflow you have to add another parameter to your service function:
+```javascript
+var order = {
+	name: 'Order',
+	context: 'order',
+	newVPN: async function ( customer, terms ) {
+		return terms.request( 'allocate.address', '127.0.0.1' )
+	}
+}
+...
+await inflicter.request( 'order.newVPN', {name: 'Stephen', customerID:123} )
+```
+That will initiate a small workflow. __harcon.simpleRequest__ sends a message to entity Order who will send within the same workflow to the Allocator. When it answeres, then the message of the beginning will be answered. [harcon](https://github.com/imrefazekas/harcon) will know if you initiate a message within the processing of another one and considers it as part of the ongoing workflow and tracks it.
+Mind the async execution to keep everything in track!
+
+__NOTE:__ You might have noticed, that the functions implementing the messaging flows introduced above appear in 2 forms:
+ __this.request__ and __terms.request__
+
+```javascript
+var timer = {
+	name: 'Timer',
+	scheduling: async function ( terms ) {
+		await terms.request( 'Validator.refreshData' )
+		return this.request( 'Validator.validateAccounts' )
+	}
+}
+```
+
+The entity's own messaging services always initiate a new workflow. The messaging services in the terms object always continue the workflow already in progress and defines a "substep" within it. It is the matter of orchestration which one needs to be performed.
+
+Terms can be used to share data among entities as well:
 
 ```javascript
 module.exports = {
@@ -528,7 +533,7 @@ module.exports = {
 	force: async function ( terms ) {
 		var self = this
 		terms.tree = 'grow'
-		return await terms.request( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
+		return terms.request( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
 	}
 }
 ```
@@ -545,13 +550,37 @@ module.exports = {
 	force: async function ( terms ) {
 		var self = this
 		terms.tree = 'grow'
-		return await terms.request( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
+		return terms.request( 'Claire.simple', 'It is morning!', 'Time to wake up!' )
 	}
 }
 ```
 
 In [harcon](https://github.com/imrefazekas/harcon), an initiated workflow will be defined by the terms of the is starter entity. You can set the terms for all communication started by the entity 'Domina' by marking the objects with the key '*', or you can set the terms individually by setting the terms with the key of the externalID of the communication.
 In case of a rest-based service, you might want to channel the request and session information to the terms forcing you to perform the requests individually with a generated externalID and setting the "terms" of the web client with the key set to the value of the externalID. For a great example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
+
+
+
+#### Distinguishing entity instances
+
+There is an option for an object-based entity to enforce uniqueness:
+
+```javascript
+module.exports = {
+	name: 'Charlotte',
+	distinguish: 'Unique',
+	access: async function ( ) {
+		return 'D\'accord?'
+	}
+}
+```
+
+The attribute 'distinguish' can be a boolean or a string which will be added to its name as a postfix. In case of boolean value, a random value will be generated.
+
+The entity can be called with __'Charlotte-Unique.access'__ or __'Charlotte-1231441123.access'__ where __'1231441123'__ is the random string generated by the [harcon](https://github.com/imrefazekas/harcon).
+
+This feature is useful in a largely scaled environment, where a given entity might appear in multiple instances and distinguishing them is a must-have behavior.
+
+The entity will be still available with its own name: 'Charlotte'. You can consider it as a synonym or alternative name.
 
 
 
@@ -571,7 +600,7 @@ shrink: async function ( terms, ...args ) {
 ```
 
 The given services can receive any number of parameters and will be enclosed by the parameter 'args'. The naming is a convention which should be followed.
-Such service can also define the optional __terms__ and __ignite__ objects as first parameters demonstrated above.
+Such service can also define the optional __terms__ object as first parameter demonstrated above.
 
 
 
@@ -587,7 +616,7 @@ Let's define components and add them to divisions:
 
 ```javascript
 // This will add John to the division 'workers'
-harcon.addict( 'workers', 'john', /job.*/, async function () {
+harcon.deploy( 'workers', 'john', /job.*/, async function () {
 	return 'Done.'
 } )
 // This will add Claire to the division 'entrance'
@@ -604,15 +633,15 @@ var claire = {
 Components in a division can be called to:
 
 ```javascript
-await inflicter.ignite( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?' )
+await inflicter.request( null, 'entrance', 'greet.simple', 'Hi', 'Ca vas?' )
 ```
 
-Note: please keep in mind, that __harcon.ignite__ can be and should be used only when you initiate a workflow from outside the harcon!
+Note: please keep in mind, that __harcon.request__ can be and should be used only when you initiate a workflow from outside the harcon!
 
 If you initiate a communication through the harcon instance, it means, that you wants to drop in a message "from outside" which could mean an integration with an external system or just kick off a workflow.
 There are 2 methods to be called:
 
-ignite and simpleIgnite
+request and simpleRequest
 
 The different between them is the parameter list. The later does not require to specify external messageId or division, the prior one does as you can see in the example just above.
 
@@ -651,7 +680,7 @@ module.exports = {
 The method receives the associated configuration object.
 That configuration object can be passed when an entity is published:
 ```javascript
-await inflicter.addicts( Claire, config )
+await inflicter.deploy( Claire, config )
 ```
 or even before, when [harcon](https://github.com/imrefazekas/harcon) is created.
 ```javascript
@@ -663,7 +692,7 @@ An entity's configuration is an merged object made from the followings (in order
 - environment variables derived from process.env
 - the [millieu](#millieu) object in the configuration of harcon
 - object in harcon configuration associated through the name of the entity
-- the direct configuration passed to the function addicts
+- the direct configuration passed to the function __deploy__
 
 Should you use none of them, and your entity shall be initiated with empty object.
 
@@ -731,7 +760,7 @@ var extension = {
 		return 'OK'
 	}
 }
-await inflicter.addicts( extension )
+await inflicter.deploy( extension )
 ```
 In the current version, the harcon instance you are using will send to your components events about system closing, entity publishing and revoking. For a working example, please check [harcon-radiation](https://github.com/imrefazekas/harcon-radiation).
 
@@ -778,7 +807,7 @@ module.exports = {
 	name: 'Lina',
 	...
 	registerForShift: function () {
-		await self.ignite('Marie.notify', 'data', 'Lina.marieChanged' )
+		await self.request('Marie.notify', 'data', 'Lina.marieChanged' )
 	},
 	...
 	marieChanged: async function ( payload ) {
@@ -976,7 +1005,7 @@ The design you app should follow for such cases as follows:
 The entity receiving the request must send back 'Request accepted'-like message to the sender and store the externalID and flowID of the communication:
 
 ```javascript
-await ignite( 'ManCanDo.sign', document )
+await request( 'ManCanDo.sign', document )
 console.log('Accepted.')
 
 ...
@@ -989,7 +1018,7 @@ let ManCanDo = {
 	_signed: async function( document ) {
 		let self = this
 		let record = await database.readRequest( document )
-		await self.ignite( record.externalId, record.flowId, record.sourceDivision, record.source + '.signed', document )
+		return self.request( record.externalId, record.flowId, record.sourceDivision, record.source + '.signed', document )
 	}
 }
 ```
