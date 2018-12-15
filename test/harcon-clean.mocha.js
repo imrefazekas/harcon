@@ -48,10 +48,10 @@ describe('harcon', function () {
 
 			inflicter.inflicterEntity.terms['*'] = { reference: 'secret' }
 
-			await inflicter.inflicterEntity.addict( null, 'peter', 'greet.*', function (greetings1, greetings2) {
+			await inflicter.inflicterEntity.deploy( null, 'peter', 'greet.*', function (greetings1, greetings2) {
 				return Proback.quicker('Hi there!')
 			} )
-			await inflicter.inflicterEntity.addict( null, 'walter', 'greet.*', function (greetings1, greetings2) {
+			await inflicter.inflicterEntity.deploy( null, 'walter', 'greet.*', function (greetings1, greetings2) {
 				return Proback.quicker('My pleasure!')
 			} )
 
@@ -71,7 +71,7 @@ describe('harcon', function () {
 			expect( names ).to.eql( [ 'Alizee', 'Bandit', 'Boss', 'Charlotte', 'Claire', 'Domina', 'Inflicter', 'Julie', 'Lina', 'Margot', 'Marie', 'Marion', 'Mortar', 'peter', 'walter' ] )
 		})
 		it('Send for divisions...', async function () {
-			let res = await inflicter.require( clerobee.generate(), null, '', 'Inflicter.divisions')
+			let res = await inflicter.request( clerobee.generate(), null, '', 'Inflicter.divisions')
 			expect( res.sort() ).to.eql( [ 'HarconSys', 'HarconSys.click', 'HarconSys.maison.cache' ] )
 		})
 		it('Clean internals', async function () {
@@ -81,7 +81,7 @@ describe('harcon', function () {
 			} )
 		})
 		it('Walter check', async function () {
-			let res = await inflicter.require( clerobee.generate(), null, '', 'greet.hello', 'Bonjour!', 'Salut!')
+			let res = await inflicter.request( clerobee.generate(), null, '', 'greet.hello', 'Bonjour!', 'Salut!')
 			expect( res ).to.eql( [ 'Hi there!', 'My pleasure!' ] )
 		})
 	})
@@ -91,7 +91,7 @@ describe('harcon', function () {
 			for (let i = 1; i <= 25; ++i) {
 				await Proback.timeout( i * 25 )
 				let time = Date.now()
-				inflicter.require( clerobee.generate(), null, '', 'Alizee.silent' ).then( (res) => {
+				inflicter.request( clerobee.generate(), null, '', 'Alizee.silent' ).then( (res) => {
 					console.log( (Date.now() - time) + ' :: ' + res )
 				} ).catch( (reason) => {
 					console.log( (Date.now() - time) + ' !! ' + reason )
@@ -102,42 +102,42 @@ describe('harcon', function () {
 
 	describe('simple messages', function () {
 		it('Alize dormir', async function () {
-			let res = await inflicter.require( clerobee.generate(), null, '', 'Alizee.dormir' )
+			let res = await inflicter.request( clerobee.generate(), null, '', 'Alizee.dormir' )
 			expect(res).to.eql( 'Non, non, non!' )
 		})
 		it('Alize flegme', async function () {
 			this.timeout(5000)
-			let res = await inflicter.require( clerobee.generate(), null, '', 'Alizee.flegme' )
+			let res = await inflicter.request( clerobee.generate(), null, '', 'Alizee.flegme' )
 			expect(res).to.eql( 'Quoi?' )
 		})
 		it('Alize superFlegme', async function () {
 			this.timeout(5000)
 			try {
-				await inflicter.require( clerobee.generate(), null, '', 'Alizee.superFlegme' )
+				await inflicter.request( clerobee.generate(), null, '', 'Alizee.superFlegme' )
 				assert.fail( 'Should not be here...' )
 			} catch (err) { expect(err).to.be.an.instanceof( Error ) }
 		})
 		it('Boss shrinking', async function () {
 			this.timeout(5000)
-			let res = await inflicter.require( clerobee.generate(), null, '', 'Boss.shrink', 'hello?' )
+			let res = await inflicter.request( clerobee.generate(), null, '', 'Boss.shrink', 'hello?' )
 			expect(res).to.eql( 'ok' )
 		})
 	})
 
 	describe('Harcon broadcasting', function () {
 		it('Broatcasting', async function () {
-			let res = await inflicter.require( clerobee.generate(), null, '', '*|Alizee.dormir' )
+			let res = await inflicter.request( clerobee.generate(), null, '', '*|Alizee.dormir' )
 			expect(res).to.eql( 'Non, non, non!' )
 		})
 	})
 
 	describe('Depth handling', function () {
 		it('multilevel divisions', async function () {
-			let res = await inflicter.require( clerobee.generate(), null, 'HarconSys.maison.cache', 'Margot.alors' )
+			let res = await inflicter.request( clerobee.generate(), null, 'HarconSys.maison.cache', 'Margot.alors' )
 			expect(res).to.eql( 'Oui?' )
 		})
 		it('multilevel contextes', async function () {
-			let res = await inflicter.require( clerobee.generate(), null, 'HarconSys.maison.cache', 'paresseux.fille.alors' )
+			let res = await inflicter.request( clerobee.generate(), null, 'HarconSys.maison.cache', 'paresseux.fille.alors' )
 			expect(res).to.eql( 'Oui?' )
 		})
 	})
@@ -145,7 +145,7 @@ describe('harcon', function () {
 	describe('Error handling', function () {
 		it('Throw error', async function () {
 			try {
-				await inflicter.require( clerobee.generate(), null, '', 'Bandit.delay' )
+				await inflicter.request( clerobee.generate(), null, '', 'Bandit.delay' )
 				assert.fail( 'Should not be here...' )
 			} catch (err) { expect(err).to.be.an.instanceof( Error ) }
 		})
@@ -154,10 +154,10 @@ describe('harcon', function () {
 	describe('State shifting', function () {
 		it('Simple case', async function () {
 			let Lina = inflicter.barrel.firestarter('Lina').object
-			await inflicter.require( clerobee.generate(), null, '', 'Marie.notify', 'data', '', 'Lina.marieChanged')
+			await inflicter.request( clerobee.generate(), null, '', 'Marie.notify', 'data', '', 'Lina.marieChanged')
 
 			await Proback.timeout( 250 )
-			await inflicter.require( clerobee.generate(), null, '', 'Marie.simple', 'Bonjour', 'Salut' )
+			await inflicter.request( clerobee.generate(), null, '', 'Marie.simple', 'Bonjour', 'Salut' )
 
 			await Proback.timeout( 250 )
 			await Proback.until( function () {
@@ -169,14 +169,14 @@ describe('harcon', function () {
 	describe('Harcon distinguish', function () {
 		it('Access distinguished entity', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'Charlotte.access')
+				let res = await inflicter.request( '0', null, '', 'Charlotte.access')
 				should.exist(res)
 				expect( res ).to.include( 'D\'accord?' )
 			} catch ( err ) { console.error(err) }
 		})
 		it('Access distinguished entity', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'Charlotte-Unique.access')
+				let res = await inflicter.request( '0', null, '', 'Charlotte-Unique.access')
 				should.exist(res)
 				expect( res ).to.include( 'D\'accord?' )
 			} catch ( err ) { console.error(err) }
@@ -186,15 +186,15 @@ describe('harcon', function () {
 	describe('Erupt flow', function () {
 		it('Simple greetings by name is', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'Marie.simple', 'whatsup?', 'how do you do?')
-				let res2 = await inflicter.require( '0', null, '', 'greet.simple', 'whatsup?', 'how do you do?')
+				let res = await inflicter.request( '0', null, '', 'Marie.simple', 'whatsup?', 'how do you do?')
+				let res2 = await inflicter.request( '0', null, '', 'greet.simple', 'whatsup?', 'how do you do?')
 				console.log( '.>??????>>..', res, res2 )
 			} catch (err) { console.error(err) }
 		})
 		it('Marion', async function () {
 			// Sending a morning message and waiting for the proper answer
 			try {
-				let res = await inflicter.require( '0', null, '', 'Marion.force' )
+				let res = await inflicter.request( '0', null, '', 'Marion.force' )
 				should.exist(res)
 				expect( res[0] ).to.eql( [ 'Hi there!', 'My pleasure!' ] )
 				expect( res[1] ).to.eql( 'Pas du tout!' )
@@ -205,14 +205,14 @@ describe('harcon', function () {
 	describe('Harcon workflow', function () {
 		it('Simple greetings by name is', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'Marie.simple', 'whatsup?', 'how do you do?')
+				let res = await inflicter.request( '0', null, '', 'Marie.simple', 'whatsup?', 'how do you do?')
 				should.exist(res)
 				expect( res ).to.include( 'Bonjour!' )
 			} catch (err) { console.error(err) }
 		})
 		it('Simple greetings is', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'greet.simple', 'whatsup?', 'how do you do?')
+				let res = await inflicter.request( '0', null, '', 'greet.simple', 'whatsup?', 'how do you do?')
 				should.exist(res)
 
 				expect( res ).to.include( 'Hi there!' )
@@ -222,32 +222,32 @@ describe('harcon', function () {
 		})
 		it('Morning greetings is', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'morning.wakeup')
+				let res = await inflicter.request( '0', null, '', 'morning.wakeup')
 				expect(res).to.eql( [ 'Hi there!', 'My pleasure!' ] )
 			} catch (err) { console.error(err) }
 		})
 		it('General dormir', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'morning.dormir')
+				let res = await inflicter.request( '0', null, '', 'morning.dormir')
 				expect(res).to.eql( [ 'Non, non, non!', 'Non, Mais non!' ] )
 			} catch (err) { console.error(err) }
 		})
 		it('Specific dormir', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'morning.girls.dormir')
+				let res = await inflicter.request( '0', null, '', 'morning.girls.dormir')
 				expect(res).to.eql( [ 'Non, non, non!', 'Non, Mais non!' ] )
 			} catch (err) { console.error(err) }
 		})
 		it('No answer', async function () {
 			try {
-				await inflicter.require( '0', null, '', 'cave.echo')
+				await inflicter.request( '0', null, '', 'cave.echo')
 			} catch (err) {
 				expect(err).to.be.an.instanceof( Error )
 			}
 		})
 		it('Division Promise test', async function () {
 			try {
-				let res = await inflicter.require( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?' )
+				let res = await inflicter.request( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?' )
 				should.exist(res)
 
 				expect( res ).to.include( 'Hi there!' )
@@ -258,7 +258,7 @@ describe('harcon', function () {
 		})
 		it('Division test', async function () {
 			try {
-				let res = await inflicter.require( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?')
+				let res = await inflicter.request( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?')
 
 				should.exist(res)
 
@@ -270,7 +270,7 @@ describe('harcon', function () {
 		})
 		it('Domina', async function () {
 			try {
-				let res = await inflicter.require( '0', null, '', 'Domina.force')
+				let res = await inflicter.request( '0', null, '', 'Domina.force')
 				should.exist(res)
 
 				expect( res[0] ).to.eql( [ 'Hi there!', 'My pleasure!' ] )
@@ -280,7 +280,7 @@ describe('harcon', function () {
 		it('Deactivate', async function () {
 			inflicter.deactivate('Claire')
 			try {
-				let res = await inflicter.require( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?')
+				let res = await inflicter.request( '0', null, harconName + '.click', 'greet.simple', 'Hi', 'Ca vas?')
 				should.exist(res)
 				expect( res ).to.not.include( 'Pas du tout!' )
 			} catch (err) { console.error(err) }
@@ -291,14 +291,14 @@ describe('harcon', function () {
 		it('Changing Alizee', async function () {
 			this.timeout( 20000 )
 			try {
-				assert.rejects( inflicter.require( '0', null, '', 'Lina.flying'), 'Nobody is listening to: Lina.flying' )
+				assert.rejects( inflicter.request( '0', null, '', 'Lina.flying'), 'Nobody is listening to: Lina.flying' )
 
 				const newLina = await readFile( path.join( __dirname, 'livereload', 'Lina_new.js'), { encoding: 'utf8' } )
 				await writeFile( path.join( __dirname, 'entities', 'Lina.js'), newLina, { encoding: 'utf8' } )
 
 				await Proback.timeout( 5000 )
 
-				let res = await inflicter.require( '0', null, '', 'Lina.flying')
+				let res = await inflicter.request( '0', null, '', 'Lina.flying')
 				expect( res ).to.eql( 'Flying in the clouds...' )
 			} catch (err) { assert.fail( 'Should not be here...' ) }
 		})

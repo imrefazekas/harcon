@@ -76,11 +76,11 @@ describe('HarconBend', function () {
 
 			inflicter = await harcon.init()
 
-			await inflicter.inflicterEntity.addicts( Domina )
-			await inflicter.inflicterEntity.addicts( Alizee )
-			await inflicter.inflicterEntity.addicts( Julie )
-			await inflicter.inflicterEntity.addicts( Claire )
-			await inflicter.inflicterEntity.addicts( Marie )
+			await inflicter.inflicterEntity.deploy( Domina )
+			await inflicter.inflicterEntity.deploy( Alizee )
+			await inflicter.inflicterEntity.deploy( Julie )
+			await inflicter.inflicterEntity.deploy( Claire )
+			await inflicter.inflicterEntity.deploy( Marie )
 
 			console.log('\n\n-----------------------\n\n')
 			assert.ok( 'Harcon initiated...' )
@@ -97,7 +97,7 @@ describe('HarconBend', function () {
 	describe('Test completeness', function () {
 		it('Firebender', async function () {
 			try {
-				let res = await inflicter.require( clerobee.generate(), null, '', 'FireBender.completeness' )
+				let res = await inflicter.request( clerobee.generate(), null, '', 'FireBender.completeness' )
 				console.log('completeness .....', res)
 				expect( Object.keys(res) ).to.eql( [ ] )
 			} catch (err) { console.error( err ) }
@@ -107,28 +107,28 @@ describe('HarconBend', function () {
 	describe('Bending', function () {
 		it('Spread', async function () {
 			try {
-				let res = await inflicter.require( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.rever', [ 'bonne nuite' ] )
+				let res = await inflicter.request( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.rever', [ 'bonne nuite' ] )
 				console.log('Spread .....', res)
 				expect( res ).to.eql( [ 'Merci', 'Enchentée.' ] )
 			} catch (err) { console.error( err ) }
 		})
 		it('Series', async function () {
 			try {
-				let res = await inflicter.require( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne soirree' ])
+				let res = await inflicter.request( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne soirree' ])
 				expect( res ).to.eql( [ 'Merci', 'Enchentée.' ] )
 			} catch (err) { console.error( err ) }
 		})
 
 		it('Series with validation failuer', async function () {
 			try {
-				await inflicter.require( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne nuite' ] )
+				await inflicter.request( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.repose', [ 'bonne nuite' ] )
 				assert.fail( 'Should not be here...' )
 			} catch (err) { expect(err).to.be.an.instanceof( Error ) }
 		})
 
 		it('Waterfall', async function () {
 			try {
-				let res = await inflicter.require( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.chouchou', [ 'bonne nuite' ] )
+				let res = await inflicter.request( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.chouchou', [ 'bonne nuite' ] )
 				console.log('Waterfall .....', res)
 				expect( res ).to.eql( 'Enchentée.' )
 			} catch (err) { assert.fail( 'Should not be here...' ) }
@@ -136,21 +136,21 @@ describe('HarconBend', function () {
 
 		it('Series wizh skipif', async function () {
 			try {
-				let res = await inflicter.require( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.choisi', [ 'bonne nuite' ] )
+				let res = await inflicter.request( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.choisi', [ 'bonne nuite' ] )
 				expect( res ).to.eql( [ 'Non, Mais non!' ] )
 			} catch (err) { assert.fail( 'Should not be here...' ) }
 		})
 
 		it('Forech Series', async function () {
 			try {
-				let res = await inflicter.require( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.distribute', [ ])
+				let res = await inflicter.request( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.distribute', [ ])
 				expect( res ).to.eql( [ [ 100, 450, 500 ], [ 100, 450, 500 ] ] )
 			} catch (err) { assert.fail( 'Should not be here...' ) }
 		})
 
 		it('Foreach Waterfall', async function () {
 			try {
-				let res = await inflicter.require( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.waterfall', [ ] )
+				let res = await inflicter.request( clerobee.generate(), null, '', 'FireBender.exec', '', 'Julie.waterfall', [ ] )
 				expect( res ).to.eql( [ 1000, 4500, 5000 ] )
 			} catch (err) { assert.fail( 'Should not be here...' ) }
 		})
@@ -160,7 +160,7 @@ describe('HarconBend', function () {
 		it('Timeout', async function () {
 			this.timeout(3500)
 			try {
-				await inflicter.require( clerobee.generate(), null, '', 'FireBender.exec', '', 'Alizee.superFlegme', [ ] )
+				await inflicter.request( clerobee.generate(), null, '', 'FireBender.exec', '', 'Alizee.superFlegme', [ ] )
 				assert.fail( 'Should not be here...' )
 			} catch (err) { expect(err).to.be.an.instanceof( Error ) }
 		})
