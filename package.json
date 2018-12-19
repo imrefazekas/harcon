@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "9.0.3",
+  "version": "9.0.5",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -23,6 +23,7 @@
   "dependencies": {
     "assign.js": "^2.8.7",
     "clerobee": "^0.9.8",
+    "cron": "^1.6.0",
     "harcon-flow": "^2.6.12",
     "isa.js": "^2.2.3",
     "mkdirp": "^0.5.1",

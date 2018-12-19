@@ -74,10 +74,9 @@ mortar.firstRead = async function () {
 			} )
 		)
 
-		self.setInterval( function () {
+		self.setInterval( async function () {
 			self.harconlog( null, 'Mortar is checking for entity changes', null, 'trace' )
-			self.igniteFiles( ).then( () => {} )
-				.catch( self.harconlog )
+			return self.igniteFiles( )
 		}, self.options.liveReloadTimeout || 5000 )
 	}
 	return OK

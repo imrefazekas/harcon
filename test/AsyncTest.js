@@ -12,7 +12,7 @@ var isFunction = function (value) {
 
 let _ = require('isa.js')
 
-let ignorable = [ 'init', 'ignite', 'request', 'inform', 'delegate', 'erupt', 'setTimeout', 'setInterval' ]
+let ignorable = [ 'init', 'ignite', 'request', 'inform', 'delegate', 'erupt', 'setCron', 'setTimeout', 'setInterval' ]
 
 function functions (obj) {
 	let res = []

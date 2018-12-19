@@ -1078,11 +1078,28 @@ All functions are synchronous.
 The [harcon-ecdsa-warper](https://github.com/imrefazekas/harcon-ecdsa-warper) defines az ECDSA-based security layer for [harcon](https://github.com/imrefazekas/harcon), please check for details.
 
 
+## Timing
+
+Each entity published possesses functions to aid timing services:
+
+```javascript
+		startCron: function ( name, spec, fn ) ...
+		setTimeout: function ( fn, timeout ) ...
+		setInterval: function ( fn, interval ) ...
+```
+
+The function startCron creates a cron-like job specified in the 2nd parameter.
+The functions setTimeout and setInterval are the wrapped version of the original ones defined by the JS.
+Please note,that __all functions must be async__!
+
+All scheduled functions are stopped automatically when [harcon](https://github.com/imrefazekas/harcon) stops.
+
+
 ## License
 
 (The MIT License)
 
-Copyright (c) 2017 Imre Fazekas
+Copyright (c) 2018 Imre Fazekas
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
