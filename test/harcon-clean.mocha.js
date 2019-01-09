@@ -49,6 +49,7 @@ describe('harcon', function () {
 			inflicter.inflicterEntity.terms['*'] = { reference: 'secret' }
 
 			await inflicter.inflicterEntity.deploy( null, 'peter', 'greet.*', function (greetings1, greetings2) {
+				console.log('Peter is logging...')
 				return Proback.quicker('Hi there!')
 			} )
 			await inflicter.inflicterEntity.deploy( null, 'walter', 'greet.*', function (greetings1, greetings2) {
@@ -83,6 +84,9 @@ describe('harcon', function () {
 		it('Walter check', async function () {
 			let res = await inflicter.request( clerobee.generate(), null, '', 'greet.hello', 'Bonjour!', 'Salut!')
 			expect( res ).to.eql( [ 'Hi there!', 'My pleasure!' ] )
+		})
+		it('Walter inform', async function () {
+			await inflicter.inform( clerobee.generate(), null, '', 'greet.hello', 'Bonjour!', 'Salut!')
 		})
 	})
 	describe('parallelism', function () {
