@@ -104,6 +104,9 @@ mortar.igniteFiles = async function ( ) {
 			let compName = newFile.substring( 0, newFile.length - 3 )
 			delete require.cache[require.resolve( compName )]
 			let component = require( compName )
+
+			if (component.passive) return
+
 			if ( self.options.entityPatcher )
 				self.options.entityPatcher( component )
 			if ( !component.name )
