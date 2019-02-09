@@ -3,7 +3,6 @@ module.exports = {
 	division: 'click',
 	context: 'greet',
 	init: async function (options) {
-		console.log('\n\n<<>>', await this.harconEntities() )
 		return 'OK'
 	},
 	// Simple service function listening to the greet.usual message where greet comes from context and usual is identified by the name of the fuction.

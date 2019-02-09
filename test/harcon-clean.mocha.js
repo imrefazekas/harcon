@@ -89,6 +89,7 @@ describe('harcon', function () {
 			await inflicter.inform( clerobee.generate(), null, '', 'greet.hello', 'Bonjour!', 'Salut!')
 		})
 	})
+
 	describe('parallelism', function () {
 		it('Alize silent', async function () {
 			this.timeout(15000)
