@@ -1027,6 +1027,25 @@ The param terms holds references about the incoming communication by the name of
 You can store the _externalID_ if the communication has been initiated by an external party or just the _flowID_ if continuity must be ensured.
 
 
+Of course it might happen you need a manual work to save an incoming communication and save the terms object and initiate a communication later in tame as a continuation of the give flow. Please read the following code:
+
+
+```javascript
+let ManCanDo = {
+	auditor: true,
+	startToWork: async function ( terms ) {
+		let comm = this.burst( terms.sourceComm, terms, '', 'ManCanDo.whatever' )
+		// save the comm
+		return 'ok'
+	},
+	returnToWork: async function( document ) {
+		let comm = retrieveComm( ... )
+		// 'ManCanDo.whatever' will be performed as a next execution point in the flow ...
+		this.blow( comm )
+	}
+}
+```
+
 
 ## Live-reload entities
 
