@@ -5,11 +5,11 @@ module.exports = {
 	dormir: async function ( terms ) {
 		return 'Non, non, non!'
 	},
-	flegme: async function ( ) {
+	flegme: async function ( terms ) {
 		await Proback.timeout( 2500 )
 		return 'Quoi?'
 	},
-	superFlegme: async function ( ) {
+	superFlegme: async function ( terms ) {
 		return new Promise( (resolve, reject) => {
 			setTimeout( function () {
 				resolve( 'Quoi???')
