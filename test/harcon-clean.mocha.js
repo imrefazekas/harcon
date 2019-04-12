@@ -60,7 +60,7 @@ describe('harcon', function () {
 			assert.ok( 'Harcon initiated...' )
 		} catch (err) { assert.fail( err ) }
 	})
-
+	/*
 	describe('Test Harcon system calls', function () {
 		it('Retrieve divisions...', async function () {
 			let divisions = await inflicter.divisions()
@@ -104,7 +104,7 @@ describe('harcon', function () {
 			}
 		})
 	})
-
+	*/
 	describe('simple messages', function () {
 		it('Alize dormir', async function () {
 			let res = await inflicter.request( clerobee.generate(), null, '', 'Alizee.dormir' )
@@ -128,7 +128,7 @@ describe('harcon', function () {
 			expect(res).to.eql( 'ok' )
 		})
 	})
-
+	/*
 	describe('Harcon broadcasting', function () {
 		it('Broatcasting', async function () {
 			let res = await inflicter.request( clerobee.generate(), null, '', '*|Alizee.dormir' )
@@ -319,7 +319,7 @@ describe('harcon', function () {
 			} catch (err) { console.error(err) }
 		})
 	})
-
+	*/
 	after(async function () {
 		if (inflicter) {
 			await inflicter.close( )
