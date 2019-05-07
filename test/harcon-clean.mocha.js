@@ -60,7 +60,7 @@ describe('harcon', function () {
 			assert.ok( 'Harcon initiated...' )
 		} catch (err) { assert.fail( err ) }
 	})
-	/*
+
 	describe('Test Harcon system calls', function () {
 		it('Retrieve divisions...', async function () {
 			let divisions = await inflicter.divisions()
@@ -104,7 +104,7 @@ describe('harcon', function () {
 			}
 		})
 	})
-	*/
+
 	describe('simple messages', function () {
 		it('Alize dormir', async function () {
 			let res = await inflicter.request( clerobee.generate(), null, '', 'Alizee.dormir' )
@@ -128,7 +128,7 @@ describe('harcon', function () {
 			expect(res).to.eql( 'ok' )
 		})
 	})
-	/*
+
 	describe('Harcon broadcasting', function () {
 		it('Broatcasting', async function () {
 			let res = await inflicter.request( clerobee.generate(), null, '', '*|Alizee.dormir' )
@@ -167,6 +167,18 @@ describe('harcon', function () {
 			await Proback.timeout( 250 )
 			await Proback.until( function () {
 				return Lina.hasMarieChanged
+			}, 250 )
+		})
+		it('Entangled case', async function () {
+			let Lina = inflicter.barrel.firestarter('Lina').object
+			await inflicter.request( clerobee.generate(), null, '', 'Marion.notify', 'data', '', 'Lina.marionChanged')
+
+			await Proback.timeout( 250 )
+			await inflicter.request( clerobee.generate(), null, '', 'Marie.simple', 'Bonjour', 'Salut' )
+
+			await Proback.timeout( 250 )
+			await Proback.until( function () {
+				return Lina.hasMarionChanged
 			}, 250 )
 		})
 	})
@@ -319,7 +331,7 @@ describe('harcon', function () {
 			} catch (err) { console.error(err) }
 		})
 	})
-	*/
+
 	after(async function () {
 		if (inflicter) {
 			await inflicter.close( )

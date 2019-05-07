@@ -8,6 +8,10 @@ module.exports = {
 		this.hasMarieChanged = true
 		return 'OK'
 	},
+	marionChanged: async function ( payload ) {
+		this.hasMarionChanged = true
+		return 'OK'
+	},
 	flying: async function ( ) {
 		return 'Flying in the clouds...'
 	}

@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'Marie',
 	context: 'greet',
+	entangled: 'Marion',
 	init: async function (options) {
 		// console.log('Init...', this.name, this.division, options)
 		return 'ok'

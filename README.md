@@ -835,6 +835,19 @@ module.exports = {
 Anytime _Marie_ calls its internal _'shifted'_ function, it triggers the [harcon](https://github.com/imrefazekas/harcon)'s state changing service. You have to pass an object possessing all properties considered to be "states". So an object might shift multiple states at once if needed. The values of the attributes are the payload to send to the listener entities.
 That __this.shifted( { data: 'content' } )__ line will initiate an internal communication with the addressing _'Lina.marieChanged'_ as _Lina_ specified. And the function _'marieChanged'_ of _Lina_ will be called with the string _'content'_ passed as payload.
 
+#### Entity entangling
+
+Entangling is a feature to keep state shifting in sync between distant entities. Lets consider the following entity: 
+
+```
+module.exports = {
+	name: 'Marie',
+	context: 'greet',
+	entangled: 'Marion',
+	...
+```
+
+In the code above, entity __Marie__ is entangled to __Marion__ which makes the [harcon](https://github.com/imrefazekas/harcon) to sync all state changes of __Marie__ to __Marion__ through the bus. That will _"force"_ __Marion__ to be the subject of the same state shifting occurred in __Marie__. Such feature could be useful when really distant enties must replicate state changes in a transparent and automated way.
 
 
 ## Interoperating with other harcon instances

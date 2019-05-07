@@ -7,5 +7,9 @@ module.exports = {
 	marieChanged: async function ( payload ) {
 		this.hasMarieChanged = true
 		return 'OK'
+	},
+	marionChanged: async function ( payload ) {
+		this.hasMarionChanged = true
+		return 'OK'
 	}
 }
