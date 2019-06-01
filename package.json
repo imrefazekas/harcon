@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "9.2.5",
+  "version": "9.2.6",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -32,11 +32,9 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "jaeger-client": "^3.14.4",
     "pino": "~5",
     "pino-pretty": "~3",
-    "secp256k1": "^3.7.0",
-    "zipkin": "^0.17.1"
+    "signun": "^1.2.0"
   },
   "engines": {
     "node": ">= 8.0.0"
