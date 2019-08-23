@@ -3,6 +3,7 @@ let fs = require('fs')
 let path = require('path')
 
 let _ = require('isa.js')
+let { SEPARATOR } = require('../lib/Static')
 
 let extensionMatcher = function (extension) {
 	return function ( file ) {
@@ -17,7 +18,7 @@ module.exports = {
 			let file = path.join(folder, files[i] )
 			if ( fs.statSync( file ).isDirectory() ) this.readFlows( file, matcher, defs )
 			else if ( _.isString( matcher ) ? extensionMatcher(matcher)(file) : matcher( file ) ) {
-				let title = files[i].substring( 0, files[i].lastIndexOf('.') )
+				let title = files[i].substring( 0, files[i].lastIndexOf( SEPARATOR ) )
 
 				let validationFile = path.join( folder, title + '.js' )
 				let validation = fs.existsSync( validationFile ) ? require( validationFile ) : ''

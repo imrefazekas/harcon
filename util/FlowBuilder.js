@@ -1,5 +1,7 @@
 let _ = require('isa.js')
 
+let { SEPARATOR } = require('../lib/Static')
+
 function Element ( name, parents, children ) {
 	this.name = name
 	this.parents = parents || []
@@ -17,7 +19,7 @@ function findMessage (roots, message) {
 
 function selectMessages (primers) {
 	return primers.map( function (primer) {
-		return _.isString( primer ) ? primer : (primer.division ? primer.division + '.' : '') + primer.event
+		return _.isString( primer ) ? primer : (primer.division ? primer.division + SEPARATOR : '') + primer.event
 	} )
 }
 

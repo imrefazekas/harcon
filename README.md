@@ -837,7 +837,7 @@ That __this.shifted( { data: 'content' } )__ line will initiate an internal comm
 
 #### Entity entangling
 
-Entangling is a feature to keep state shifting in sync between distant entities. Lets consider the following entity: 
+Entangling is a feature to keep state shifting in sync between distant entities. Lets consider the following entity:
 
 ```
 module.exports = {
@@ -1127,11 +1127,45 @@ Please note,that __all functions must be async__!
 All scheduled functions are stopped automatically when [harcon](https://github.com/imrefazekas/harcon) stops.
 
 
+## Interveners
+
+An entity might want to proxied by another entity ot conform / transform the input parameters and / or alter the result of a given service. One can define the followings:
+
+```
+module.exports = {
+	name: 'Alizee',
+	context: 'morning.girls',
+	supervener: 'Vener',
+	...
+```
+
+That makes [harcon](https://github.com/imrefazekas/harcon) to intervene and catch all requests sent to 'Alizee' and allow 'Vener' to step in and perform an operation it wants then performing the original service and the result can be tranformed by the 'Vener'.
+That might help to implement real ['proxy'](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) funtionality in [harcon](https://github.com/imrefazekas/harcon).
+
+A possible 'Vener' could be defined as follows:
+
+```
+module.exports = {
+	name: 'Vener',
+	async supervene ( event, ...params ) {
+		console.log('Accepted: ', event, params )
+		return params
+	},
+	async superform ( event, result ) {
+		console.log('Formed: ', event, result )
+		return result
+	}
+}
+```
+
+The names of the interceptor functions are fixed and should be respected.
+
+
 ## License
 
 (The MIT License)
 
-Copyright (c) 2018 Imre Fazekas
+Copyright (c) 2019 Imre Fazekas
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
