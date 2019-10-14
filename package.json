@@ -1,6 +1,6 @@
 {
   "name": "harcon",
-  "version": "9.2.20",
+  "version": "9.2.21",
   "description": "Messaging/Service Bus for the harmonic convergence of node-based enterprise entities.",
   "keywords": [
     "messaging",
@@ -23,18 +23,18 @@
   "dependencies": {
     "assign.js": "^2.8.8",
     "clerobee": "^1.0.0",
-    "cron": "^1.7.1",
+    "cron": "^1.7.2",
     "harcon-flow": "^2.7.1",
     "isa.js": "^2.2.10",
     "mkdirp": "^0.5.1",
     "proback.js": "^2.1.8",
-    "vindication.js": "^4.15.5"
+    "vindication.js": "^4.15.10"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "pino": "~5",
     "pino-pretty": "~3",
-    "@nlv8/signun": "^1.3.3"
+    "@nlv8/signun": "^1.3.5"
   },
   "engines": {
     "node": ">= 8.0.0"
