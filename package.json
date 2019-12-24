@@ -21,14 +21,14 @@
   "license": "MIT",
   "main": "./lib/Inflicter.js",
   "dependencies": {
-    "assign.js": "^2.8.8",
+    "assign.js": "^2.8.9",
     "clerobee": "^1.0.0",
     "cron": "^1.7.2",
-    "harcon-flow": "^2.7.1",
+    "harcon-flow": "^2.7.2",
     "isa.js": "^2.2.10",
     "mkdirp": "^0.5.1",
     "proback.js": "^2.1.8",
-    "vindication.js": "^4.15.13"
+    "vindication.js": "^4.16.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
