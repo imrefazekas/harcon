@@ -22,5 +22,8 @@ module.exports = {
 	silent: async function ( ) {
 		await Proback.timeout( 1900 )
 		return 'ssss'
+	},
+	async falsify () {
+		return false
 	}
 }

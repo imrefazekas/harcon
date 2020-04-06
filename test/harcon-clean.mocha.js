@@ -106,6 +106,12 @@ describe('harcon', function () {
 	})
 
 	describe('simple messages', function () {
+		it('Alize falsify', async function () {
+			let res = await inflicter.request( clerobee.generate(), null, '', 'Alizee.falsify' )
+			console.log('!++++++++++>>>>>', res)
+			expect(res).to.eql( false )
+		})
+
 		it('Alize dormir', async function () {
 			let res = await inflicter.request( clerobee.generate(), null, '', 'Alizee.dormir' )
 			expect(res).to.eql( 'Non, non, non!' )
