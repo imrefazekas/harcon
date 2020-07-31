@@ -9,7 +9,18 @@ function getFiles (srcpath, extension) {
 	})
 }
 
+let _ = require('isa.js')
+let ignorable = [ 'init', 'ignite', 'request', 'inform', 'delegate', 'startCron', 'stopCron', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval' ]
+
 module.exports = {
+	ignorable,
+	functions (obj) {
+		let res = []
+		for (let m in obj)
+			if ( !ignorable.includes(m) && _.isFunction(obj[m]) )
+				res.push( m )
+		return res
+	},
 	getExtensions: function ( path ) {
 		return getFiles( path, '.js' )
 	},
