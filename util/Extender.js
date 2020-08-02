@@ -1,3 +1,5 @@
+const _ = require('isa.js')
+
 let Assigner = require('assign.js')
 let assigner = (new Assigner()).respect(true).recursive(true)
 let fs = require('fs')
@@ -9,17 +11,13 @@ function getFiles (srcpath, extension) {
 	})
 }
 
-let _ = require('isa.js')
 let ignorable = [ 'init', 'ignite', 'request', 'inform', 'delegate', 'startCron', 'stopCron', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval' ]
 
 module.exports = {
 	ignorable,
 	functions (obj) {
-		let res = []
-		for (let m in obj)
-			if ( !ignorable.includes(m) && _.isFunction(obj[m]) )
-				res.push( m )
-		return res
+		let fns = _.functionNames( obj )
+		return fns.filter( fn => !ignorable.includes(fn))
 	},
 	getExtensions: function ( path ) {
 		return getFiles( path, '.js' )
