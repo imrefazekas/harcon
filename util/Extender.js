@@ -17,7 +17,7 @@ module.exports = {
 	ignorable,
 	functions (obj) {
 		let fns = _.functionNames( obj )
-		return fns.filter( fn => !ignorable.includes(fn))
+		return fns.filter( (fn) => { return !ignorable.includes(fn) } )
 	},
 	getExtensions: function ( path ) {
 		return getFiles( path, '.js' )
