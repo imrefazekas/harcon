@@ -15,9 +15,11 @@ let ignorable = [ 'init', 'ignite', 'request', 'inform', 'delegate', 'startCron'
 
 module.exports = {
 	ignorable,
-	functions (obj) {
+	functions (obj, asyncOnly = true) {
 		let fns = _.functionNames( obj )
-		return fns.filter( (fn) => { return !ignorable.includes(fn) } )
+		return fns.filter( (fn) => {
+			return !ignorable.includes(fn) && ( !asyncOnly || _.isAsyncFunction(obj[fn]) )
+		} )
 	},
 	getExtensions: function ( path ) {
 		return getFiles( path, '.js' )
