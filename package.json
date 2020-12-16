@@ -34,7 +34,7 @@
     "chai": "^4.2.0",
     "pino": "~6",
     "pino-pretty": "~4",
-    "@nlv8/signun": "^1.4.3"
+    "@nlv8/signun": "2.0.1"
   },
   "engines": {
     "node": ">= 8.0.0"
